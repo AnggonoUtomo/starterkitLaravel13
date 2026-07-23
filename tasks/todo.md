@@ -14,3 +14,6 @@
 - [x] Format PHP code with Pint (`vendor/bin/pint --format agent`)
 - [x] Format JS/TS code with ESLint & Prettier (`npm run lint` & `npm run format`)
 - [x] Commit and push to GitHub repository
+- [ ] Implement `Console/AuditLog` submodule (Visual Activity Log + Detail Drawer)
+- [ ] Implement `Console/Profile` submodule (Fortify Profile & Security in ConsoleLayout)
+- [ ] Add Dark/Light/System Theme Switcher in Console Header

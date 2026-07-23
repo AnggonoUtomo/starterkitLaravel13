@@ -199,3 +199,12 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
 
 </laravel-boost-guidelines>
+
+=== git rules ===
+
+# Git Commit & Push Confirmation
+
+- ALWAYS request explicit confirmation from the user before executing `git commit` or `git push`.
+- Present a detailed summary of all added, modified, or deleted files along with the proposed commit message before asking for confirmation.
+- Use Indonesian language for all git commit messages (e.g. `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `chore: ...`).
+

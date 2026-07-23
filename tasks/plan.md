@@ -31,8 +31,14 @@ Decompose the starterkit development into 4 distinct phases: Infrastructure, Sha
 - [x] Task 4.3: Build `Console/SystemSetting` (System Health Checks, Module Registry, Controller, Routes, Permissions, React UI).
 - [x] Task 4.4: Build `ConsoleLayout`, `CommandPalette` (`Ctrl+K`), and `ImpersonationBanner` with Framer Motion.
 
+### Phase 5: Console Expansion (AuditLog, Profile, Theme Management)
+- [ ] Task 5.1: Build `Console/AuditLog` (Domain Event logger integration, AuditLogQueryService, Controller, Routes, Permissions, React UI with detail drawer).
+- [ ] Task 5.2: Build `Console/Profile` (Fortify profile & security integration inside `ConsoleLayout`, Controller, Routes, Permissions, React UI).
+- [ ] Task 5.3: Add Dark/Light/System Theme Switcher in `ConsoleLayout` header.
+
 ## Verification Checkpoints
 - [x] Checkpoint 1: Database migrated & seeded (`php artisan migrate:fresh --seed`).
 - [x] Checkpoint 2: Vite assets built cleanly (`npm run build`).
 - [x] Checkpoint 3: Pest test suite passed 100% (`php artisan test`).
 - [x] Checkpoint 4: Code formatted cleanly via Pint and ESLint (`vendor/bin/pint --format agent` & `npm run lint`).
+- [ ] Checkpoint 5: AuditLog and Profile submodules pass Pest feature tests.
