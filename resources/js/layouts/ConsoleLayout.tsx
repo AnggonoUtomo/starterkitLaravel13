@@ -8,8 +8,11 @@ import {
     LayoutDashboard,
     LogOut,
     Menu,
+    Monitor,
+    Moon,
     Settings,
     Shield,
+    Sun,
     User,
     Users,
     X,
@@ -17,6 +20,8 @@ import {
 import React, { useState } from 'react';
 import CommandPalette from '@/components/CommandPalette';
 import ImpersonationBanner from '@/components/ImpersonationBanner';
+import ToastNotification from '@/components/ToastNotification';
+import { useAppearance } from '@/hooks/use-appearance';
 
 interface Props {
     children: React.ReactNode;
@@ -42,6 +47,7 @@ export default function ConsoleLayout({ children }: Props) {
     const { auth, flash } = pageProps.props;
     const url = pageProps.url;
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { appearance, updateAppearance } = useAppearance();
 
     const navItems = [
         {
@@ -81,6 +87,9 @@ export default function ConsoleLayout({ children }: Props) {
             {/* Impersonation Alert Banner */}
             <ImpersonationBanner />
 
+            {/* Real-time Toast Notifications */}
+            <ToastNotification />
+
             {/* Top Navigation Bar */}
             <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 backdrop-blur">
                 <div className="flex items-center gap-3">
@@ -106,7 +115,7 @@ export default function ConsoleLayout({ children }: Props) {
                     </Link>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                     {/* Command Palette Trigger */}
                     <button
                         onClick={() => {
@@ -124,6 +133,43 @@ export default function ConsoleLayout({ children }: Props) {
                             Ctrl K
                         </kbd>
                     </button>
+
+                    {/* Theme Switcher Toggle */}
+                    <div className="flex items-center rounded-lg border border-slate-800 bg-slate-950 p-1">
+                        <button
+                            onClick={() => updateAppearance('dark')}
+                            title="Dark Mode"
+                            className={`rounded-md p-1.5 text-xs transition ${
+                                appearance === 'dark'
+                                    ? 'bg-slate-800 text-amber-400 shadow-sm'
+                                    : 'text-slate-500 hover:text-slate-300'
+                            }`}
+                        >
+                            <Moon className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                            onClick={() => updateAppearance('light')}
+                            title="Light Mode"
+                            className={`rounded-md p-1.5 text-xs transition ${
+                                appearance === 'light'
+                                    ? 'bg-slate-800 text-amber-400 shadow-sm'
+                                    : 'text-slate-500 hover:text-slate-300'
+                            }`}
+                        >
+                            <Sun className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                            onClick={() => updateAppearance('system')}
+                            title="System Mode"
+                            className={`rounded-md p-1.5 text-xs transition ${
+                                appearance === 'system'
+                                    ? 'bg-slate-800 text-emerald-400 shadow-sm'
+                                    : 'text-slate-500 hover:text-slate-300'
+                            }`}
+                        >
+                            <Monitor className="h-3.5 w-3.5" />
+                        </button>
+                    </div>
 
                     {/* User profile pill */}
                     {auth?.user && (

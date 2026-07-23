@@ -1,7 +1,7 @@
 # Daftar Tugas: Theme Switcher & Toast Notification System
 
-- [ ] Membangun komponen `ToastNotification.tsx`
-- [ ] Menambahkan dropdown Theme Switcher (Dark/Light/System) di header `ConsoleLayout`
-- [ ] Memasang `ToastNotification` pada `ConsoleLayout`
-- [ ] Merapikan format kode dengan ESLint & Prettier (`npm run lint` & `npm run format`)
-- [ ] Memverifikasi dengan pengujian Pest PHP (`php artisan test`)
+- [x] Membangun komponen `ToastNotification.tsx` beranimasi Framer Motion
+- [x] Menambahkan kontrol Theme Switcher (Dark/Light/System) pada header ConsoleLayout
+- [x] Memasang `ToastNotification` pada `ConsoleLayout` mendengarkan flash success & error
+- [x] Merapikan format kode dengan ESLint & Prettier (`npm run lint` & `npm run format`)
+- [x] Memverifikasi dengan pengujian Pest PHP (`php artisan test`)

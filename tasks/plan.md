@@ -37,9 +37,9 @@ Membagi pengembangan starterkit ke dalam 5 fase utama: Infrastruktur, Kernel Ber
 - [x] Task 5.3: Add CI/CD GitHub Actions pipeline & ObservabilityService instrumentation.
 
 ### Phase 6: UI Enhancements (Theme Switcher & Real-time Toast Notifications)
-- [ ] Task 6.1: Build `ToastNotification.tsx` component with Framer Motion slide-in animation.
-- [ ] Task 6.2: Add Dark/Light/System Theme Switcher dropdown control in `ConsoleLayout` header.
-- [ ] Task 6.3: Integrate `ToastNotification` into `ConsoleLayout` listening to Inertia flash props.
+- [x] Task 6.1: Build `ToastNotification.tsx` component with Framer Motion slide-in animation.
+- [x] Task 6.2: Add Dark/Light/System Theme Switcher dropdown control in `ConsoleLayout` header.
+- [x] Task 6.3: Integrate `ToastNotification` into `ConsoleLayout` listening to Inertia flash props.
 
 ## Titik Verifikasi (Verification Checkpoints)
 - [x] Checkpoint 1: Database berhasil dimigrasi & di-seed (`php artisan migrate:fresh --seed`).
@@ -47,4 +47,4 @@ Membagi pengembangan starterkit ke dalam 5 fase utama: Infrastruktur, Kernel Ber
 - [x] Checkpoint 3: Seluruh unit test Pest PHP lolos 100% (46/46 passed).
 - [x] Checkpoint 4: Kode terformat rapi via Pint dan ESLint (`vendor/bin/pint --format agent` & `npm run lint`).
 - [x] Checkpoint 5: Pipeline CI/CD GitHub Actions dan Observabilitas siap rilis.
-- [ ] Checkpoint 6: Theme Switcher & Toast Notification System berfungsi sempurna.
+- [x] Checkpoint 6: Theme Switcher & Toast Notification System berfungsi sempurna.
