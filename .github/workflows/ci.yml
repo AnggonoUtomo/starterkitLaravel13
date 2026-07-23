@@ -1,0 +1,83 @@
+name: CI & Quality Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Quality Gate & Test Suite
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo, pdo_sqlite, redis, bcmath, ctype, json, openssl, tokenizer, xml
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install PHP Dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Install NPM Dependencies
+        run: npm ci
+
+      - name: Prepare Environment File
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Check PHP Code Style (Laravel Pint)
+        run: vendor/bin/pint --test
+
+      - name: Check Frontend Code Quality (ESLint)
+        run: npm run lint
+
+      - name: Build Vite Production Assets
+        run: npm run build
+
+      - name: Execute Pest Feature Test Suite
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+          CACHE_STORE: redis
+          SESSION_DRIVER: redis
+          QUEUE_CONNECTION: redis
+          REDIS_HOST: 127.0.0.1
+          REDIS_PORT: 6379
+        run: php artisan test --compact

@@ -1,16 +1,18 @@
 import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
-    LayoutDashboard,
-    Users,
-    Shield,
-    Settings,
-    Command,
-    Menu,
-    X,
-    LogOut,
-    CheckCircle2,
     AlertCircle,
+    CheckCircle2,
+    Command,
+    FileText,
+    LayoutDashboard,
+    LogOut,
+    Menu,
+    Settings,
+    Shield,
+    User,
+    Users,
+    X,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import CommandPalette from '@/components/CommandPalette';
@@ -57,6 +59,18 @@ export default function ConsoleLayout({ children }: Props) {
             href: '/console/system-settings',
             icon: Settings,
             active: url.startsWith('/console/system-settings'),
+        },
+        {
+            name: 'Audit Logs',
+            href: '/console/audit-logs',
+            icon: FileText,
+            active: url.startsWith('/console/audit-logs'),
+        },
+        {
+            name: 'My Profile',
+            href: '/console/profile',
+            icon: User,
+            active: url.startsWith('/console/profile'),
         },
     ];
 

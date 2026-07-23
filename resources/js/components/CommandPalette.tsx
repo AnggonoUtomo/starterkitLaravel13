@@ -1,6 +1,14 @@
 import { router } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Command, Search, Settings, Shield, Users } from 'lucide-react';
+import {
+    Command,
+    FileText,
+    Search,
+    Settings,
+    Shield,
+    User,
+    Users,
+} from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface CommandItem {
@@ -36,6 +44,20 @@ export default function CommandPalette() {
             description: 'Check system health and registered modules',
             icon: <Settings className="h-4 w-4 text-emerald-500" />,
             url: '/console/system-settings',
+        },
+        {
+            id: 'audit',
+            title: 'Audit Logs',
+            description: 'Inspect system events and domain activity logs',
+            icon: <FileText className="h-4 w-4 text-amber-500" />,
+            url: '/console/audit-logs',
+        },
+        {
+            id: 'profile',
+            title: 'My Profile',
+            description: 'Manage profile info and account security',
+            icon: <User className="h-4 w-4 text-emerald-500" />,
+            url: '/console/profile',
         },
     ];
 
