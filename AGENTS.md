@@ -208,3 +208,24 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Present a detailed summary of all added, modified, or deleted files along with the proposed commit message before asking for confirmation.
 - Use Indonesian language for all git commit messages (e.g. `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `chore: ...`).
 
+=== user preferences & project conventions ===
+
+# Standar & Aturan Pengembangan Proyek (Persisten)
+
+1. **Konfirmasi Commit & Push Git:**
+   - WAJIB meminta konfirmasi eksplisit dari pengguna sebelum menjalankan `git commit` atau `git push`.
+   - Tampilkan rincian daftar file yang ditambah/diubah/dihapus beserta usulan pesan commit sebelum meminta konfirmasi.
+
+2. **Bahasa Dokumentasi & Commit:**
+   - Seluruh dokumen teknis (`spec.md`, `plan.md`, `todo.md`, ADR) dan pesan git commit WAJIB menggunakan Bahasa Indonesia yang sederhana dan jelas tanpa mengubah konteks teknis.
+   - Format prefix commit: `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `ci: ...`, `chore: ...`.
+
+3. **Sentralisasi Dokumentasi:**
+   - Semua dokumentasi tersimpan terpusat di folder `docs/`.
+   - Dokumentasi per-submodul tersimpan di `docs/project/{Module}/{Submodule}/` (`spec.md`, `plan.md`, `todo.md`).
+
+4. **Arsitektur Modular DDD-Lite:**
+   - Setiap fitur dibungkus sebagai submodul di `app/Modules/{Module}/{Submodule}/`.
+   - Generator CLI `php artisan make:module {Module}/{Submodule}` otomatis membuat struktur backend, frontend React, dan dokumentasi submodul dalam Bahasa Indonesia.
+
+
