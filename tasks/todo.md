@@ -17,3 +17,5 @@
 - [x] Merapikan format kode PHP dengan Pint (`vendor/bin/pint --format agent`)
 - [x] Merapikan kode JS/TS dengan ESLint & Prettier (`npm run lint` & `npm run format`)
 - [x] Commit dan push ke repository GitHub
+- [ ] Membangun komponen `ToastNotification.tsx` beranimasi Framer Motion
+- [ ] Menambahkan dropdown Theme Switcher (Dark/Light/System) pada header ConsoleLayout

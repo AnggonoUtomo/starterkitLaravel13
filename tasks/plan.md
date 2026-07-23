@@ -31,11 +31,15 @@ Membagi pengembangan starterkit ke dalam 5 fase utama: Infrastruktur, Kernel Ber
 - [x] Tugas 4.3: Membangun `Console/SystemSetting` (Pengecekan Kesehatan Sistem, Registry Modul, Controller, Rute, Izin, UI React).
 - [x] Tugas 4.4: Membangun `ConsoleLayout`, `CommandPalette` (`Ctrl+K`), dan `ImpersonationBanner` dengan animasi Framer Motion.
 
-### Fase 5: Ekspansi Console, CI/CD, & Observabilitas
-- [x] Tugas 5.1: Membangun `Console/AuditLog` (Integrasi Event Logger Domain, AuditLogQueryService, Controller, Rute, Izin, UI React dengan detail drawer).
-- [x] Tugas 5.2: Membangun `Console/Profile` (Integrasi profil & keamanan Fortify di dalam `ConsoleLayout`, Controller, Rute, Izin, UI React).
-- [x] Tugas 5.3: Mengonfigurasi CI/CD GitHub Actions (`.github/workflows/ci.yml`) dengan PHP 8.4 dan Redis 7 container.
-- [x] Tugas 5.4: Membangun `ObservabilityService` untuk pemantauan performa runtime dan memori.
+### Phase 5: Console Expansion (AuditLog, Profile, Theme Management)
+- [x] Task 5.1: Build `Console/AuditLog` (Domain Event logger integration, AuditLogQueryService, Controller, Routes, Permissions, React UI with detail drawer).
+- [x] Task 5.2: Build `Console/Profile` (Fortify profile & security integration inside `ConsoleLayout`, Controller, Routes, Permissions, React UI).
+- [x] Task 5.3: Add CI/CD GitHub Actions pipeline & ObservabilityService instrumentation.
+
+### Phase 6: UI Enhancements (Theme Switcher & Real-time Toast Notifications)
+- [ ] Task 6.1: Build `ToastNotification.tsx` component with Framer Motion slide-in animation.
+- [ ] Task 6.2: Add Dark/Light/System Theme Switcher dropdown control in `ConsoleLayout` header.
+- [ ] Task 6.3: Integrate `ToastNotification` into `ConsoleLayout` listening to Inertia flash props.
 
 ## Titik Verifikasi (Verification Checkpoints)
 - [x] Checkpoint 1: Database berhasil dimigrasi & di-seed (`php artisan migrate:fresh --seed`).
@@ -43,3 +47,4 @@ Membagi pengembangan starterkit ke dalam 5 fase utama: Infrastruktur, Kernel Ber
 - [x] Checkpoint 3: Seluruh unit test Pest PHP lolos 100% (46/46 passed).
 - [x] Checkpoint 4: Kode terformat rapi via Pint dan ESLint (`vendor/bin/pint --format agent` & `npm run lint`).
 - [x] Checkpoint 5: Pipeline CI/CD GitHub Actions dan Observabilitas siap rilis.
+- [ ] Checkpoint 6: Theme Switcher & Toast Notification System berfungsi sempurna.
