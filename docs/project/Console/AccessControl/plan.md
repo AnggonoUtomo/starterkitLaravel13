@@ -1,16 +1,16 @@
-# Submodule Plan: Console/AccessControl
+# Rencana Submodul: Console/AccessControl
 
-## Overview
-Implement Spatie Role and Permission Matrix Grid UI and backend logic.
+## Ringkasan
+Mengimplementasikan UI Grid Matrix Izin dan logika Spatie Role pada backend.
 
-## Architecture
-- `Services/RoleService.php`: Syncs permissions from `ModuleServiceProvider` and fetches matrix data.
-- `Http/Controllers/RoleController.php`: Manages role CRUD and permission toggle endpoints.
-- `routes.php`: Registers `console/access-control` routes.
-- `permissions.php`: Declares `roles.view`, `roles.create`, `roles.edit`, `roles.delete`.
+## Arsitektur
+- `Services/RoleService.php`: Menyinkronkan izin dari `ModuleServiceProvider` dan mengambil data matrix.
+- `Http/Controllers/RoleController.php`: Menangani CRUD role dan endpoint pengubahan izin.
+- `routes.php`: Mendaftarkan rute `console/access-control`.
+- `permissions.php`: Mengklarifikasikan izin `roles.view`, `roles.create`, `roles.edit`, `roles.delete`.
 
-## Task Breakdown
-- [x] Task 1: Create `RoleService.php` with auto-sync logic
-- [x] Task 2: Create `RoleController.php`
-- [x] Task 3: Declare `routes.php` and `permissions.php`
-- [x] Task 4: Create React page `resources/js/pages/Console/AccessControl/Index.tsx`
+## Rincian Tugas
+- [x] Tugas 1: Membuat `RoleService.php` dengan logika auto-sync
+- [x] Tugas 2: Membuat `RoleController.php`
+- [x] Tugas 3: Deklarasi `routes.php` dan `permissions.php`
+- [x] Tugas 4: Membuat halaman React `resources/js/pages/Console/AccessControl/Index.tsx`

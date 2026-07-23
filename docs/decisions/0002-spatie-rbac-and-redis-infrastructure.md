@@ -1,26 +1,26 @@
-# ADR-002: Spatie RBAC and Redis Infrastructure Integration
+# ADR-002: Otorisasi Spatie RBAC dan Integrasi Infrastruktur Redis
 
 ## Status
-Accepted
+Diterima (Accepted)
 
-## Date
+## Tanggal
 2026-07-23
 
-## Context
-The application requires enterprise-grade access control (Roles and Permissions) and high-speed infrastructure for sessions, caching, and background events.
+## Konteks & Masalah
+Aplikasi membutuhkan sistem kontrol hak akses kelas enterprise (Role dan Permission) serta infrastruktur berkecepatan tinggi untuk pengelolaan sesi, cache, dan antrean background.
 
-## Decision
-1. **Authorization:** Use `spatie/laravel-permission` for Role-Based Access Control (RBAC).
-2. **Permission Registration:** Permissions are declared per submodule in `permissions.php` and auto-discovered into database tables.
-3. **Redis Integration:** Use Redis (`predis/predis`) for:
-   - `CACHE_STORE=redis`: Fast caching of Spatie roles/permissions and module registries.
-   - `SESSION_DRIVER=redis`: Scalable, high-performance user session storage.
-   - `QUEUE_CONNECTION=redis`: Asynchronous processing of domain events and audit logs.
+## Keputusan
+1. **Otorisasi Hak Akses:** Menggunakan `spatie/laravel-permission` untuk Role-Based Access Control (RBAC).
+2. **Pendaftaran Izin:** Izin diklarifikasikan per submodul pada file `permissions.php` dan ter-sync otomatis ke database.
+3. **Integrasi Redis:** Menggunakan Redis (`predis/predis`) untuk:
+   - `CACHE_STORE=redis`: Kecepatan tinggi untuk pencache-an role & permission Spatie serta pendaftaran modul.
+   - `SESSION_DRIVER=redis`: Penyimpanan sesi pengguna yang efisien dan cepat.
+   - `QUEUE_CONNECTION=redis`: Pemrosesan asinkron untuk domain event dan log audit.
 
-## Alternatives Considered
-- **Custom Database Role System:** Rejected because Spatie Permission is battle-tested, widely supported, and natively handles direct permissions and role caching.
-- **File/Array Cache:** Rejected due to performance limits under concurrent multi-user production workloads.
+## Alternatif yang Dipertimbangkan
+- **Sistem Role Database Custom:** Ditolak karena Spatie Permission sudah teruji, memiliki dukungan luas, dan mendukung pencache-an role secara bawaan.
+- **File/Array Cache:** Ditolak karena keterbatasan performa saat diakses banyak pengguna secara bersamaan.
 
-## Consequences
-- Fast permission checks cached in Redis.
-- Easy integration with Inertia React props via `HandleInertiaRequests` middleware.
+## Konsekuensi
+- Pengecekan hak akses sangat cepat karena di-cache dalam Redis.
+- Integrasi yang mudah dengan prop Inertia React via middleware `HandleInertiaRequests`.

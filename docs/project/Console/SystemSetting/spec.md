@@ -1,17 +1,17 @@
-# Submodule Spec: Console/SystemSetting
+# Spesifikasi Submodul: Console/SystemSetting
 
-## Objective
-Display system health indicators (Database, Redis, PHP, Laravel, Queue) and auto-discovered module registry status.
+## Tujuan
+Menampilkan indikator kesehatan sistem (Database, Redis, PHP, Laravel, Queue) serta status registrasi modul yang terdeteksi otomatis.
 
-## Tech Stack & Dependencies
+## Teknologi & Dependensi
 - Backend: `SystemSettingController`, `SystemHealthService`
-- Integration: Database PDO ping, Redis ping, `ModuleServiceProvider`
-- Frontend Page: `resources/js/pages/Console/SystemSetting/Index.tsx`
+- Integrasi: PDO Database ping, Redis ping, `ModuleServiceProvider`
+- Halaman Frontend: `resources/js/pages/Console/SystemSetting/Index.tsx`
 
-## Acceptance Criteria
-- [x] Displays health cards for Database, Redis infrastructure, PHP version, and Queue driver.
-- [x] Gracefully handles disconnected Redis or DB without throwing fatal uncaught exceptions.
-- [x] Lists auto-discovered DDD-Lite modules and submodules with permission counts.
+## Kriteria Keberhasilan
+- [x] Menampilkan kartu indikator kesehatan untuk Database, Redis, versi PHP, dan driver Queue.
+- [x] Menangani kondisi jika Redis atau DB terputus tanpa menyebabkan error fatal aplikasi.
+- [x] Menampilkan daftar modul DDD-Lite yang terdeteksi beserta jumlah izinnya.
 
-## Verification Steps
-- Run feature test: `php artisan test --filter=ModuleSystemTest`
+## Langkah Verifikasi
+- Pengujian Fitur Pest: `php artisan test --filter=ModuleSystemTest`

@@ -1,19 +1,19 @@
-# Master Task Checklist
+# Checklist Daftar Tugas Master
 
-- [x] Uninstall Wayfinder dependencies (`laravel/wayfinder`, `@laravel/vite-plugin-wayfinder`)
-- [x] Install Ziggy, Spatie Permission, Redis predis, and Framer Motion
-- [x] Configure `ModuleServiceProvider` for route & permission auto-discovery
-- [x] Create Shared Kernel DTOs, Domain Event Contracts, and AuditLogService
-- [x] Build CLI Module Generator tool (`php artisan make:module`)
-- [x] Implement `Console/UserManagement` submodule (CRUD + Impersonation Mode)
-- [x] Implement `Console/AccessControl` submodule (Spatie RBAC + Permission Matrix Grid)
-- [x] Implement `Console/SystemSetting` submodule (System Health + Module Registry)
-- [x] Implement `ConsoleLayout`, `CommandPalette` (`Ctrl+K`), and `ImpersonationBanner`
-- [x] Seed database with default roles, permissions, and admin account
-- [x] Run Pest test suite (44/44 passed)
-- [x] Format PHP code with Pint (`vendor/bin/pint --format agent`)
-- [x] Format JS/TS code with ESLint & Prettier (`npm run lint` & `npm run format`)
-- [x] Commit and push to GitHub repository
-- [ ] Implement `Console/AuditLog` submodule (Visual Activity Log + Detail Drawer)
-- [ ] Implement `Console/Profile` submodule (Fortify Profile & Security in ConsoleLayout)
-- [ ] Add Dark/Light/System Theme Switcher in Console Header
+- [x] Mencopot dependensi Wayfinder (`laravel/wayfinder`, `@laravel/vite-plugin-wayfinder`)
+- [x] Menginstal Ziggy, Spatie Permission, Redis predis, dan Framer Motion
+- [x] Mengonfigurasi `ModuleServiceProvider` untuk auto-discovery rute & izin
+- [x] Membuat Shared Kernel DTO, Kontrak Event Domain, dan AuditLogService
+- [x] Membangun perintah CLI Generator modul (`php artisan make:module`)
+- [x] Membangun submodul `Console/UserManagement` (CRUD + Mode Impersonasi)
+- [x] Membangun submodul `Console/AccessControl` (Spatie RBAC + Permission Matrix Grid)
+- [x] Membangun submodul `Console/SystemSetting` (Kesehatan Sistem + Registry Modul)
+- [x] Membangun `ConsoleLayout`, `CommandPalette` (`Ctrl+K`), dan `ImpersonationBanner`
+- [x] Membangun submodul `Console/AuditLog` (Log Aktivitas Visual + Detail Drawer)
+- [x] Membangun submodul `Console/Profile` (Profil Account & Keamanan Fortify di ConsoleLayout)
+- [x] Mengonfigurasi CI/CD GitHub Actions (`.github/workflows/ci.yml`)
+- [x] Membangun `ObservabilityService` untuk pelacakan performa & memori
+- [x] Menjalankan pengujian Pest PHP (46/46 passed)
+- [x] Merapikan format kode PHP dengan Pint (`vendor/bin/pint --format agent`)
+- [x] Merapikan kode JS/TS dengan ESLint & Prettier (`npm run lint` & `npm run format`)
+- [x] Commit dan push ke repository GitHub

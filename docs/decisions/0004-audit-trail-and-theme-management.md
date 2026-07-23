@@ -1,33 +1,32 @@
-# ADR-004: Audit Trail Submodule via Domain Events and Theme Management
+# ADR-004: Submodul Audit Trail via Domain Events dan Pengelolaan Tema
 
 ## Status
-Accepted
+Diterima (Accepted)
 
-## Date
+## Tanggal
 2026-07-23
 
-## Context
-As the Console Admin module expands, administrators need:
-1. Visual inspection of system events (user created, role assigned, permission toggled, settings updated).
-2. Account profile & security management integrated directly into `ConsoleLayout`.
-3. Seamless Dark/Light/System theme toggling in the Console Admin interface.
+## Konteks & Masalah
+Seiring berkembangnya modul Console Admin, administrator membutuhkan:
+1. Inspeksi visual atas aktivitas sistem (pembuatan user, penugasan role, perubahan izin, dan impersonasi).
+2. Pengelolaan profil akun dan keamanan yang terintegrasi di dalam `ConsoleLayout`.
+3. Pengaturan tema tampilan yang nyaman di Console Admin.
 
-## Decision
-1. **Audit Trail Submodule (`Console/AuditLog`)**:
-   - Create submodule `Console/AuditLog` with `AuditLogController`, `AuditLogService`, `routes.php`, and `permissions.php`.
-   - Store domain activity logs using `AuditLogService` listening to system events.
-   - Provide a paginated, filterable Activity Log table UI with Framer Motion details drawer.
+## Keputusan
+1. **Submodul Audit Trail (`Console/AuditLog`)**:
+   - Membuat submodul `Console/AuditLog` dengan `AuditLogController`, `AuditLogService`, `routes.php`, dan `permissions.php`.
+   - Menyimpan log aktivitas domain menggunakan `AuditLogService` yang mendengarkan event sistem.
+   - Menyediakan UI tabel log aktivitas dengan fitur pencarian dan *slide-over drawer* JSON payload berbasis Framer Motion.
 
-2. **Console Profile Integration (`Console/Profile`)**:
-   - Create submodule `Console/Profile` wrapping Fortify user profile update, password change, and security settings inside `ConsoleLayout`.
+2. **Integrasi Profil Console (`Console/Profile`)**:
+   - Membuat submodul `Console/Profile` yang membungkus pembaruan profil Fortify dan kata sandi langsung di dalam `ConsoleLayout`.
 
-3. **Theme Management**:
-   - Store theme preference (`dark` | `light` | `system`) in `localStorage` & cookie.
-   - Provide a quick toggle control in `ConsoleLayout` header.
+3. **Pengelolaan Tema Tampilan**:
+   - Menyiapkan arsitektur tema di Console Layout.
 
-## Alternatives Considered
-- **Spatie Activitylog Package:** Rejected to keep the starterkit lightweight and demonstrate native Laravel Domain Event logging via `AuditLogService`.
+## Alternatif yang Dipertimbangkan
+- **Package Spatie Activitylog:** Ditolak untuk menjaga starterkit tetap ringan dan mendemonstrasikan pencatatan event domain native via `AuditLogService`.
 
-## Consequences
-- Full visibility of security events for administrators.
-- Consistent user experience across Profile, Console Settings, and Audit Trail.
+## Konsekuensi
+- Akses penuh bagi administrator untuk memantau keamanan sistem.
+- Pengalaman pengguna yang konsisten di seluruh modul Console Admin.

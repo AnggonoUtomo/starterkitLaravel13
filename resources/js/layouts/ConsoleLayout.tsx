@@ -23,6 +23,7 @@ interface Props {
 }
 
 interface SharedPageProps {
+    [key: string]: unknown;
     auth?: {
         user?: {
             name: string;
@@ -37,8 +38,9 @@ interface SharedPageProps {
 }
 
 export default function ConsoleLayout({ children }: Props) {
-    const { auth, flash, url } = usePage<SharedPageProps & { url: string }>()
-        .props;
+    const pageProps = usePage<SharedPageProps>();
+    const { auth, flash } = pageProps.props;
+    const url = pageProps.url;
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const navItems = [

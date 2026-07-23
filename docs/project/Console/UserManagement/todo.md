@@ -1,9 +1,9 @@
-# Submodule Task List: Console/UserManagement
+# Daftar Tugas Submodul: Console/UserManagement
 
-- [x] Create `UserDTO` in `DTO/`
-- [x] Implement `UserService` with paginated search & impersonate helpers
-- [x] Implement `UserController` for Inertia responses
-- [x] Declare `routes.php` and `permissions.php`
-- [x] Create React Index page with user table, modals, and impersonate button
-- [x] Connect `ImpersonationBanner` in `ConsoleLayout`
-- [x] Verify with Pest tests
+- [x] Membuat `UserDTO` di folder `DTO/`
+- [x] Mengimplementasikan `UserService` dengan helper pencarian & impersonasi
+- [x] Mengimplementasikan `UserController` untuk respons Inertia
+- [x] Deklarasi `routes.php` dan `permissions.php`
+- [x] Membuat halaman React Index dengan tabel user, modal CRUD, dan tombol impersonasi
+- [x] Menghubungkan `ImpersonationBanner` pada `ConsoleLayout`
+- [x] Verifikasi dengan pengujian Pest PHP

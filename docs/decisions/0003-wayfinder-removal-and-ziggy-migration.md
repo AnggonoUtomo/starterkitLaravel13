@@ -1,22 +1,22 @@
-# ADR-003: Removal of Wayfinder and Migration to Ziggy
+# ADR-003: Pencopotan Wayfinder dan Migrasi ke Ziggy
 
 ## Status
-Accepted
+Diterima (Accepted)
 
-## Date
+## Tanggal
 2026-07-23
 
-## Context
-The project initially included `@laravel/vite-plugin-wayfinder` and `laravel/wayfinder`. However, Wayfinder enforces specific code-generation patterns that collided with the custom DDD-Lite submodule route auto-discovery mechanism.
+## Konteks & Masalah
+Proyek awalnya menyertakan `@laravel/vite-plugin-wayfinder` dan `laravel/wayfinder`. Namun Wayfinder memaksakan pola pembuat kode tertentu yang bentrok dengan mekanisme auto-discovery rute submodul DDD-Lite custom yang kita bangun.
 
-## Decision
-1. Remove `laravel/wayfinder` from Composer and `@laravel/vite-plugin-wayfinder` from NPM.
-2. Adopt `tightenco/ziggy` and `ziggy-js` as the client-side route helper engine for Inertia React pages (`route()`).
-3. Configure Vite resolution aliases to support clean imports from `@Modules`.
+## Keputusan
+1. Mencopot `laravel/wayfinder` dari Composer dan `@laravel/vite-plugin-wayfinder` dari NPM.
+2. Mengadopsi `tightenco/ziggy` dan `ziggy-js` sebagai engine helper rute client-side pada halaman Inertia React (`route()`).
+3. Mengonfigurasi alias Vite untuk mendukung impor kode yang bersih dari `@Modules`.
 
-## Alternatives Considered
-- **Keeping Wayfinder alongside Ziggy:** Rejected due to duplicate route generation overhead and typescript compilation conflicts.
+## Alternatif yang Dipertimbangkan
+- **Mempertahankan Wayfinder bersama Ziggy:** Ditolak karena duplikasi pendaftaran rute dan potensi konflik kompilasi TypeScript.
 
-## Consequences
-- Clean, familiar `route('console.user-management.index')` syntax in Inertia React.
-- Seamless compatibility with dynamic auto-discovered submodule routes.
+## Konsekuensi
+- Sintaks helper rute yang familiar dan bersih di React: `route('console.user-management.index')`.
+- Kompatibilitas sempurna dengan rute submodul yang didaftarkan secara dinamis.

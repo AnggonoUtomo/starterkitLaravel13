@@ -1,7 +1,7 @@
-# Submodule Task List: Console/SystemSetting
+# Daftar Tugas Submodul: Console/SystemSetting
 
-- [x] Implement `SystemHealthService` with DB & Redis ping safety
-- [x] Implement `SystemSettingController` for Inertia responses
-- [x] Declare `routes.php` and `permissions.php`
-- [x] Create React Index page with health status cards and module registry
-- [x] Verify with Pest tests
+- [x] Mengimplementasikan `SystemHealthService` dengan keamanan ping DB & Redis
+- [x] Mengimplementasikan `SystemSettingController` untuk respons Inertia
+- [x] Deklarasi `routes.php` dan `permissions.php`
+- [x] Membuat halaman React Index dengan kartu indikator kesehatan dan registrasi modul
+- [x] Verifikasi dengan pengujian Pest PHP

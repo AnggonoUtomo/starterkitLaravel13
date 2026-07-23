@@ -1,44 +1,45 @@
-# Master Architecture & Implementation Plan
+# Rencana Master Arsitektur & Pelaksanaan
 
-## Overview
-Decompose the starterkit development into 4 distinct phases: Infrastructure, Shared Kernel, Module Generator Tooling, and Core Console Submodules (`UserManagement`, `AccessControl`, `SystemSetting`).
+## Ringkasan
+Membagi pengembangan starterkit ke dalam 5 fase utama: Infrastruktur, Kernel Bersama, Alat CLI Generator, Submodul Utama Console, dan Ekosistem Observabilitas & CI/CD.
 
-## Architecture Decisions
-- **DDD-Lite Structure:** Modules organized under `app/Modules/{Module}/{Submodule}`.
-- **Auto-Discovery:** Routes and permissions automatically discovered via `ModuleServiceProvider`.
-- **Frontend Mirroring:** React pages stored under `resources/js/pages/{Module}/{Submodule}`.
+## Keputusan Arsitektur
+- **Struktur DDD-Lite:** Modul diorganisir di bawah `app/Modules/{Module}/{Submodule}`.
+- **Auto-Discovery:** Rute dan izin didaftarkan secara otomatis via `ModuleServiceProvider`.
+- **Penyelarasan Frontend:** Halaman React disimpan di `resources/js/pages/{Module}/{Submodule}`.
 
-## Task Breakdown
+## Rincian Perencanaan Tugas
 
-### Phase 1: Infrastructure & Dependencies Setup
-- [x] Task 1.1: Remove Wayfinder (`laravel/wayfinder` & `@laravel/vite-plugin-wayfinder`).
-- [x] Task 1.2: Install Ziggy (`tightenco/ziggy` & `ziggy-js`), Spatie Permission (`spatie/laravel-permission`), and Redis (`predis/predis`).
-- [x] Task 1.3: Install Framer Motion (`framer-motion`) and update `vite.config.ts`.
-- [x] Task 1.4: Update `.env` to configure Redis for Cache, Session, and Queue.
+### Fase 1: Setup Infrastruktur & Dependensi
+- [x] Tugas 1.1: Mencopot Wayfinder (`laravel/wayfinder` & `@laravel/vite-plugin-wayfinder`).
+- [x] Tugas 1.2: Menginstal Ziggy (`tightenco/ziggy` & `ziggy-js`), Spatie Permission (`spatie/laravel-permission`), dan Redis (`predis/predis`).
+- [x] Tugas 1.3: Menginstal Framer Motion (`framer-motion`) dan mengonfigurasi `vite.config.ts`.
+- [x] Tugas 1.4: Mengonfigurasi `.env` untuk Redis pada Cache, Session, dan Queue.
 
-### Phase 2: Shared Kernel Architecture
-- [x] Task 2.1: Create `ModuleServiceProvider` for auto-discovering routes and permissions.
-- [x] Task 2.2: Create Base DTO (`BaseDTO`), Domain Event Contract (`DomainEventContract`), and `AuditLogService`.
-- [x] Task 2.3: Register `ModuleServiceProvider` in `bootstrap/providers.php`.
+### Fase 2: Arsitektur Kernel Bersama (Shared Kernel)
+- [x] Tugas 2.1: Membuat `ModuleServiceProvider` untuk auto-discovery rute dan izin.
+- [x] Tugas 2.2: Membuat Base DTO (`BaseDTO`), Kontrak Event Domain (`DomainEventContract`), dan `AuditLogService`.
+- [x] Tugas 2.3: Mendaftarkan `ModuleServiceProvider` pada `bootstrap/providers.php`.
 
-### Phase 3: CLI Module Generator Tool
-- [x] Task 3.1: Create `php artisan make:module` command.
-- [x] Task 3.2: Implement auto-scaffolding of backend directories & frontend React pages.
+### Fase 3: Alat CLI Module Generator
+- [x] Tugas 3.1: Membuat perintah `php artisan make:module`.
+- [x] Tugas 3.2: Mengimplementasikan pembuatan otomatis direktori backend, frontend React, dan dokumentasi submodul.
 
-### Phase 4: Core Console Module Implementation
-- [x] Task 4.1: Build `Console/UserManagement` (User CRUD, Impersonation Mode, DTOs, Services, Controller, Routes, Permissions, React UI).
-- [x] Task 4.2: Build `Console/AccessControl` (Spatie Role CRUD, Visual Permission Matrix Grid, Controller, Routes, Permissions, React UI).
-- [x] Task 4.3: Build `Console/SystemSetting` (System Health Checks, Module Registry, Controller, Routes, Permissions, React UI).
-- [x] Task 4.4: Build `ConsoleLayout`, `CommandPalette` (`Ctrl+K`), and `ImpersonationBanner` with Framer Motion.
+### Fase 4: Implementasi Submodul Utama Console Admin
+- [x] Tugas 4.1: Membangun `Console/UserManagement` (CRUD User, Mode Impersonasi, DTO, Service, Controller, Rute, Izin, UI React).
+- [x] Tugas 4.2: Membangun `Console/AccessControl` (CRUD Role Spatie, Visual Permission Matrix Grid, Controller, Rute, Izin, UI React).
+- [x] Tugas 4.3: Membangun `Console/SystemSetting` (Pengecekan Kesehatan Sistem, Registry Modul, Controller, Rute, Izin, UI React).
+- [x] Tugas 4.4: Membangun `ConsoleLayout`, `CommandPalette` (`Ctrl+K`), dan `ImpersonationBanner` dengan animasi Framer Motion.
 
-### Phase 5: Console Expansion (AuditLog, Profile, Theme Management)
-- [ ] Task 5.1: Build `Console/AuditLog` (Domain Event logger integration, AuditLogQueryService, Controller, Routes, Permissions, React UI with detail drawer).
-- [ ] Task 5.2: Build `Console/Profile` (Fortify profile & security integration inside `ConsoleLayout`, Controller, Routes, Permissions, React UI).
-- [ ] Task 5.3: Add Dark/Light/System Theme Switcher in `ConsoleLayout` header.
+### Fase 5: Ekspansi Console, CI/CD, & Observabilitas
+- [x] Tugas 5.1: Membangun `Console/AuditLog` (Integrasi Event Logger Domain, AuditLogQueryService, Controller, Rute, Izin, UI React dengan detail drawer).
+- [x] Tugas 5.2: Membangun `Console/Profile` (Integrasi profil & keamanan Fortify di dalam `ConsoleLayout`, Controller, Rute, Izin, UI React).
+- [x] Tugas 5.3: Mengonfigurasi CI/CD GitHub Actions (`.github/workflows/ci.yml`) dengan PHP 8.4 dan Redis 7 container.
+- [x] Tugas 5.4: Membangun `ObservabilityService` untuk pemantauan performa runtime dan memori.
 
-## Verification Checkpoints
-- [x] Checkpoint 1: Database migrated & seeded (`php artisan migrate:fresh --seed`).
-- [x] Checkpoint 2: Vite assets built cleanly (`npm run build`).
-- [x] Checkpoint 3: Pest test suite passed 100% (`php artisan test`).
-- [x] Checkpoint 4: Code formatted cleanly via Pint and ESLint (`vendor/bin/pint --format agent` & `npm run lint`).
-- [ ] Checkpoint 5: AuditLog and Profile submodules pass Pest feature tests.
+## Titik Verifikasi (Verification Checkpoints)
+- [x] Checkpoint 1: Database berhasil dimigrasi & di-seed (`php artisan migrate:fresh --seed`).
+- [x] Checkpoint 2: Asset Vite terkompilasi bersih (`npm run build`).
+- [x] Checkpoint 3: Seluruh unit test Pest PHP lolos 100% (46/46 passed).
+- [x] Checkpoint 4: Kode terformat rapi via Pint dan ESLint (`vendor/bin/pint --format agent` & `npm run lint`).
+- [x] Checkpoint 5: Pipeline CI/CD GitHub Actions dan Observabilitas siap rilis.

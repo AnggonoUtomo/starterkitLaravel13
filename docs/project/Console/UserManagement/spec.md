@@ -1,20 +1,20 @@
-# Submodule Spec: Console/UserManagement
+# Spesifikasi Submodul: Console/UserManagement
 
-## Objective
-Provide user account management, Spatie role assignment, user search/filtering, and admin impersonation mode ("Log in as user").
+## Tujuan
+Menyediakan fitur pengelolaan akun pengguna, penugasan role Spatie, pencarian/penyaringan user, serta fitur impersonasi akun ("Masuk sebagai pengguna lain").
 
-## Tech Stack & Dependencies
-- Backend: `UserController`, `UserService`, `UserDTO`, `ImpersonateUserTransaction`
-- Spatie Traits: `HasRoles` on `User` Model
-- Frontend Page: `resources/js/pages/Console/UserManagement/Index.tsx`
-- Shared Components: `ImpersonationBanner.tsx` with Framer Motion
+## Teknologi & Dependensi
+- Backend: `UserController`, `UserService`, `UserDTO`
+- Trait Spatie: `HasRoles` pada Model `User`
+- Halaman Frontend: `resources/js/pages/Console/UserManagement/Index.tsx`
+- Komponen Bersama: `ImpersonationBanner.tsx` dengan animasi Framer Motion
 
-## Acceptance Criteria
-- [x] Admin can list paginated users with assigned Spatie roles.
-- [x] Admin can create a new user and assign roles.
-- [x] Admin can edit user information and sync roles.
-- [x] Admin can delete user accounts (except their own account).
-- [x] Admin can impersonate a user account, displaying a floating Framer Motion banner with an exit button.
+## Kriteria Keberhasilan
+- [x] Admin dapat melihat daftar pengguna dengan role Spatie yang ditugaskan.
+- [x] Admin dapat membuat pengguna baru dan menugaskan role.
+- [x] Admin dapat memperbarui informasi pengguna dan menyinkronkan role.
+- [x] Admin dapat menghapus akun pengguna (kecuali akun sendiri).
+- [x] Admin dapat mengimpersonasi pengguna lain, menampilkan banner melayang dengan tombol keluar.
 
-## Verification Steps
-- Run feature test: `php artisan test --filter=ModuleSystemTest`
+## Langkah Verifikasi
+- Pengujian Fitur Pest: `php artisan test --filter=ModuleSystemTest`

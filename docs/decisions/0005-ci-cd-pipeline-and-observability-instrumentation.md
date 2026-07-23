@@ -1,28 +1,28 @@
-# ADR-005: CI/CD Quality Pipeline and Observability Instrumentation
+# ADR-005: Pipeline Kualitas CI/CD dan Observabilitas Sistem
 
 ## Status
-Accepted
+Diterima (Accepted)
 
-## Date
+## Tanggal
 2026-07-23
 
-## Context
-To prepare for enterprise production shipping and automated code quality validation:
-1. Every commit and pull request must be verified by automated GitHub Actions CI.
-2. System health, Redis status, and performance metrics must be visible via observability endpoints.
-3. Pre-launch shipping checklists must be documented and verified.
+## Konteks & Masalah
+Untuk mempersiapkan rilis produksi dan pengujian kualitas kode otomatis:
+1. Setiap commit dan pull request wajib diuji oleh pipeline otomatis GitHub Actions CI.
+2. Kesehatan sistem, status Redis, dan penggunaan memori harus dapat dipantau melalui layanan observabilitas.
+3. Checklist rilis produksi harus terdokumentasi secara jelas.
 
-## Decision
-1. **GitHub Actions CI/CD Pipeline (`.github/workflows/ci.yml`)**:
-   - Runs on PHP 8.4 with Redis 7 service container.
-   - Quality Gates: Composer & NPM Dependency Caching, Pint Formatting Check, ESLint & TypeScript Checking, Vite Asset Build, and Pest Feature Test Suite (46+ tests).
-2. **Observability & Health Instrumentation**:
-   - `App\Shared\Services\ObservabilityService`: Tracks system metrics (request latency, memory usage, Redis status, DB connection status).
-   - `/up` and `/console/system-settings` health routes.
-3. **Shipping & Production Readiness Checklist (`docs/shipping-checklist.md`)**:
-   - Pre-deployment quality checks, environment secret handling, and zero-downtime deployment guidance.
+## Keputusan
+1. **Pipeline CI/CD GitHub Actions (`.github/workflows/ci.yml`)**:
+   - Berjalan pada PHP 8.4 dan container Redis 7.
+   - Quality Gates: Caching Composer/NPM, Pint Format Check, ESLint & TypeScript Check, Vite Build, dan Pest Test Suite (46+ test).
+2. **Observabilitas & Kesehatan Sistem**:
+   - `App\Shared\Services\ObservabilityService`: Mengukur indikator kesehatan sistem (latency Redis, status DB, alokasi memori).
+   - Rute kesehatan `/up` dan `/console/system-settings`.
+3. **Checklist Peluncuran Produksi (`docs/shipping-checklist.md`)**:
+   - Pengecekan sebelum rilis, penanganan secret lingkungan, dan panduan deployment.
 
-## Consequences
-- No broken code reaches `main` branch.
-- Instant visibility into application health and resource consumption.
-- Reliable, repeatable automated shipping process.
+## Konsekuensi
+- Tidak ada kode yang rusak lolos ke branch `main`.
+- Transparansi instan terhadap kesehatan server dan konsumsi sumber daya.
+- Proses peluncuran aplikasi yang terukur dan konsisten.

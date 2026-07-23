@@ -1,19 +1,19 @@
-# Submodule Spec: Console/AccessControl
+# Spesifikasi Submodul: Console/AccessControl
 
-## Objective
-Provide Spatie Role management and an interactive Visual Permission Matrix Grid (Roles vs Permissions grouped by Submodule).
+## Tujuan
+Menyediakan pengelolaan Role Spatie dan tampilan Matrix Izin Visual (Role vs Izin yang dikelompokkan per Submodul).
 
-## Tech Stack & Dependencies
+## Teknologi & Dependensi
 - Backend: `RoleController`, `RoleService`
 - Package: `spatie/laravel-permission`
 - Auto-Discovery: `ModuleServiceProvider::getDiscoveredPermissions()`
-- Frontend Page: `resources/js/pages/Console/AccessControl/Index.tsx`
+- Halaman Frontend: `resources/js/pages/Console/AccessControl/Index.tsx`
 
-## Acceptance Criteria
-- [x] Auto-discovered submodule permissions are synced into Spatie `permissions` table.
-- [x] Admin can view matrix grid showing permissions grouped by submodule vs roles.
-- [x] Admin can toggle permission assignments on roles in real time.
-- [x] Admin can create new roles and delete non-Super Admin roles.
+## Kriteria Keberhasilan
+- [x] Izin submodul yang terdeteksi otomatis tersinkronisasi ke tabel `permissions` Spatie.
+- [x] Admin dapat melihat grid matrix izin yang dikelompokkan berdasarkan submodul.
+- [x] Admin dapat mengubah status izin pada role secara real-time.
+- [x] Admin dapat membuat role baru dan menghapus role selain Super Admin.
 
-## Verification Steps
-- Run feature test: `php artisan test --filter=ModuleSystemTest`
+## Langkah Verifikasi
+- Pengujian Fitur Pest: `php artisan test --filter=ModuleSystemTest`

@@ -1,27 +1,27 @@
-# ADR-001: Modular DDD-Lite Architecture and ServiceProvider Auto-Discovery
+# ADR-001: Arsitektur Modular DDD-Lite dan Auto-Discovery ServiceProvider
 
 ## Status
-Accepted
+Diterima (Accepted)
 
-## Date
+## Tanggal
 2026-07-23
 
-## Context
-As the Laravel application grows, placing all Controllers, Services, and Models flat inside `app/Http/Controllers` and `app/Models` creates tight coupling and monolithic friction. We need an extensible structure where features can be isolated into self-contained Modules and Submodules, with mirrored frontend React structures.
+## Konteks & Masalah
+Seiring berkembangnya aplikasi Laravel, menempatkan seluruh Controller, Service, dan Model secara seragam di dalam folder `app/Http/Controllers` dan `app/Models` dapat menyebabkan keterikatan kode yang rumit. Kita membutuhkan struktur yang dapat dikembangkan dengan mudah di mana setiap fitur diisolasi ke dalam Modul dan Submodul independen, beserta struktur halaman React frontend yang sejajar.
 
-## Decision
-Adopt a **Modular DDD-Lite (Domain-Driven Design Lite)** directory architecture:
-1. Modules live in `app/Modules/{Module}/{Submodule}/`.
-2. Each submodule is self-contained with: `Database/`, `DTO/`, `Http/`, `Integration/`, `Models/`, `Policies/`, `Providers/`, `Services/`, `Support/`, `Transactions/`, `routes.php`, and `permissions.php`.
-3. Auto-Discovery: `App\Shared\Providers\ModuleServiceProvider` automatically scans and registers `routes.php` and `permissions.php` across all submodules.
-4. Frontend Mirroring: React page files live in `resources/js/pages/{Module}/{Submodule}/`.
-5. CLI Automation: `php artisan make:module` command generates the full backend and frontend scaffold.
+## Keputusan
+Menerapkan arsitektur direktori **Modular DDD-Lite (Domain-Driven Design Lite)**:
+1. Setiap Modul berlokasi di `app/Modules/{Module}/{Submodule}/`.
+2. Setiap submodul bersifat mandiri (*self-contained*) dengan folder: `Database/`, `DTO/`, `Http/`, `Integration/`, `Models/`, `Policies/`, `Providers/`, `Services/`, `Support/`, `Transactions/`, `routes.php`, dan `permissions.php`.
+3. Auto-Discovery: `App\Shared\Providers\ModuleServiceProvider` memindai dan mendaftarkan `routes.php` serta `permissions.php` dari seluruh submodul secara otomatis.
+4. Penyelarasan Frontend: Halaman React disimpan di `resources/js/pages/{Module}/{Submodule}/`.
+5. Otomatisasi CLI: Perintah `php artisan make:module` membuat struktur backend, frontend, dan dokumentasi submodul secara otomatis.
 
-## Alternatives Considered
-- **Nwidart/laravel-modules Package:** Rejected due to heavy opinionated overhead and extra package dependencies.
-- **Flat Standard Laravel Structure:** Rejected due to lack of modular boundary isolation.
+## Alternatif yang Dipertimbangkan
+- **Package nwidart/laravel-modules:** Ditolak karena terlalu berat dan menambah dependensi external yang tidak diperlukan.
+- **Struktur Standar Laravel Flat:** Ditolak karena kurang isolasi antar batas domain fitur.
 
-## Consequences
-- Clean separation of concerns per submodule.
-- Adding new features requires minimal configuration — simply run `php artisan make:module`.
-- Code changes in one submodule do not pollute other domain areas.
+## Konsekuensi
+- Pemisahan tanggung jawab kode (*separation of concerns*) yang sangat bersih pada setiap submodul.
+- Penambahan fitur baru sangat cepat — cukup jalankan `php artisan make:module`.
+- Perubahan kode pada satu submodul tidak mengganggu submodul domain lainnya.

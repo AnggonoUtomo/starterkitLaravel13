@@ -1,18 +1,18 @@
-# Submodule Plan: Console/UserManagement
+# Rencana Submodul: Console/UserManagement
 
-## Overview
-Build the User Management domain slice following DDD-Lite architecture rules.
+## Ringkasan
+Membangun domain pengelolaan pengguna mengikuti aturan arsitektur DDD-Lite.
 
-## Architecture
-- `DTO/UserDTO.php`: Transforms Eloquent User Model into clean data array.
-- `Services/UserService.php`: Encapsulates pagination, CRUD operations, and session impersonation logic.
-- `Http/Controllers/UserController.php`: Handles request validation and Inertia response rendering.
-- `routes.php`: Registers `console/users` routes with `console.user-management.` name prefix.
-- `permissions.php`: Declares `users.view`, `users.create`, `users.edit`, `users.delete`, `users.impersonate`.
+## Arsitektur
+- `DTO/UserDTO.php`: Mengubah Model Eloquent User menjadi struktur data DTO.
+- `Services/UserService.php`: Membungkus logika paginasi, operasi CRUD, dan sesi impersonasi.
+- `Http/Controllers/UserController.php`: Menangani validasi request dan respons Inertia.
+- `routes.php`: Mendaftarkan rute `console/users` dengan prefix nama `console.user-management.`.
+- `permissions.php`: Mengklarifikasikan izin `users.view`, `users.create`, `users.edit`, `users.delete`, `users.impersonate`.
 
-## Task Breakdown
-- [x] Task 1: Create `UserDTO.php`
-- [x] Task 2: Create `UserService.php`
-- [x] Task 3: Create `UserController.php`
-- [x] Task 4: Create `routes.php` and `permissions.php`
-- [x] Task 5: Create React page `resources/js/pages/Console/UserManagement/Index.tsx`
+## Rincian Tugas
+- [x] Tugas 1: Membuat `UserDTO.php`
+- [x] Tugas 2: Membuat `UserService.php`
+- [x] Tugas 3: Membuat `UserController.php`
+- [x] Tugas 4: Deklarasi `routes.php` dan `permissions.php`
+- [x] Tugas 5: Membuat halaman React `resources/js/pages/Console/UserManagement/Index.tsx`

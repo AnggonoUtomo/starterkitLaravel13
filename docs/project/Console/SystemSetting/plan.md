@@ -1,16 +1,16 @@
-# Submodule Plan: Console/SystemSetting
+# Rencana Submodul: Console/SystemSetting
 
-## Overview
-Implement System Health Monitoring and Module Registry dashboard.
+## Ringkasan
+Mengimplementasikan Pemantauan Kesehatan Sistem dan Dasbor Registrasi Modul.
 
-## Architecture
-- `Services/SystemHealthService.php`: Safely pings Database & Redis, collects environment config, and aggregates discovered module permissions.
-- `Http/Controllers/SystemSettingController.php`: Renders Inertia response.
-- `routes.php`: Registers `console/system-settings` routes.
-- `permissions.php`: Declares `system.view`, `system.manage`.
+## Arsitektur
+- `Services/SystemHealthService.php`: Memeriksa koneksi Database & Redis dengan aman, mengumpulkan konfigurasi lingkungan, dan merekap izin modul.
+- `Http/Controllers/SystemSettingController.php`: Rendring respons Inertia.
+- `routes.php`: Mendaftarkan rute `console/system-settings`.
+- `permissions.php`: Mengklarifikasikan izin `system.view`, `system.manage`.
 
-## Task Breakdown
-- [x] Task 1: Create `SystemHealthService.php`
-- [x] Task 2: Create `SystemSettingController.php`
-- [x] Task 3: Declare `routes.php` and `permissions.php`
-- [x] Task 4: Create React page `resources/js/pages/Console/SystemSetting/Index.tsx`
+## Rincian Tugas
+- [x] Tugas 1: Membuat `SystemHealthService.php`
+- [x] Tugas 2: Membuat `SystemSettingController.php`
+- [x] Tugas 3: Deklarasi `routes.php` dan `permissions.php`
+- [x] Tugas 4: Membuat halaman React `resources/js/pages/Console/SystemSetting/Index.tsx`
