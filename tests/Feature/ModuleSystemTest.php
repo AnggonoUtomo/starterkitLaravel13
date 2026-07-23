@@ -39,6 +39,7 @@ test('make:module artisan command generates scaffold files', function () {
     // Cleanup generated test files
     File::deleteDirectory(app_path("Modules/{$moduleName}"));
     File::deleteDirectory(resource_path("js/pages/{$moduleName}"));
+    File::deleteDirectory(base_path("docs/project/{$moduleName}"));
 });
 
 test('authenticated user can access console user management index', function () {
