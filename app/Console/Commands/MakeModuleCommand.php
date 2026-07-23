@@ -136,14 +136,15 @@ export default function Index({ title }: Props) {
 TSX;
         File::put("{$frontendPath}/Index.tsx", $frontendIndexContent);
 
-        // Generate Submodule Docs (spec.md, plan.md, todo.md)
-        File::makeDirectory("{$backendPath}/docs", 0755, true, true);
-        File::put("{$backendPath}/docs/spec.md", "# Submodule Spec: {$module}/{$submodule}\n\n## Objective\nDomain specification for {$submodule}.\n");
-        File::put("{$backendPath}/docs/plan.md", "# Submodule Plan: {$module}/{$submodule}\n\n## Implementation Plan\n- [ ] Initial scaffold created.\n");
-        File::put("{$backendPath}/docs/todo.md", "# Submodule Task List: {$module}/{$submodule}\n\n- [ ] Initial task setup.\n");
+        // Generate Submodule Docs in docs/project/{module}/{submodule}/ (spec.md, plan.md, todo.md)
+        $docsPath = base_path("docs/project/{$module}/{$submodule}");
+        File::makeDirectory($docsPath, 0755, true, true);
+        File::put("{$docsPath}/spec.md", "# Submodule Spec: {$module}/{$submodule}\n\n## Objective\nDomain specification for {$submodule}.\n");
+        File::put("{$docsPath}/plan.md", "# Submodule Plan: {$module}/{$submodule}\n\n## Implementation Plan\n- [ ] Initial scaffold created.\n");
+        File::put("{$docsPath}/todo.md", "# Submodule Task List: {$module}/{$submodule}\n\n- [ ] Initial task setup.\n");
 
         $this->info("✓ Backend scaffold created at: {$backendPath}");
-        $this->info("✓ Submodule documentation created at: {$backendPath}/docs");
+        $this->info("✓ Submodule documentation created at: {$docsPath}");
         $this->info("✓ Frontend scaffold created at: {$frontendPath}");
         $this->info("Submodule {$module}/{$submodule} created successfully!");
 
