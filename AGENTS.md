@@ -283,3 +283,13 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
 10. **Aturan Eksekusi Verification & `composer ci:check`:**
    - DILARANG menjalankan perintah `composer ci:check` secara otomatis setelah selesai coding kecuali diinstruksikan secara eksplisit oleh pengguna.
 
+11. **Pelarangan Folder `types/` Kosong pada Submodul Frontend:**
+   - DILARANG membuat atau menyisakan folder `types/` kosong di dalam direktori submodul frontend (`resources/js/pages/{Module}/{Submodule}/`).
+   - Seluruh definisi tipe TypeScript submodul WAJIB diletakkan pada berkas berkas tunggal `types.ts` di tingkat utama folder submodul tersebut (contoh: `resources/js/pages/Console/SystemSetting/types.ts`).
+
+12. **Aturan Perilaku Tooltip (Hover-Only Trigger):**
+   - Tooltip DILARANG terbuka/muncul secara otomatis saat halaman atau modal di-mount, maupun saat elemen menerima auto-focus (seperti setelah login, buka modal Add/Edit/Delete, dll.).
+   - Tooltip HANYA boleh muncul saat pengguna mengarahkan kursor (hover) secara eksplisit pada elemen trigger. `TooltipProvider` WAJIB dikonfigurasi dengan `delayDuration = 200` (atau lebih tinggi) dan elemen tombol info WAJIB memiliki penanganan agar tidak terfokus secara otomatis (`tabIndex={-1}`).
+
+
+

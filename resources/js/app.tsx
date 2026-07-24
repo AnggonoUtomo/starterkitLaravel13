@@ -14,10 +14,12 @@ createInertiaApp({
         switch (true) {
             case name === 'welcome':
                 return null;
+            case name === 'auth/confirm-password':
+                return SettingsLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
-                return [AppLayout, SettingsLayout];
+                return SettingsLayout;
             case name.startsWith('Console/') || name.startsWith('console/'):
                 return null;
             default:
@@ -27,7 +29,7 @@ createInertiaApp({
     strictMode: true,
     withApp(app) {
         return (
-            <TooltipProvider delayDuration={0}>
+            <TooltipProvider delayDuration={200}>
                 {app}
                 <Toaster />
             </TooltipProvider>

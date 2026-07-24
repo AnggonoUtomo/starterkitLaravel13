@@ -57,7 +57,7 @@ export default function CommandPalette() {
             title: 'My Profile',
             description: 'Manage profile info and account security',
             icon: <User className="h-4 w-4 text-emerald-500" />,
-            url: '/console/profile',
+            url: '/settings/profile',
         },
     ];
 

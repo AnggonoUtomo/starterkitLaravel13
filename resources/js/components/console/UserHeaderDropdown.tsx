@@ -113,7 +113,7 @@ export default function UserHeaderDropdown({ user }: UserHeaderDropdownProps) {
                         <DropdownMenuGroup className="space-y-0.5">
                             <DropdownMenuItem asChild>
                                 <Link
-                                    href="/console/profile"
+                                    href="/settings/profile"
                                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-foreground transition hover:bg-emerald-500/10 hover:text-emerald-500 enabled:cursor-pointer"
                                 >
                                     <User className="size-4 text-emerald-500" />

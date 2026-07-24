@@ -99,12 +99,12 @@ export default function ConsoleLayout({ children }: Props) {
     const footerNavItems = [
         {
             name: 'Profil Saya',
-            href: '/console/profile',
+            href: '/settings/profile',
             icon: UserCircle,
             iconColor: 'text-rose-500',
             activeClass:
                 'border border-rose-500/30 bg-rose-500/10 text-rose-500 font-semibold shadow-xs',
-            active: url.startsWith('/console/profile'),
+            active: url.startsWith('/settings/profile'),
         },
         {
             name: 'Kata Sandi',
@@ -167,7 +167,7 @@ export default function ConsoleLayout({ children }: Props) {
     };
 
     return (
-        <TooltipProvider delayDuration={0}>
+        <TooltipProvider delayDuration={200}>
             <div className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
                 {/* Impersonation Alert Banner */}
                 <ImpersonationBanner />
@@ -312,22 +312,18 @@ export default function ConsoleLayout({ children }: Props) {
                                             <TooltipTrigger asChild>
                                                 <Link
                                                     href={item.href}
-                                                    className={`flex items-center justify-center rounded-lg border transition enabled:cursor-pointer ${
+                                                    className={`group flex items-center justify-center rounded-lg border transition enabled:cursor-pointer ${
                                                         sidebarOpen
                                                             ? 'flex-1 px-2.5 py-2'
                                                             : 'size-9 p-2'
                                                     } ${
                                                         active
                                                             ? item.activeClass
-                                                            : 'border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
+                                                            : 'border-sidebar-border/60 bg-sidebar/80 text-foreground hover:border-sidebar-border hover:bg-sidebar-accent'
                                                     }`}
                                                 >
                                                     <Icon
-                                                        className={`size-4.5 shrink-0 ${
-                                                            active
-                                                                ? item.iconColor
-                                                                : 'opacity-80'
-                                                        }`}
+                                                        className={`size-4.5 shrink-0 ${item.iconColor} transition-transform group-hover:scale-110`}
                                                     />
                                                 </Link>
                                             </TooltipTrigger>

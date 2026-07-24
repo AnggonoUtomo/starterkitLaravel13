@@ -42,6 +42,8 @@ export function FieldInfoLabel({
                         <TooltipTrigger asChild>
                             <button
                                 type="button"
+                                tabIndex={-1}
+                                onFocus={(e) => e.preventDefault()}
                                 className="inline-flex items-center justify-center rounded text-muted-foreground/70 transition-colors hover:text-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                                 aria-label={`Informasi untuk ${label}`}
                             >

@@ -26,7 +26,7 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Profil Saya',
-        href: '/console/profile',
+        href: '/settings/profile',
         icon: UserCircle,
     },
     {

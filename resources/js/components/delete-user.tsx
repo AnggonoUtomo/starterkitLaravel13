@@ -1,9 +1,10 @@
 import { Form } from '@inertiajs/react';
-import { useRef } from 'react';
-import Heading from '@/components/heading';
+import { AlertTriangle, Trash2 } from 'lucide-react';
+import React, { useRef } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
     Dialog,
     DialogClose,
@@ -14,43 +15,60 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export default function DeleteUser() {
     const passwordInput = useRef<HTMLInputElement>(null);
 
     return (
-        <div className="space-y-6">
-            <Heading
-                variant="small"
-                title="Delete account"
-                description="Delete your account and all of its resources"
-            />
-            <div className="space-y-4 rounded-lg border border-destructive/20 bg-destructive/10 p-4">
-                <div className="relative space-y-0.5 text-destructive">
-                    <p className="font-medium">Warning</p>
-                    <p className="text-sm">
-                        Please proceed with caution, this cannot be undone.
+        <Card className="min-w-0 overflow-hidden border-destructive/30">
+            <CardContent className="space-y-4 p-5 sm:p-6">
+                <div className="space-y-1 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-xs text-destructive">
+                    <p className="flex items-center gap-1.5 font-bold">
+                        <AlertTriangle className="size-4 shrink-0" />
+                        <span>Peringatan Penting:</span>
+                    </p>
+                    <p className="leading-relaxed">
+                        Harap berhati-hati. Setelah akun Anda dihapus, seluruh
+                        data dan akses tidak dapat dipulihkan kembali.
                     </p>
                 </div>
 
                 <Dialog>
-                    <DialogTrigger asChild>
-                        <Button
-                            variant="destructive"
-                            data-test="delete-user-button"
-                        >
-                            Delete account
-                        </Button>
-                    </DialogTrigger>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant="destructive"
+                                        data-test="delete-user-button"
+                                        className="cursor-pointer gap-2"
+                                    >
+                                        <Trash2 className="size-4" />
+                                        <span>Hapus Akun Permanen</span>
+                                    </Button>
+                                </DialogTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="text-xs">
+                                Buka konfirmasi penghapusan akun permanen
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+
                     <DialogContent>
                         <DialogTitle>
-                            Are you sure you want to delete your account?
+                            Apakah Anda yakin ingin menghapus akun ini?
                         </DialogTitle>
-                        <DialogDescription>
-                            Once your account is deleted, all of its resources
-                            and data will also be permanently deleted. Please
-                            enter your password to confirm you would like to
-                            permanently delete your account.
+                        <DialogDescription className="text-xs">
+                            Setelah akun dihapus, seluruh resource dan data
+                            terkait akan dihapus secara permanen. Silakan
+                            masukkan kata sandi Anda untuk mengonfirmasi
+                            tindakan ini.
                         </DialogDescription>
 
                         <Form
@@ -61,26 +79,24 @@ export default function DeleteUser() {
                             }}
                             onError={() => passwordInput.current?.focus()}
                             resetOnSuccess
-                            className="space-y-6"
+                            className="space-y-4"
                         >
                             {({ resetAndClearErrors, processing, errors }) => (
                                 <>
-                                    <div className="grid gap-2">
+                                    <div className="space-y-2">
                                         <Label
                                             htmlFor="password"
-                                            className="sr-only"
+                                            className="text-xs font-semibold"
                                         >
-                                            Password
+                                            Kata Sandi Konfirmasi
                                         </Label>
-
                                         <PasswordInput
                                             id="password"
                                             name="password"
                                             ref={passwordInput}
-                                            placeholder="Password"
+                                            placeholder="Masukkan kata sandi Anda"
                                             autoComplete="current-password"
                                         />
-
                                         <InputError message={errors.password} />
                                     </div>
 
@@ -88,25 +104,22 @@ export default function DeleteUser() {
                                         <DialogClose asChild>
                                             <Button
                                                 variant="secondary"
+                                                type="button"
                                                 onClick={() =>
                                                     resetAndClearErrors()
                                                 }
                                             >
-                                                Cancel
+                                                Batal
                                             </Button>
                                         </DialogClose>
 
                                         <Button
                                             variant="destructive"
                                             disabled={processing}
-                                            asChild
+                                            type="submit"
+                                            data-test="confirm-delete-user-button"
                                         >
-                                            <button
-                                                type="submit"
-                                                data-test="confirm-delete-user-button"
-                                            >
-                                                Delete account
-                                            </button>
+                                            Ya, Hapus Akun Saya
                                         </Button>
                                     </DialogFooter>
                                 </>
@@ -114,7 +127,7 @@ export default function DeleteUser() {
                         </Form>
                     </DialogContent>
                 </Dialog>
-            </div>
-        </div>
+            </CardContent>
+        </Card>
     );
 }
