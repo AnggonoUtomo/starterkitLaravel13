@@ -241,6 +241,6 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
    - `Index.tsx` hanya bertugas menyusun state utama dan memanggil komponen-komponen submodul tersebut.
    - Komponen bersama (*Global Shared Components*) seperti layout atau UI primitives tetap berada di folder global aslinya (`resources/js/components/`).
 
-
-
-
+7. **Kelengkapan Dokumentasi `todo.md` (*Detailed Todo Checklist*):**
+   - Pada setiap item checklist `todo.md` yang selesai dikerjakan, WAJIB menyertakan penjelasan detail mengenai apa yang telah diselesaikan.
+   - Cantumkan rincian tautan berkas yang dibuat (`[NEW]`), diubah (`[MODIFY]`), atau dijadikan referensi (`[REFERENCE]`) beserta deskripsi singkat kontribusinya.
