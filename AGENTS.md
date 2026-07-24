@@ -255,7 +255,9 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
      - Header Sub-Modul / Kategori: `text-[11.5px] font-bold uppercase tracking-wider text-muted-foreground/90`.
      - Header Parent Card / Role: `text-xs font-bold text-foreground`.
      - Label Input & Badge Status: `text-xs font-semibold`.
-     - Susunan Item Permission / Data: Dibariskas secara vertikal dari atas ke bawah (`flex flex-col gap-1.5`) per kategori sub-modul.
+   - **Frontend Global Layout & Sticky Sidebar Standard:**
+     - Header Nav: `sticky top-0 z-40 h-16` dengan efek backdrop blur.
+     - Sidebar Navigation: Terkunci di tempatnya secara permanen (`sticky top-16 z-30 h-[calc(100vh-4rem)] flex-col shrink-0`) dengan scrollbar mandiri di dalam kontainer (`overflow-y-auto`) agar tidak terpengaruh oleh scroll area halaman utama.
    - **Backend Payload & DTO Pattern:**
      - DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`).
      - Support query filtering untuk `search` dan `role` pada method pagination.

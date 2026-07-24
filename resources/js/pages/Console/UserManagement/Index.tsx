@@ -11,24 +11,12 @@ import type {
     UserWorkspaceMode,
     RoleOptionItem,
     PermissionGroupItem,
+    UserData,
 } from './components/UserWorkspaceCard';
 import UserWorkspaceCard from './components/UserWorkspaceCard';
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    initials?: string;
-    roles: string[];
-    rolePermissions?: Record<string, string[]>;
-    permissions?: string[];
-    effectivePermissions?: string[];
-    primaryRole?: string;
-    created_at?: string;
-}
-
 interface PaginatedUsers {
-    data: User[];
+    data: UserData[];
     links: any[];
     total: number;
     current_page: number;
@@ -58,12 +46,26 @@ export default function Index({
 }: Props) {
     const [search, setSearch] = useState(filters.search || '');
     const [roleFilter, setRoleFilter] = useState(filters.role || '');
-    const [selectedUser, setSelectedUser] = useState<User | null>(
+    const [selectedUser, setSelectedUser] = useState<UserData | null>(
         users.data[0] || null,
     );
     const [workspaceMode, setWorkspaceMode] = useState<UserWorkspaceMode>('detail');
-    const [deletingUser, setDeletingUser] = useState<User | null>(null);
-    const [impersonatingUser, setImpersonatingUser] = useState<User | null>(null);
+    const [deletingUser, setDeletingUser] = useState<UserData | null>(null);
+    const [impersonatingUser, setImpersonatingUser] = useState<UserData | null>(null);
+
+    // Synchronize selectedUser state with fresh users.data props from server without extra renders (React 19 pattern)
+    const [prevUsersData, setPrevUsersData] = useState(users.data);
+
+    if (prevUsersData !== users.data) {
+        setPrevUsersData(users.data);
+
+        if (selectedUser) {
+            const updated = users.data.find((u) => u.id === selectedUser.id);
+            setSelectedUser(updated || users.data[0] || null);
+        } else {
+            setSelectedUser(users.data[0] || null);
+        }
+    }
 
     // Form Hook for Create / Edit
     const form = useForm({
@@ -153,13 +155,13 @@ export default function Index({
         return () => window.removeEventListener('keydown', handleShortcut);
     }, [selectedUser, handleStartCreate, handleCancelWorkspace]);
 
-    // Handlers
+    // SPA Search & Filter Handlers
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         router.get(
             '/console/users',
             { search, role: roleFilter },
-            { preserveState: true },
+            { preserveState: true, preserveScroll: true, replace: true },
         );
     };
 
@@ -168,16 +170,16 @@ export default function Index({
         router.get(
             '/console/users',
             { search, role: newRole },
-            { preserveState: true },
+            { preserveState: true, preserveScroll: true, replace: true },
         );
     };
 
-    const handleSelectUser = (user: User) => {
+    const handleSelectUser = (user: UserData) => {
         setSelectedUser(user);
         setWorkspaceMode('detail');
     };
 
-    const handleStartEdit = (user: User) => {
+    const handleStartEdit = (user: UserData) => {
         setSelectedUser(user);
         form.setData({
             name: user.name,
@@ -189,9 +191,12 @@ export default function Index({
         setWorkspaceMode('edit');
     };
 
+    // SPA CRUD Form Handlers
     const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         form.post('/console/users', {
+            preserveScroll: true,
+            preserveState: true,
             onSuccess: () => {
                 form.reset();
                 setWorkspaceMode('detail');
@@ -207,6 +212,8 @@ export default function Index({
         }
 
         form.put(`/console/users/${selectedUser.id}`, {
+            preserveScroll: true,
+            preserveState: true,
             onSuccess: () => {
                 form.reset();
                 setWorkspaceMode('detail');
@@ -214,19 +221,17 @@ export default function Index({
         });
     };
 
-    const handleConfirmDelete = (user: User) => {
+    const handleConfirmDelete = (user: UserData) => {
         router.delete(`/console/users/${user.id}`, {
+            preserveScroll: true,
+            preserveState: true,
             onSuccess: () => {
                 setDeletingUser(null);
-
-                if (selectedUser?.id === user.id) {
-                    setSelectedUser(users.data.find((u) => u.id !== user.id) || null);
-                }
             },
         });
     };
 
-    const handleConfirmImpersonate = (user: User) => {
+    const handleConfirmImpersonate = (user: UserData) => {
         router.post(`/console/users/${user.id}/impersonate`, {}, {
             onSuccess: () => {
                 setImpersonatingUser(null);

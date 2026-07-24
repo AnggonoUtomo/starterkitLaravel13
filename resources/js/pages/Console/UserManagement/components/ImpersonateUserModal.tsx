@@ -1,17 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserCheck, X } from 'lucide-react';
 import React from 'react';
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
+import type { UserData } from './UserWorkspaceCard';
 
 interface ImpersonateUserModalProps {
-    impersonatingUser: User | null;
+    impersonatingUser: UserData | null;
     onClose: () => void;
-    onConfirmImpersonate: (user: User) => void;
+    onConfirmImpersonate: (user: UserData) => void;
 }
 
 export default function ImpersonateUserModal({

@@ -1,17 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, X } from 'lucide-react';
 import React from 'react';
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
+import type { UserData } from './UserWorkspaceCard';
 
 interface DeleteUserModalProps {
-    deletingUser: User | null;
+    deletingUser: UserData | null;
     onClose: () => void;
-    onConfirmDelete: (user: User) => void;
+    onConfirmDelete: (user: UserData) => void;
 }
 
 export default function DeleteUserModal({

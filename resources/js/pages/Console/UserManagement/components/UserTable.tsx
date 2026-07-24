@@ -119,7 +119,7 @@ export default function UserTable({
                                         onClick={() => onSelectUser(user)}
                                         className={`transition cursor-pointer ${
                                             isSelected
-                                                ? 'bg-emerald-500/10 dark:bg-emerald-500/15'
+                                                ? 'bg-emerald-500/10'
                                                 : 'hover:bg-muted/40'
                                         }`}
                                     >

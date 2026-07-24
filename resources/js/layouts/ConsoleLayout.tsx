@@ -227,64 +227,66 @@ export default function ConsoleLayout({ children }: Props) {
                 </header>
 
                 <div className="flex flex-1">
-                    {/* Sidebar Navigation */}
+                    {/* Fixed Sticky Sidebar Navigation with Independent Scrollbar */}
                     <aside
-                        className={`flex shrink-0 flex-col gap-1 border-r border-sidebar-border bg-sidebar p-3 transition-all duration-300 ease-in-out ${
+                        className={`sticky top-16 z-30 flex h-[calc(100vh-4rem)] shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300 ease-in-out ${
                             sidebarOpen ? 'w-64' : 'w-16 items-center'
                         }`}
                     >
-                        {sidebarOpen && (
-                            <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
-                                Console Modules
-                            </div>
-                        )}
-                        {navItems.map((item) => {
-                            const Icon = item.icon;
+                        <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 scrollbar-thin">
+                            {sidebarOpen && (
+                                <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                    Console Modules
+                                </div>
+                            )}
+                            {navItems.map((item) => {
+                                const Icon = item.icon;
 
-                            const linkElement = (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className={`flex items-center gap-3 rounded-lg text-sm font-medium transition ${
-                                        sidebarOpen
-                                            ? 'w-full justify-start px-3 py-2.5'
-                                            : 'justify-center p-2.5'
-                                    } ${
-                                        item.active
-                                            ? item.activeClass
-                                            : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
-                                    }`}
-                                >
-                                    <Icon
-                                        className={`h-5 w-5 shrink-0 transition-colors ${
+                                const linkElement = (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        className={`flex items-center gap-3 rounded-lg text-sm font-medium transition ${
+                                            sidebarOpen
+                                                ? 'w-full justify-start px-3 py-2.5'
+                                                : 'justify-center p-2.5'
+                                        } ${
                                             item.active
-                                                ? item.iconColor
-                                                : `${item.iconColor} opacity-75 group-hover:opacity-100`
+                                                ? item.activeClass
+                                                : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
                                         }`}
-                                    />
-                                    {sidebarOpen && <span>{item.name}</span>}
-                                </Link>
-                            );
-
-                            if (!sidebarOpen) {
-                                return (
-                                    <Tooltip key={item.name}>
-                                        <TooltipTrigger asChild>
-                                            {linkElement}
-                                        </TooltipTrigger>
-                                        <TooltipContent side="right">
-                                            {item.name}
-                                        </TooltipContent>
-                                    </Tooltip>
+                                    >
+                                        <Icon
+                                            className={`h-5 w-5 shrink-0 transition-colors ${
+                                                item.active
+                                                    ? item.iconColor
+                                                    : `${item.iconColor} opacity-75 group-hover:opacity-100`
+                                            }`}
+                                        />
+                                        {sidebarOpen && <span>{item.name}</span>}
+                                    </Link>
                                 );
-                            }
 
-                            return linkElement;
-                        })}
+                                if (!sidebarOpen) {
+                                    return (
+                                        <Tooltip key={item.name}>
+                                            <TooltipTrigger asChild>
+                                                {linkElement}
+                                            </TooltipTrigger>
+                                            <TooltipContent side="right">
+                                                {item.name}
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    );
+                                }
+
+                                return linkElement;
+                            })}
+                        </div>
                     </aside>
 
                     {/* Main Content Area */}
-                    <div className="flex flex-1 flex-col overflow-x-hidden">
+                    <div className="flex flex-1 flex-col overflow-x-hidden min-w-0">
                         {/* Flash messages */}
                         {flash?.success && (
                             <div className="m-4 mb-0 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-950/60 p-3 text-sm text-emerald-300">
