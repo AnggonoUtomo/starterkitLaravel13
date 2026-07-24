@@ -9,39 +9,8 @@ import UserManagementHeader from './components/UserManagementHeader';
 import UserShortcutPanel from './components/UserShortcutPanel';
 import UserSummaryCards from './components/UserSummaryCards';
 import UserTable from './components/UserTable';
-import type {
-    RoleOptionItem,
-    PermissionGroupItem,
-    UserData,
-} from './components/UserWorkspaceCard';
 import UserWorkspaceCard from './components/UserWorkspaceCard';
-
-interface PaginatedUsers {
-    data: UserData[];
-    links: {
-        url: string | null;
-        label: string;
-        active: boolean;
-    }[];
-    total: number;
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    from: number;
-    to: number;
-}
-
-interface Props {
-    title: string;
-    users: PaginatedUsers;
-    availableRoles: string[];
-    rolesWithPermissions?: RoleOptionItem[];
-    permissionGroups?: PermissionGroupItem[];
-    filters: {
-        search: string;
-        role?: string;
-    };
-}
+import type { UserData, UserManagementIndexProps } from './types';
 
 export default function Index({
     title,
@@ -50,7 +19,7 @@ export default function Index({
     rolesWithPermissions = [],
     permissionGroups = [],
     filters,
-}: Props) {
+}: UserManagementIndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [roleFilter, setRoleFilter] = useState(filters.role || '');
     const [selectedUser, setSelectedUser] = useState<UserData | null>(

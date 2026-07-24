@@ -2,27 +2,7 @@ import { Link } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, Eye, UserCheck } from 'lucide-react';
 import React from 'react';
 import ConsoleEmptyState from '@/components/console/ConsoleEmptyState';
-import type { PaginationLink } from '../../UserManagement/components/UserTable';
-
-interface AuditLog {
-    id: string;
-    event_name: string;
-    caused_by_user_id?: number | null;
-    caused_by_user_name: string;
-    payload: Record<string, any>;
-    timestamp: string;
-}
-
-interface AuditLogTableProps {
-    logs: AuditLog[];
-    totalLogs?: number;
-    currentPage?: number;
-    lastPage?: number;
-    from?: number;
-    to?: number;
-    paginationLinks?: PaginationLink[];
-    onSelectLog: (log: AuditLog) => void;
-}
+import type { AuditLogTableProps } from '../types';
 
 export default function AuditLogTable({
     logs,

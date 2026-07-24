@@ -2,19 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import React from 'react';
 
-interface AuditLog {
-    id: string;
-    event_name: string;
-    caused_by_user_id?: number | null;
-    caused_by_user_name: string;
-    payload: Record<string, any>;
-    timestamp: string;
-}
-
-interface AuditPayloadDrawerProps {
-    selectedLog: AuditLog | null;
-    onClose: () => void;
-}
+import type { AuditPayloadDrawerProps } from '../types';
 
 export default function AuditPayloadDrawer({
     selectedLog,

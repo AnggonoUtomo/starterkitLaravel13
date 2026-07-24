@@ -16,60 +16,13 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-
-export type UserWorkspaceMode = 'detail' | 'create' | 'edit';
-
-export interface PermissionItem {
-    id: number;
-    name: string;
-}
-
-export interface PermissionGroupItem {
-    module: string;
-    permissions: PermissionItem[];
-}
-
-export interface RoleOptionItem {
-    id: number;
-    name: string;
-    permissions: string[];
-}
-
-export interface UserData {
-    id: number;
-    name: string;
-    email: string;
-    initials?: string;
-    roles: string[];
-    rolePermissions?: Record<string, string[]>;
-    permissions?: string[];
-    effectivePermissions?: string[];
-    primaryRole?: string;
-    created_at?: string;
-}
-
-interface UserWorkspaceCardProps {
-    mode: UserWorkspaceMode;
-    selectedUser: UserData | null;
-    formData: {
-        name: string;
-        email: string;
-        password?: string;
-        roles: string[];
-        permissions: string[];
-    };
-    availableRoles: string[];
-    rolesWithPermissions: RoleOptionItem[];
-    permissionGroups: PermissionGroupItem[];
-    isProcessing: boolean;
-    onFieldChange: (field: string, value: any) => void;
-    onSubmitCreate: (e: React.FormEvent) => void;
-    onSubmitEdit: (e: React.FormEvent) => void;
-    onCancel: () => void;
-    onStartEdit: (user: UserData) => void;
-    onStartDelete: (user: UserData) => void;
-    onStartImpersonate: (user: UserData) => void;
-}
+import type {
+    UserData,
+    UserWorkspaceMode,
+    UserWorkspaceCardProps,
+    RoleOptionItem,
+    PermissionGroupItem,
+} from '../types';
 
 /**
  * Helper component to render permissions grouped by module category in a clean vertical stack with clear font sizes.

@@ -8,13 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import type { UserData } from './UserWorkspaceCard';
-
-interface DeleteUserModalProps {
-    deletingUser: UserData | null;
-    onClose: () => void;
-    onConfirmDelete: (user: UserData) => void;
-}
+import type { DeleteUserModalProps } from '../types';
 
 export default function DeleteUserModal({
     deletingUser,

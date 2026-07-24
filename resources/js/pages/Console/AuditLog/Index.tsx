@@ -2,40 +2,12 @@ import { Head, router } from '@inertiajs/react';
 import React, { useState } from 'react';
 import ConsoleFilterBar from '@/components/console/ConsoleFilterBar';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
-import type { PaginationLink } from '../UserManagement/components/UserTable';
 import AuditLogHeader from './components/AuditLogHeader';
 import AuditLogTable from './components/AuditLogTable';
 import AuditPayloadDrawer from './components/AuditPayloadDrawer';
+import type { AuditLog, AuditLogIndexProps } from './types';
 
-interface AuditLog {
-    id: string;
-    event_name: string;
-    caused_by_user_id?: number | null;
-    caused_by_user_name: string;
-    payload: Record<string, any>;
-    timestamp: string;
-}
-
-interface PaginatedLogs {
-    data: AuditLog[];
-    links: PaginationLink[];
-    total: number;
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    from: number;
-    to: number;
-}
-
-interface Props {
-    title: string;
-    logs: PaginatedLogs;
-    filters: {
-        search: string;
-    };
-}
-
-export default function Index({ title, logs, filters }: Props) {
+export default function Index({ title, logs, filters }: AuditLogIndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
 

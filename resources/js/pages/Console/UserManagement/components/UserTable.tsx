@@ -18,35 +18,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { UserData } from './UserWorkspaceCard';
-
-export interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
-
-interface UserTableProps {
-    users: UserData[];
-    selectedUser: UserData | null;
-    search: string;
-    roleFilter: string;
-    availableRoles: string[];
-    totalUsers: number;
-    currentPage?: number;
-    lastPage?: number;
-    from?: number;
-    to?: number;
-    paginationLinks?: PaginationLink[];
-    onSearchChange: (val: string) => void;
-    onRoleFilterChange: (role: string) => void;
-    onSearchSubmit: (e: React.FormEvent) => void;
-    onSelectUser: (user: UserData) => void;
-    onOpenCreate: () => void;
-    onOpenEdit: (user: UserData) => void;
-    onOpenDelete: (user: UserData) => void;
-    onOpenImpersonate: (user: UserData) => void;
-}
+import type { UserData, PaginationLink, UserTableProps } from '../types';
 
 export default function UserTable({
     users,

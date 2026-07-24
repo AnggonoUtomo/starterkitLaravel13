@@ -67,7 +67,7 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
 ## Alat (Tools)
 
 - Laravel Boost adalah MCP server dengan alat yang dirancang khusus untuk aplikasi ini. Utamakan penggunaan alat Boost daripada opsi manual seperti perintah shell atau pembacaan berkas langsung.
-- Gunakan `database-query` untuk menjalankan query *read-only* ke database alih-alih menulis SQL mentah di tinker.
+- Gunakan `database-query` untuk menjalankan query _read-only_ ke database alih-alih menulis SQL mentah di tinker.
 - Gunakan `database-schema` untuk memeriksa struktur tabel sebelum membuat migrasi atau model.
 - Gunakan `get-absolute-url` untuk mendapatkan skema URL, domain, dan port proyek secara tepat sebelum membagikan URL kepada pengguna.
 - Gunakan `browser-logs` untuk membaca log, error, dan pengecualian browser. Hanya log terbaru yang berguna, abaikan log lama.
@@ -96,7 +96,7 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
 
 - Eksekusi PHP dalam konteks aplikasi untuk debugging dan pengujian kode. Jangan membuat model tanpa persetujuan pengguna, utamakan pengujian dengan factory. Utamakan perintah Artisan yang ada dibanding menulis kode tinker kustom.
 - Selalu gunakan kutip tunggal untuk mencegah ekspansi shell: `php artisan tinker --execute 'Your::code();'`
-  - Gunakan kutip ganda untuk string PHP di dalamnya: `php artisan tinker --execute 'User::where("active", true)->count();'`
+    - Gunakan kutip ganda untuk string PHP di dalamnya: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
 === aturan php ===
 
@@ -136,7 +136,7 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
 - Gunakan seluruh fitur Inertia dari v1, v2, dan v3. Periksa dokumentasi sebelum melakukan perubahan untuk memastikan pendekatan yang tepat.
 - Fitur baru v3: standalone HTTP requests (hook `useHttp`), optimistic updates dengan automatic rollback, layout props (hook `useLayoutProps`), instant visits, penyederhanaan SSR via plugin `@inertiajs/vite`, penanganan kustom exception untuk halaman error.
 - Fitur turunan v2: deferred props, infinite scroll, merging props, polling, prefetching, once props, flash data.
-- Saat menggunakan deferred props, tambahkan kondisi tampilan kosong (*empty state*) dengan animasi pulsing atau skeleton.
+- Saat menggunakan deferred props, tambahkan kondisi tampilan kosong (_empty state_) dengan animasi pulsing atau skeleton.
 - Axios telah dihapus. Gunakan client XHR bawaan dengan interceptor, atau instal Axios secara terpisah jika diperlukan.
 - `Inertia::lazy()` / `LazyProp` telah dihapus. Gunakan `Inertia::optional()` sebagai gantinya.
 - Tipe prop (`Inertia::optional()`, `Inertia::defer()`, `Inertia::merge()`) bekerja di dalam array bersarang menggunakan notasi titik (dot notation).
@@ -212,88 +212,89 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
 # Standar & Aturan Pengembangan Proyek (Persisten)
 
 1. **Konfirmasi Commit & Push Git:**
-   - WAJIB meminta konfirmasi eksplisit dari pengguna sebelum menjalankan `git commit` atau `git push`.
-   - Tampilkan rincian daftar berkas yang ditambah/diubah/dihapus beserta usulan pesan commit sebelum meminta konfirmasi.
+    - WAJIB meminta konfirmasi eksplisit dari pengguna sebelum menjalankan `git commit` atau `git push`.
+    - Tampilkan rincian daftar berkas yang ditambah/diubah/dihapus beserta usulan pesan commit sebelum meminta konfirmasi.
 
 2. **Bahasa Dokumentasi & Commit:**
-   - Seluruh dokumen teknis (`spec.md`, `plan.md`, `todo.md`, ADR) dan pesan git commit WAJIB menggunakan Bahasa Indonesia yang sederhana dan jelas tanpa mengubah konteks teknis.
-   - Format prefix commit: `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `ci: ...`, `chore: ...`.
+    - Seluruh dokumen teknis (`spec.md`, `plan.md`, `todo.md`, ADR) dan pesan git commit WAJIB menggunakan Bahasa Indonesia yang sederhana dan jelas tanpa mengubah konteks teknis.
+    - Format prefix commit: `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `ci: ...`, `chore: ...`.
 
 3. **Sentralisasi & Kategorisasi Dokumentasi:**
-   - Semua dokumentasi tersimpan terpusat di folder `docs/`.
-   - Dokumentasi per-submodul WAJIB dikategorikan secara terpisah ke dalam subfolder `frontend/` dan `backend/`:
-     - FrontEnd: `docs/project/{Module}/{Submodule}/frontend/` (`spec.md`, `plan.md`, `todo.md`)
-     - BackEnd: `docs/project/{Module}/{Submodule}/backend/` (`spec.md`, `plan.md`, `todo.md`)
+    - Semua dokumentasi tersimpan terpusat di folder `docs/`.
+    - Dokumentasi per-submodul WAJIB dikategorikan secara terpisah ke dalam subfolder `frontend/` dan `backend/`:
+        - FrontEnd: `docs/project/{Module}/{Submodule}/frontend/` (`spec.md`, `plan.md`, `todo.md`)
+        - BackEnd: `docs/project/{Module}/{Submodule}/backend/` (`spec.md`, `plan.md`, `todo.md`)
 
 4. **Arsitektur Modular DDD-Lite:**
-   - Setiap fitur dibungkus sebagai submodul di `app/Modules/{Module}/{Submodule}/`.
-   - Generator CLI `php artisan make:module {Module}/{Submodule}` otomatis membuat struktur backend, frontend React, dan dokumentasi submodul dalam Bahasa Indonesia.
+    - Setiap fitur dibungkus sebagai submodul di `app/Modules/{Module}/{Submodule}/`.
+    - Generator CLI `php artisan make:module {Module}/{Submodule}` otomatis membuat struktur backend, frontend React, dan dokumentasi submodul dalam Bahasa Indonesia.
 
-5. **Pola Implementasi Bertahap (*Incremental Slicing*):**
-   - Setiap tugas/fitur WAJIB dikerjakan secara iris-demi-iris (*incremental slicing*) bagian per bagian sesuai dokumen/rencana.
-   - Dilarang keras mengerjakan seluruh perubahan sekaligus dalam satu langkah besar.
-   - Selesaikan 1 slice kecil, komunikasikan & tunjukkan hasilnya agar pengguna dapat mempelajari pola kode yang terbentuk, lalu kembangkan slice berikutnya.
+5. **Pola Implementasi Bertahap (_Incremental Slicing_):**
+    - Setiap tugas/fitur WAJIB dikerjakan secara iris-demi-iris (_incremental slicing_) bagian per bagian sesuai dokumen/rencana.
+    - Dilarang keras mengerjakan seluruh perubahan sekaligus dalam satu langkah besar.
+    - Selesaikan 1 slice kecil, komunikasikan & tunjukkan hasilnya agar pengguna dapat mempelajari pola kode yang terbentuk, lalu kembangkan slice berikutnya.
 
-6. **Pemisahan Komponen Spesifik Submodul (*Submodule Frontend Modularization*):**
-   - Dilarang menumpuk seluruh elemen UI dalam 1 file `Index.tsx`.
-   - Pisahkan komponen spesifik submodul (misal: Header, Table, Modals) ke dalam folder `components/` lokal di samping `Index.tsx` submodul tersebut (contoh: `resources/js/pages/Console/{Submodule}/components/`).
-   - `Index.tsx` hanya bertugas menyusun state utama dan memanggil komponen-komponen submodul tersebut.
-   - Komponen bersama (*Global Shared Components*) seperti layout atau UI primitives tetap berada di folder global aslinya (`resources/js/components/`).
+6. **Pemisahan Komponen Spesifik Submodul (_Submodule Frontend Modularization_):**
+    - Dilarang menumpuk seluruh elemen UI dalam 1 file `Index.tsx`.
+    - Pisahkan komponen spesifik submodul (misal: Header, Table, Modals) ke dalam folder `components/` lokal di samping `Index.tsx` submodul tersebut (contoh: `resources/js/pages/Console/{Submodule}/components/`).
+    - `Index.tsx` hanya bertugas menyusun state utama dan memanggil komponen-komponen submodul tersebut.
+    - Komponen bersama (_Global Shared Components_) seperti layout atau UI primitives tetap berada di folder global aslinya (`resources/js/components/`).
 
-7. **Kelengkapan Dokumentasi `todo.md` (*Detailed Todo Checklist*):**
-   - Pada setiap item checklist `todo.md` yang selesai dikerjakan, WAJIB menyertakan penjelasan detail mengenai apa yang telah diselesaikan.
-   - Cantumkan rincian tautan berkas yang dibuat (`[NEW]`), diubah (`[MODIFY]`), atau dijadikan referensi (`[REFERENCE]`) beserta deskripsi singkat kontribusinya.
+7. **Kelengkapan Dokumentasi `todo.md` (_Detailed Todo Checklist_):**
+    - Pada setiap item checklist `todo.md` yang selesai dikerjakan, WAJIB menyertakan penjelasan detail mengenai apa yang telah diselesaikan.
+    - Cantumkan rincian tautan berkas yang dibuat (`[NEW]`), diubah (`[MODIFY]`), atau dijadikan referensi (`[REFERENCE]`) beserta deskripsi singkat kontribusinya.
 
-8. **Pola Adaptasi Visual & Logika Backend Submodul (*Submodule Architecture Patterns*):**
-   - **Frontend Workspace Layout Pattern:**
-     - Area Atas: Header khusus submodul, Kartu Ringkasan Metrik (`SummaryCards.tsx`), dan Banner Lipat Pintasan Papan Ketik (`ShortcutPanel.tsx`).
-     - Area Utama: Layout Grid Split View (Sisi Kiri 2-Cols: Tabel Data / Datatable interaktif dengan live search & filter dropdown; Sisi Kanan 1-Col: `WorkspaceCard` yang beralih mode secara halus antara Detail Card, Form Create, atau Form Edit).
-     - Modals: Modals terpisah untuk aksi destructive / konfirmasi (seperti Delete Modal & Impersonate Modal).
-   - **Frontend Typography & Font Sizing Standard:**
-     - Item Rows / Badge Items: `text-xs font-mono font-medium` (12px) dengan padding `px-3 py-1.5` untuk keterbacaan yang nyaman dan jelas.
-     - Header Sub-Modul / Kategori: `text-[11.5px] font-bold uppercase tracking-wider text-muted-foreground/90`.
-     - Header Parent Card / Role: `text-xs font-bold text-foreground`.
-     - Label Input & Badge Status: `text-xs font-semibold`.
-     - Susunan Item Permission / Data: Dibariskas secara vertikal dari atas ke bawah (`flex flex-col gap-1.5`) per kategori sub-modul.
-   - **Frontend Global Layout & Sticky Sidebar Standard:**
-     - Header Nav: `sticky top-0 z-40 h-16` dengan efek backdrop blur.
-     - Sidebar Navigation: Terkunci di tempatnya secara permanen (`sticky top-16 z-30 h-[calc(100vh-4rem)] flex-col shrink-0`) dengan scrollbar mandiri di dalam kontainer (`overflow-y-auto`) agar tidak terpengaruh oleh scroll area halaman utama.
-   - **Frontend Tailwind v4 & Clean Class Standard (`cssConflict` Prevention & Sanitization):**
-     - **Aturan Cursor Disabled**: Dilarang menumpuk `cursor-pointer` langsung pada elemen yang memiliki `disabled:cursor-not-allowed`. WAJIB gunakan `enabled:cursor-pointer disabled:cursor-not-allowed` agar tidak memicu `cssConflict`.
-     - **Aturan Border Grid**: Dilarang menumpuk `border-r last:border-r-0` atau `border-b last:border-b-0`. WAJIB gunakan modifier `not-last:border-r` dan `not-last:border-b`.
-     - **Aturan Token Warna Semantik**: Dilarang menumpuk warna hex/arbitrer bertumpuk dengan varian dark (misal: `bg-[#fff2f2] dark:bg-[#1D0002]` atau `text-black dark:text-white`). WAJIB gunakan token warna semantik (`bg-background`, `bg-card`, `bg-muted`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-destructive/10`, `text-destructive`).
-     - **Aturan Sintaks Kanonikal**: Gunakan sintaks Tailwind v4 standar: `size-5!` (bukan `!size-5`), `aspect-335/364` (bukan `aspect-[335/364]`), `mt-[-6.6rem]` (bukan `-mt-[6.6rem]`), `w-109.5` (bukan `w-[438px]`).
-     - Seluruh penulisan utility class Tailwind v4 WAJIB divalidasi dan dibersihkan dari peringatan linter `tailwindcss-intellisense`.
+8. **Pola Adaptasi Visual & Logika Backend Submodul (_Submodule Architecture Patterns_):**
+    - **Frontend Workspace Layout Pattern:**
+        - Area Atas: Header khusus submodul, Kartu Ringkasan Metrik (`SummaryCards.tsx`), dan Banner Lipat Pintasan Papan Ketik (`ShortcutPanel.tsx`).
+        - Area Utama: Layout Grid Split View (Sisi Kiri 2-Cols: Tabel Data / Datatable interaktif dengan live search & filter dropdown; Sisi Kanan 1-Col: `WorkspaceCard` yang beralih mode secara halus antara Detail Card, Form Create, atau Form Edit).
+        - Modals: Modals terpisah untuk aksi destructive / konfirmasi (seperti Delete Modal & Impersonate Modal).
+    - **Frontend Typography & Font Sizing Standard:**
+        - Item Rows / Badge Items: `text-xs font-mono font-medium` (12px) dengan padding `px-3 py-1.5` untuk keterbacaan yang nyaman dan jelas.
+        - Header Sub-Modul / Kategori: `text-[11.5px] font-bold uppercase tracking-wider text-muted-foreground/90`.
+        - Header Parent Card / Role: `text-xs font-bold text-foreground`.
+        - Label Input & Badge Status: `text-xs font-semibold`.
+        - Susunan Item Permission / Data: Dibariskas secara vertikal dari atas ke bawah (`flex flex-col gap-1.5`) per kategori sub-modul.
+    - **Frontend Global Layout & Sticky Sidebar Standard:**
+        - Header Nav: `sticky top-0 z-40 h-16` dengan efek backdrop blur.
+        - Sidebar Navigation: Terkunci di tempatnya secara permanen (`sticky top-16 z-30 h-[calc(100vh-4rem)] flex-col shrink-0`) dengan scrollbar mandiri di dalam kontainer (`overflow-y-auto`) agar tidak terpengaruh oleh scroll area halaman utama.
+    - **Frontend Tailwind v4 & Clean Class Standard (`cssConflict` Prevention & Sanitization):**
+        - **Aturan Cursor Disabled**: Dilarang menumpuk `cursor-pointer` langsung pada elemen yang memiliki `disabled:cursor-not-allowed`. WAJIB gunakan `enabled:cursor-pointer disabled:cursor-not-allowed` agar tidak memicu `cssConflict`.
+        - **Aturan Border Grid**: Dilarang menumpuk `border-r last:border-r-0` atau `border-b last:border-b-0`. WAJIB gunakan modifier `not-last:border-r` dan `not-last:border-b`.
+        - **Aturan Token Warna Semantik**: Dilarang menumpuk warna hex/arbitrer bertumpuk dengan varian dark (misal: `bg-[#fff2f2] dark:bg-[#1D0002]` atau `text-black dark:text-white`). WAJIB gunakan token warna semantik (`bg-background`, `bg-card`, `bg-muted`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-destructive/10`, `text-destructive`).
+        - **Aturan Sintaks Kanonikal**: Gunakan sintaks Tailwind v4 standar: `size-5!` (bukan `!size-5`), `aspect-335/364` (bukan `aspect-[335/364]`), `mt-[-6.6rem]` (bukan `-mt-[6.6rem]`), `w-109.5` (bukan `w-[438px]`).
+        - Seluruh penulisan utility class Tailwind v4 WAJIB divalidasi dan dibersihkan dari peringatan linter `tailwindcss-intellisense`.
     - **Frontend Form & Button UX Standard:**
-      - **Asterisk Input Wajib (`*`)**: Setiap label input yang wajib diisi WAJIB menyertakan tanda asterik merah (`<span className="text-rose-500 font-bold ml-0.5">*</span>`).
-      - **Ikon Informasi & Tooltip Input**: Setiap label input WAJIB menyertakan ikon bantuan `HelpCircle` (size-3.5) yang menampilkan tooltip informasi penggunaan saat di-hover/focus.
-      - **Tooltip Tombol Aksi**: Setiap tombol aksi interaktif (Create, Edit, Delete, Impersonate, Filter, Reset, Collapse, Select All) WAJIB dibungkus atau dilengkapi dengan Tooltip petunjuk penggunaan.
-   - **Backend Layered Architecture & Payload Standard:**
-     - **Form Request & DTO Layer:** Validasi HTTP disentralkan di `Http/Requests/`. Form Request menyediakan method `toDto()` yang memetakan data tervalidasi ke DTO imutabel (`DTO/`).
-     - **Transaction & Service Layer:** Operasi mutasi data (Create, Update, Sync, Delete, Impersonate) wajib dibungkus dalam kelas `Transactions/` atau `DB::transaction()` untuk eksekusi atomik. Logika bisnis disentralkan di `Services/` yang menangani aturan domain, pembersihan cache RBAC (`PermissionRegistrar::forgetCachedPermissions()`), dan pencatatan jejak audit via `AuditLogService`.
-     - **Policy & Otorisasi Layer:** Seluruh endpoint controller dilindungi oleh Policy Otorisasi (`Policies/`) via `HasMiddleware` atau `$this->authorize()`. Proteksi peran khusus (`User::SUPER_SYSTEM_ROLE`) ditegakkan secara ketat pada Policy, Controller, dan Service.
-     - **Payload & DTO Pattern:** DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `permissions`, `effectivePermissions`, `rolePermissions`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`, `restore`, `forceDelete`).
-     - **Manifest Submodul:** Setiap submodul memiliki `module.php` (manifest), `navigation.php` (menu sidebar), `permissions.php` (daftar izin RBAC), dan `routes.php` (rute ternama).
+        - **Asterisk Input Wajib (`*`)**: Setiap label input yang wajib diisi WAJIB menyertakan tanda asterik merah (`<span className="text-rose-500 font-bold ml-0.5">*</span>`).
+        - **Ikon Informasi & Tooltip Input**: Setiap label input WAJIB menyertakan ikon bantuan `HelpCircle` (size-3.5) yang menampilkan tooltip informasi penggunaan saat di-hover/focus.
+        - **Tooltip Tombol Aksi**: Setiap tombol aksi interaktif (Create, Edit, Delete, Impersonate, Filter, Reset, Collapse, Select All) WAJIB dibungkus atau dilengkapi dengan Tooltip petunjuk penggunaan.
+    - **Backend Layered Architecture & Payload Standard:**
+        - **Form Request & DTO Layer:** Validasi HTTP disentralkan di `Http/Requests/`. Form Request menyediakan method `toDto()` yang memetakan data tervalidasi ke DTO imutabel (`DTO/`).
+        - **Transaction & Service Layer:** Operasi mutasi data (Create, Update, Sync, Delete, Impersonate) wajib dibungkus dalam kelas `Transactions/` atau `DB::transaction()` untuk eksekusi atomik. Logika bisnis disentralkan di `Services/` yang menangani aturan domain, pembersihan cache RBAC (`PermissionRegistrar::forgetCachedPermissions()`), dan pencatatan jejak audit via `AuditLogService`.
+        - **Policy & Otorisasi Layer:** Seluruh endpoint controller dilindungi oleh Policy Otorisasi (`Policies/`) via `HasMiddleware` atau `$this->authorize()`. Proteksi peran khusus (`User::SUPER_SYSTEM_ROLE`) ditegakkan secara ketat pada Policy, Controller, dan Service.
+        - **Payload & DTO Pattern:** DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `permissions`, `effectivePermissions`, `rolePermissions`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`, `restore`, `forceDelete`).
+        - **Manifest Submodul:** Setiap submodul memiliki `module.php` (manifest), `navigation.php` (menu sidebar), `permissions.php` (daftar izin RBAC), dan `routes.php` (rute ternama).
 
 9. **Pelarangan Total Wayfinder & Penegakan Ziggy / Standard Routing:**
-   - Dilarang keras menggunakan atau memasang kembali dependensi `laravel/wayfinder` maupun `@laravel/vite-plugin-wayfinder`.
-   - Folder `resources/js/actions`, `resources/js/routes`, dan `resources/js/wayfinder` telah dicopot secara permanen dan DILARANG dibuat ulang.
-   - Seluruh routing frontend WAJIB menggunakan Ziggy (`route('...')`) atau URL string standar.
+    - Dilarang keras menggunakan atau memasang kembali dependensi `laravel/wayfinder` maupun `@laravel/vite-plugin-wayfinder`.
+    - Folder `resources/js/actions`, `resources/js/routes`, dan `resources/js/wayfinder` telah dicopot secara permanen dan DILARANG dibuat ulang.
+    - Seluruh routing frontend WAJIB menggunakan Ziggy (`route('...')`) atau URL string standar.
 
 10. **Aturan Eksekusi Verification & `composer ci:check`:**
-   - DILARANG menjalankan perintah `composer ci:check` secara otomatis setelah selesai coding kecuali diinstruksikan secara eksplisit oleh pengguna.
 
-11. **Pelarangan Folder `types/` Kosong pada Submodul Frontend:**
-   - DILARANG membuat atau menyisakan folder `types/` kosong di dalam direktori submodul frontend (`resources/js/pages/{Module}/{Submodule}/`).
-   - Seluruh definisi tipe TypeScript submodul WAJIB diletakkan pada berkas berkas tunggal `types.ts` di tingkat utama folder submodul tersebut (contoh: `resources/js/pages/Console/SystemSetting/types.ts`).
+- DILARANG menjalankan perintah `composer ci:check` secara otomatis setelah selesai coding kecuali diinstruksikan secara eksplisit oleh pengguna.
+
+11. **Pelarangan Folder `types/` Kosong & Penegakan Berkas Terpusat `types.ts` pada Submodul Frontend:**
+
+- DILARANG membuat atau menyisakan folder `types/` di dalam direktori submodul frontend (`resources/js/pages/{Module}/{Submodule}/`).
+- Seluruh definisi tipe TypeScript submodul (Data Models, Props, Form State, Filters, Modal Props) WAJIB diletakkan pada berkas tunggal `types.ts` di tingkat utama direktori submodul tersebut (contoh: `resources/js/pages/Console/UserManagement/types.ts`, `resources/js/pages/Console/AuditLog/types.ts`).
+- Generator CLI `php artisan make:module {Module}/{Submodule}` dan seluruh pembuatan submodul baru WAJIB menyertakan berkas `types.ts` ini sebagai aturan baku bawaan.
 
 12. **Aturan Perilaku Tooltip (Hover-Only Trigger):**
-   - Tooltip DILARANG terbuka/muncul secara otomatis saat halaman atau modal di-mount, maupun saat elemen menerima auto-focus (seperti setelah login, buka modal Add/Edit/Delete, dll.).
-   - Tooltip HANYA boleh muncul saat pengguna mengarahkan kursor (hover) secara eksplisit pada elemen trigger. `TooltipProvider` WAJIB dikonfigurasi dengan `delayDuration = 200` (atau lebih tinggi) dan elemen tombol info WAJIB memiliki penanganan agar tidak terfokus secara otomatis (`tabIndex={-1}`).
+
+- Tooltip DILARANG terbuka/muncul secara otomatis saat halaman atau modal di-mount, maupun saat elemen menerima auto-focus (seperti setelah login, buka modal Add/Edit/Delete, dll.).
+- Tooltip HANYA boleh muncul saat pengguna mengarahkan kursor (hover) secara eksplisit pada elemen trigger. `TooltipProvider` WAJIB dikonfigurasi dengan `delayDuration = 200` (atau lebih tinggi) dan elemen tombol info WAJIB memiliki penanganan agar tidak terfokus secara otomatis (`tabIndex={-1}`).
 
 13. **Mandatory Pagination & Live Search Filter pada Datatable Submodul:**
-   - Setiap submodul atau halaman yang menampilkan tabel data (Datatable) WAJIB mengimplementasikan fitur Pencarian Live (*Live Search Filter*) dan Navigasi Halaman (*Pagination UI & Control*) baik secara server-side via Inertia request maupun client-side filtering.
 
-
-
-
+- Setiap submodul atau halaman yang menampilkan tabel data (Datatable) WAJIB mengimplementasikan fitur Pencarian Live (_Live Search Filter_) dan Navigasi Halaman (_Pagination UI & Control_) baik secara server-side via Inertia request maupun client-side filtering.

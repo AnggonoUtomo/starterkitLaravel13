@@ -180,10 +180,15 @@ PHP;
         // 8. Generate Frontend directories & Index.tsx & types.ts
         File::makeDirectory("{$frontendPath}/components", 0755, true, true);
 
+        $propsTypeName = "{$submodule}IndexProps";
         $frontendTypesContent = <<<TS
 export interface {$submodule}Item {
     id: number;
     name: string;
+}
+
+export interface {$propsTypeName} {
+    title: string;
 }
 TS;
         File::put("{$frontendPath}/types.ts", $frontendTypesContent);
@@ -192,12 +197,9 @@ TS;
 import React from 'react';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
 import { Head } from '@inertiajs/react';
+import type { {$propsTypeName} } from './types';
 
-interface Props {
-    title: string;
-}
-
-export default function Index({ title }: Props) {
+export default function Index({ title }: {$propsTypeName}) {
     return (
         <ConsoleLayout>
             <Head title={title} />
