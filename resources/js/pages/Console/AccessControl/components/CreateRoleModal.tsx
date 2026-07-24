@@ -35,10 +35,12 @@ export default function CreateRoleModal({
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-base font-bold">Buat Role Baru</DialogTitle>
+                    <DialogTitle className="text-base font-bold">
+                        Buat Role Baru
+                    </DialogTitle>
                     <DialogDescription>
-                        Masukkan nama role baru yang ingin dibuat. Role ini dapat dikonfigurasi
-                        dengan permission di matriks izin.
+                        Masukkan nama role baru yang ingin dibuat. Role ini
+                        dapat dikonfigurasi dengan permission di matriks izin.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -54,7 +56,7 @@ export default function CreateRoleModal({
                             placeholder="cth: Editor, Supervisor"
                             required
                             disabled={isProcessing}
-                            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
                         />
                     </div>
 
@@ -63,14 +65,14 @@ export default function CreateRoleModal({
                             type="button"
                             onClick={onClose}
                             disabled={isProcessing}
-                            className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="cursor-pointer px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             Batal
                         </button>
                         <button
                             type="submit"
                             disabled={isProcessing}
-                            className="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700 cursor-pointer shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {isProcessing ? 'Memproses...' : 'Buat Role'}
                         </button>

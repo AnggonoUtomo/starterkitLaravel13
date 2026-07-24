@@ -56,7 +56,7 @@ class SystemHealthService
 
         foreach ($permissions as $submoduleKey => $perms) {
             $parts = explode('/', $submoduleKey);
-            $moduleName = $parts[0] ?? 'Global';
+            $moduleName = $parts[0];
             $submoduleName = $parts[1] ?? $submoduleKey;
 
             $modules[$moduleName][] = [

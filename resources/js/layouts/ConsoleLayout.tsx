@@ -118,8 +118,10 @@ export default function ConsoleLayout({ children }: Props) {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <button
-                                    onClick={() => setSidebarOpen((prev) => !prev)}
-                                    className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground cursor-pointer"
+                                    onClick={() =>
+                                        setSidebarOpen((prev) => !prev)
+                                    }
+                                    className="cursor-pointer rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground"
                                     aria-label="Toggle Sidebar"
                                 >
                                     {sidebarOpen ? (
@@ -130,7 +132,9 @@ export default function ConsoleLayout({ children }: Props) {
                                 </button>
                             </TooltipTrigger>
                             <TooltipContent side="bottom">
-                                {sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'}
+                                {sidebarOpen
+                                    ? 'Collapse Sidebar'
+                                    : 'Expand Sidebar'}
                             </TooltipContent>
                         </Tooltip>
 
@@ -155,7 +159,7 @@ export default function ConsoleLayout({ children }: Props) {
                                 });
                                 window.dispatchEvent(event);
                             }}
-                            className="hidden items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar px-3 py-1.5 text-xs text-muted-foreground transition hover:bg-sidebar-accent sm:inline-flex cursor-pointer"
+                            className="hidden cursor-pointer items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar px-3 py-1.5 text-xs text-muted-foreground transition hover:bg-sidebar-accent sm:inline-flex"
                         >
                             <Command className="h-3.5 w-3.5" />
                             <span>Search / Commands</span>
@@ -169,7 +173,7 @@ export default function ConsoleLayout({ children }: Props) {
                             <button
                                 onClick={() => updateAppearance('dark')}
                                 title="Dark Mode"
-                                className={`rounded-md p-1.5 text-xs transition cursor-pointer ${
+                                className={`cursor-pointer rounded-md p-1.5 text-xs transition ${
                                     appearance === 'dark'
                                         ? 'bg-sidebar text-amber-500 shadow-sm'
                                         : 'text-muted-foreground hover:text-foreground'
@@ -180,7 +184,7 @@ export default function ConsoleLayout({ children }: Props) {
                             <button
                                 onClick={() => updateAppearance('light')}
                                 title="Light Mode"
-                                className={`rounded-md p-1.5 text-xs transition cursor-pointer ${
+                                className={`cursor-pointer rounded-md p-1.5 text-xs transition ${
                                     appearance === 'light'
                                         ? 'bg-sidebar text-amber-500 shadow-sm'
                                         : 'text-muted-foreground hover:text-foreground'
@@ -191,7 +195,7 @@ export default function ConsoleLayout({ children }: Props) {
                             <button
                                 onClick={() => updateAppearance('system')}
                                 title="System Mode"
-                                className={`rounded-md p-1.5 text-xs transition cursor-pointer ${
+                                className={`cursor-pointer rounded-md p-1.5 text-xs transition ${
                                     appearance === 'system'
                                         ? 'bg-sidebar text-emerald-500 shadow-sm'
                                         : 'text-muted-foreground hover:text-foreground'
@@ -216,7 +220,7 @@ export default function ConsoleLayout({ children }: Props) {
                                     href="/logout"
                                     method="post"
                                     as="button"
-                                    className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-rose-500 cursor-pointer"
+                                    className="cursor-pointer rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-rose-500"
                                     title="Logout"
                                 >
                                     <LogOut className="h-4 w-4" />
@@ -233,7 +237,7 @@ export default function ConsoleLayout({ children }: Props) {
                             sidebarOpen ? 'w-64' : 'w-16 items-center'
                         }`}
                     >
-                        <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 scrollbar-thin">
+                        <div className="flex flex-1 scrollbar-thin flex-col gap-1 overflow-y-auto p-3">
                             {sidebarOpen && (
                                 <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
                                     Console Modules
@@ -263,7 +267,9 @@ export default function ConsoleLayout({ children }: Props) {
                                                     : `${item.iconColor} opacity-75 group-hover:opacity-100`
                                             }`}
                                         />
-                                        {sidebarOpen && <span>{item.name}</span>}
+                                        {sidebarOpen && (
+                                            <span>{item.name}</span>
+                                        )}
                                     </Link>
                                 );
 
@@ -286,7 +292,7 @@ export default function ConsoleLayout({ children }: Props) {
                     </aside>
 
                     {/* Main Content Area */}
-                    <div className="flex flex-1 flex-col overflow-x-hidden min-w-0">
+                    <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
                         {/* Flash messages */}
                         {flash?.success && (
                             <div className="m-4 mb-0 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-950/60 p-3 text-sm text-emerald-300">

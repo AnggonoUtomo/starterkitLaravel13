@@ -5,9 +5,17 @@ namespace App\Modules\Console\UserManagement\DTO;
 use App\Models\User;
 use App\Shared\DTO\BaseDTO;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class UserDTO extends BaseDTO
 {
+    /**
+     * @param  array<int, string>  $roles
+     * @param  array<string, array<int, string>>  $rolePermissions
+     * @param  array<int, string>  $permissions
+     * @param  array<int, string>  $effectivePermissions
+     * @param  array<string, bool>  $can
+     */
     public function __construct(
         public int $id,
         public string $name,
@@ -28,6 +36,7 @@ class UserDTO extends BaseDTO
         $currentUser = $currentUser ?? auth()->user();
 
         $rolePermissions = [];
+        /** @var Role $role */
         foreach ($user->roles as $role) {
             $rolePermissions[$role->name] = $role->permissions->pluck('name')->sort()->values()->toArray();
         }

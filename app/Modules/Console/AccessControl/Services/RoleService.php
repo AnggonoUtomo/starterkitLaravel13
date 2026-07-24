@@ -11,6 +11,8 @@ class RoleService
 {
     /**
      * Get all roles with their assigned permissions.
+     *
+     * @return Collection<int, Role>
      */
     public function getRolesWithPermissions(): Collection
     {
@@ -19,6 +21,8 @@ class RoleService
 
     /**
      * Get all registered permissions grouped by submodule.
+     *
+     * @return array<string, array<int, string>>
      */
     public function getAllGroupedPermissions(): array
     {
@@ -39,9 +43,12 @@ class RoleService
 
     /**
      * Create a new Role.
+     *
+     * @param  array<int, string>  $permissions
      */
     public function createRole(string $name, array $permissions = []): Role
     {
+        /** @var Role $role */
         $role = Role::create(['name' => $name, 'guard_name' => 'web']);
         if (! empty($permissions)) {
             $role->syncPermissions($permissions);
@@ -52,6 +59,8 @@ class RoleService
 
     /**
      * Update role permissions.
+     *
+     * @param  array<int, string>  $permissions
      */
     public function updateRolePermissions(Role $role, array $permissions): Role
     {

@@ -36,7 +36,7 @@ export default function Welcome() {
                 </header>
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
                     <main className="flex w-full max-w-83.75 flex-col-reverse lg:max-w-4xl lg:flex-row">
-                        <div className="flex-1 rounded-br-lg rounded-bl-lg bg-card p-6 pb-12 text-[13px] leading-5 border border-border shadow-sm lg:rounded-tl-lg lg:rounded-br-none lg:p-20 text-foreground">
+                        <div className="flex-1 rounded-br-lg rounded-bl-lg border border-border bg-card p-6 pb-12 text-[13px] leading-5 text-foreground shadow-sm lg:rounded-tl-lg lg:rounded-br-none lg:p-20">
                             <h1 className="mb-1 font-medium">
                                 Let's get started
                             </h1>

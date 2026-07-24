@@ -1,16 +1,6 @@
 import { X, Lock, Check } from 'lucide-react';
 import React from 'react';
-
-interface Permission {
-    id: number;
-    name: string;
-}
-
-interface Role {
-    id: number;
-    name: string;
-    permissions: Permission[];
-}
+import type { Role } from '../types';
 
 interface PermissionMatrixTableProps {
     roles: Role[];
@@ -43,7 +33,7 @@ export default function PermissionMatrixTable({
                                     {role.name !== 'Super System' && (
                                         <button
                                             onClick={() => onDeleteRole(role)}
-                                            className="text-muted-foreground transition hover:text-rose-500 cursor-pointer"
+                                            className="cursor-pointer text-muted-foreground transition hover:text-rose-500"
                                             title="Delete Role"
                                         >
                                             <X className="h-3.5 w-3.5" />
@@ -51,7 +41,7 @@ export default function PermissionMatrixTable({
                                     )}
                                 </div>
                                 <div className="mt-0.5 font-mono text-[10px] font-normal text-indigo-500">
-                                    {role.permissions.length} perms
+                                    {role.permissions?.length ?? 0} perms
                                 </div>
                             </th>
                         ))}
@@ -86,9 +76,12 @@ export default function PermissionMatrixTable({
                                         </td>
 
                                         {roles.map((role) => {
-                                            const hasPerm = role.permissions.some(
-                                                (p) => p.name === permName,
-                                            );
+                                            const hasPerm =
+                                                role.permissions?.some((p) =>
+                                                    typeof p === 'string'
+                                                        ? p === permName
+                                                        : p.name === permName,
+                                                ) ?? false;
                                             const isSuperSystem =
                                                 role.name === 'Super System';
 

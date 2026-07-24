@@ -11,6 +11,8 @@ class UserService
 {
     /**
      * Get paginated users with search and role filter.
+     *
+     * @return LengthAwarePaginator<int, array<string, mixed>>
      */
     public function getPaginatedUsers(int $perPage = 10, ?string $search = null, ?string $role = null): LengthAwarePaginator
     {
@@ -28,15 +30,19 @@ class UserService
         }
 
         $paginator = $query->paginate($perPage);
+        /** @var User|null $currentUser */
         $currentUser = auth()->user();
 
         $paginator->getCollection()->transform(fn (User $user) => UserDTO::fromModel($user, $currentUser)->toArray());
 
+        /** @var LengthAwarePaginator<int, array<string, mixed>> $paginator */
         return $paginator;
     }
 
     /**
      * Create a new user with assigned roles and direct permissions.
+     *
+     * @param  array<string, mixed>  $data
      */
     public function createUser(array $data): User
     {
@@ -59,6 +65,8 @@ class UserService
 
     /**
      * Update existing user with roles and direct permissions.
+     *
+     * @param  array<string, mixed>  $data
      */
     public function updateUser(User $user, array $data): User
     {
@@ -97,6 +105,7 @@ class UserService
      */
     public function impersonate(User $targetUser): void
     {
+        /** @var User $adminUser */
         $adminUser = auth()->user();
 
         session()->put('impersonator_id', $adminUser->id);
@@ -113,6 +122,7 @@ class UserService
         $impersonatorId = session('impersonator_id');
 
         if ($impersonatorId) {
+            /** @var User $adminUser */
             $adminUser = User::findOrFail($impersonatorId);
             session()->forget(['impersonator_id', 'impersonator_name']);
             auth()->login($adminUser);

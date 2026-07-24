@@ -56,10 +56,7 @@ export default function Index({ title, logs, filters }: Props) {
                 />
 
                 {/* Audit Logs Table */}
-                <AuditLogTable
-                    logs={logs.data}
-                    onSelectLog={setSelectedLog}
-                />
+                <AuditLogTable logs={logs.data} onSelectLog={setSelectedLog} />
             </div>
 
             {/* Slide-over Detail Drawer */}

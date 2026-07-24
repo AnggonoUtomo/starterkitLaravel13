@@ -1,13 +1,13 @@
-import { KeyRound, Plus, RefreshCcw, Save, Trash2, ShieldCheck } from 'lucide-react';
+import {
+    KeyRound,
+    Plus,
+    RefreshCcw,
+    Save,
+    Trash2,
+    ShieldCheck,
+} from 'lucide-react';
 import React from 'react';
-
-interface Role {
-    id: number;
-    name: string;
-    guard_name?: string;
-    is_protected?: boolean;
-    permissions?: string[];
-}
+import type { Role } from '../types';
 
 interface RoleControlCardProps {
     roles: Role[];
@@ -41,7 +41,8 @@ export default function RoleControlCard({
             ? Math.round((selectedPermissionCount / totalPermissionCount) * 100)
             : 0;
 
-    const isProtected = activeRole?.name === 'Super System' || activeRole?.is_protected;
+    const isProtected =
+        activeRole?.name === 'Super System' || activeRole?.is_protected;
 
     return (
         <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-xs">
@@ -52,7 +53,9 @@ export default function RoleControlCard({
                         <KeyRound className="h-4 w-4" />
                     </div>
                     <div>
-                        <h3 className="text-sm font-bold text-foreground">Pilih Role</h3>
+                        <h3 className="text-sm font-bold text-foreground">
+                            Pilih Role
+                        </h3>
                         <p className="text-[11px] text-muted-foreground">
                             Role aktif menjadi target konfigurasi matriks.
                         </p>
@@ -62,7 +65,7 @@ export default function RoleControlCard({
                 <button
                     type="button"
                     onClick={onAddRole}
-                    className="inline-flex size-8 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 transition hover:bg-emerald-500/20 cursor-pointer"
+                    className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 transition hover:bg-emerald-500/20"
                     title="Tambah Role Baru"
                 >
                     <Plus className="h-4 w-4" />
@@ -82,7 +85,8 @@ export default function RoleControlCard({
                 >
                     {roles.map((role) => (
                         <option key={role.id} value={role.id}>
-                            {role.name} {role.name === 'Super System' ? '(Protected)' : ''}
+                            {role.name}{' '}
+                            {role.name === 'Super System' ? '(Protected)' : ''}
                         </option>
                     ))}
                 </select>
@@ -92,7 +96,9 @@ export default function RoleControlCard({
             {activeRole && (
                 <div className="rounded-lg border border-border bg-muted/30 p-3">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-bold text-foreground">{activeRole.name}</span>
+                        <span className="text-xs font-bold text-foreground">
+                            {activeRole.name}
+                        </span>
                         {isProtected ? (
                             <span className="inline-flex items-center gap-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold text-indigo-500">
                                 <ShieldCheck className="h-3 w-3" />
@@ -113,20 +119,36 @@ export default function RoleControlCard({
             {/* Metrics Grid */}
             <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-lg border border-border bg-background p-2.5">
-                    <div className="text-[10px] font-semibold text-muted-foreground">Total Role</div>
-                    <div className="text-base font-bold text-foreground">{roles.length}</div>
+                    <div className="text-[10px] font-semibold text-muted-foreground">
+                        Total Role
+                    </div>
+                    <div className="text-base font-bold text-foreground">
+                        {roles.length}
+                    </div>
                 </div>
                 <div className="rounded-lg border border-border bg-background p-2.5">
-                    <div className="text-[10px] font-semibold text-muted-foreground">Total Izin</div>
-                    <div className="text-base font-bold text-foreground">{totalPermissionCount}</div>
+                    <div className="text-[10px] font-semibold text-muted-foreground">
+                        Total Izin
+                    </div>
+                    <div className="text-base font-bold text-foreground">
+                        {totalPermissionCount}
+                    </div>
                 </div>
                 <div className="rounded-lg border border-border bg-background p-2.5">
-                    <div className="text-[10px] font-semibold text-emerald-500">Terpilih</div>
-                    <div className="text-base font-bold text-emerald-500">{selectedPermissionCount}</div>
+                    <div className="text-[10px] font-semibold text-emerald-500">
+                        Terpilih
+                    </div>
+                    <div className="text-base font-bold text-emerald-500">
+                        {selectedPermissionCount}
+                    </div>
                 </div>
                 <div className="rounded-lg border border-border bg-background p-2.5">
-                    <div className="text-[10px] font-semibold text-indigo-500">Cakupan</div>
-                    <div className="text-base font-bold text-indigo-500">{progressPercentage}%</div>
+                    <div className="text-[10px] font-semibold text-indigo-500">
+                        Cakupan
+                    </div>
+                    <div className="text-base font-bold text-indigo-500">
+                        {progressPercentage}%
+                    </div>
                 </div>
             </div>
 
@@ -152,7 +174,7 @@ export default function RoleControlCard({
                     type="button"
                     onClick={onReset}
                     disabled={isProcessing || isProtected}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <RefreshCcw className="h-3.5 w-3.5" />
                     Reset
@@ -162,7 +184,7 @@ export default function RoleControlCard({
                     type="button"
                     onClick={onSubmit}
                     disabled={isProcessing || isProtected}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <Save className="h-3.5 w-3.5" />
                     {isProcessing ? 'Memproses...' : 'Simpan'}
@@ -176,7 +198,7 @@ export default function RoleControlCard({
                     type="button"
                     onClick={() => onDeleteRole(activeRole)}
                     disabled={isProcessing}
-                    className="flex items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-500 transition hover:bg-rose-500/20 disabled:opacity-50 cursor-pointer"
+                    className="flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-500 transition hover:bg-rose-500/20 disabled:opacity-50"
                 >
                     <Trash2 className="h-3.5 w-3.5" />
                     Hapus Role Ini

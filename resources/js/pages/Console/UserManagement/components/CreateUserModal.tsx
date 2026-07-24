@@ -55,7 +55,7 @@ export default function CreateUserModal({
                             </h3>
                             <button
                                 onClick={onClose}
-                                className="text-muted-foreground hover:text-foreground cursor-pointer"
+                                className="cursor-pointer text-muted-foreground hover:text-foreground"
                             >
                                 <X className="h-5 w-5" />
                             </button>
@@ -126,7 +126,7 @@ export default function CreateUserModal({
                                                 onClick={() =>
                                                     handleRoleToggle(role)
                                                 }
-                                                className={`rounded-lg border px-3 py-1 text-xs font-medium transition cursor-pointer ${
+                                                className={`cursor-pointer rounded-lg border px-3 py-1 text-xs font-medium transition ${
                                                     isSelected
                                                         ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-500'
                                                         : 'border-border bg-muted/30 text-muted-foreground hover:border-muted-foreground'
@@ -144,16 +144,18 @@ export default function CreateUserModal({
                                     type="button"
                                     onClick={onClose}
                                     disabled={isProcessing}
-                                    className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="cursor-pointer px-4 py-2 text-sm text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isProcessing}
-                                    className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="cursor-pointer rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    {isProcessing ? 'Memproses...' : 'Simpan Pengguna'}
+                                    {isProcessing
+                                        ? 'Memproses...'
+                                        : 'Simpan Pengguna'}
                                 </button>
                             </div>
                         </form>

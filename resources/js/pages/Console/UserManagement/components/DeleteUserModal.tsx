@@ -47,15 +47,24 @@ export default function DeleteUserModal({
                             <AlertTriangle className="h-5 w-5" />
                         </div>
                         <div>
-                            <DialogTitle className="text-base font-bold">Konfirmasi Hapus Akun</DialogTitle>
-                            <DialogDescription>Tindakan ini akan menghapus akun pengguna secara permanen.</DialogDescription>
+                            <DialogTitle className="text-base font-bold">
+                                Konfirmasi Hapus Akun
+                            </DialogTitle>
+                            <DialogDescription>
+                                Tindakan ini akan menghapus akun pengguna secara
+                                permanen.
+                            </DialogDescription>
                         </div>
                     </div>
                 </DialogHeader>
 
                 {deletingUser && (
                     <div className="rounded-lg border border-border bg-muted/30 p-3 text-xs text-foreground">
-                        Apakah Anda yakin ingin menghapus akun <span className="font-bold text-rose-500">{deletingUser.name}</span> ({deletingUser.email})?
+                        Apakah Anda yakin ingin menghapus akun{' '}
+                        <span className="font-bold text-rose-500">
+                            {deletingUser.name}
+                        </span>{' '}
+                        ({deletingUser.email})?
                     </div>
                 )}
 
@@ -64,7 +73,7 @@ export default function DeleteUserModal({
                         type="button"
                         onClick={onClose}
                         disabled={isDeleting}
-                        className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="cursor-pointer px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         Batal
                     </button>
@@ -72,7 +81,7 @@ export default function DeleteUserModal({
                         type="button"
                         onClick={handleConfirm}
                         disabled={isDeleting}
-                        className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-rose-700 cursor-pointer shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="cursor-pointer rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {isDeleting ? 'Menghapus...' : 'Hapus Pengguna'}
                     </button>

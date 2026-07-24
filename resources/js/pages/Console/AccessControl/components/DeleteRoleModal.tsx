@@ -9,13 +9,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 
-interface Role {
-    id: number;
-    name: string;
-    guard_name?: string;
-    is_protected?: boolean;
-    permissions?: string[];
-}
+import type { Role } from '../types';
 
 interface DeleteRoleModalProps {
     deletingRole: Role | null;
@@ -54,16 +48,25 @@ export default function DeleteRoleModal({
                             <AlertTriangle className="h-5 w-5" />
                         </div>
                         <div>
-                            <DialogTitle className="text-base font-bold">Konfirmasi Hapus Role</DialogTitle>
-                            <DialogDescription>Tindakan ini akan menghapus role secara permanen beserta seluruh izin yang terkait.</DialogDescription>
+                            <DialogTitle className="text-base font-bold">
+                                Konfirmasi Hapus Role
+                            </DialogTitle>
+                            <DialogDescription>
+                                Tindakan ini akan menghapus role secara permanen
+                                beserta seluruh izin yang terkait.
+                            </DialogDescription>
                         </div>
                     </div>
                 </DialogHeader>
 
                 {deletingRole && (
                     <div className="rounded-lg border border-border bg-muted/30 p-3 text-xs text-foreground">
-                        Apakah Anda yakin ingin menghapus role <span className="font-bold text-rose-500">{deletingRole.name}</span>?
-                        Seluruh pengguna yang memiliki role ini akan kehilangan izin terkait.
+                        Apakah Anda yakin ingin menghapus role{' '}
+                        <span className="font-bold text-rose-500">
+                            {deletingRole.name}
+                        </span>
+                        ? Seluruh pengguna yang memiliki role ini akan
+                        kehilangan izin terkait.
                     </div>
                 )}
 
@@ -72,7 +75,7 @@ export default function DeleteRoleModal({
                         type="button"
                         onClick={onClose}
                         disabled={isDeleting}
-                        className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="cursor-pointer px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         Batal
                     </button>
@@ -80,7 +83,7 @@ export default function DeleteRoleModal({
                         type="button"
                         onClick={handleConfirm}
                         disabled={isDeleting}
-                        className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-rose-700 cursor-pointer shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="cursor-pointer rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {isDeleting ? 'Menghapus...' : 'Hapus Role'}
                     </button>

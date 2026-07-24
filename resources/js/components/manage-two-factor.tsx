@@ -59,7 +59,10 @@ export default function ManageTwoFactor(props: Props) {
                     </p>
 
                     <div className="relative inline">
-                        <Form action="/user/two-factor-authentication" method="delete">
+                        <Form
+                            action="/user/two-factor-authentication"
+                            method="delete"
+                        >
                             {({ processing }) => (
                                 <Button
                                     variant="destructive"

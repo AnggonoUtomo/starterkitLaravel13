@@ -49,9 +49,12 @@ export default function Index({
     const [selectedUser, setSelectedUser] = useState<UserData | null>(
         users.data[0] || null,
     );
-    const [workspaceMode, setWorkspaceMode] = useState<UserWorkspaceMode>('detail');
+    const [workspaceMode, setWorkspaceMode] =
+        useState<UserWorkspaceMode>('detail');
     const [deletingUser, setDeletingUser] = useState<UserData | null>(null);
-    const [impersonatingUser, setImpersonatingUser] = useState<UserData | null>(null);
+    const [impersonatingUser, setImpersonatingUser] = useState<UserData | null>(
+        null,
+    );
 
     // Synchronize selectedUser state with fresh users.data props from server without extra renders (React 19 pattern)
     const [prevUsersData, setPrevUsersData] = useState(users.data);
@@ -232,11 +235,15 @@ export default function Index({
     };
 
     const handleConfirmImpersonate = (user: UserData) => {
-        router.post(`/console/users/${user.id}/impersonate`, {}, {
-            onSuccess: () => {
-                setImpersonatingUser(null);
+        router.post(
+            `/console/users/${user.id}/impersonate`,
+            {},
+            {
+                onSuccess: () => {
+                    setImpersonatingUser(null);
+                },
             },
-        });
+        );
     };
 
     return (
@@ -276,7 +283,9 @@ export default function Index({
                             onOpenCreate={handleStartCreate}
                             onOpenEdit={handleStartEdit}
                             onOpenDelete={(user) => setDeletingUser(user)}
-                            onOpenImpersonate={(user) => setImpersonatingUser(user)}
+                            onOpenImpersonate={(user) =>
+                                setImpersonatingUser(user)
+                            }
                         />
                     </div>
 
@@ -290,13 +299,17 @@ export default function Index({
                             rolesWithPermissions={rolesWithPermissions}
                             permissionGroups={permissionGroups}
                             isProcessing={form.processing}
-                            onFieldChange={(field, val) => form.setData(field as any, val)}
+                            onFieldChange={(field, val) =>
+                                form.setData(field as any, val)
+                            }
                             onSubmitCreate={handleCreateSubmit}
                             onSubmitEdit={handleEditSubmit}
                             onCancel={handleCancelWorkspace}
                             onStartEdit={handleStartEdit}
                             onStartDelete={(user) => setDeletingUser(user)}
-                            onStartImpersonate={(user) => setImpersonatingUser(user)}
+                            onStartImpersonate={(user) =>
+                                setImpersonatingUser(user)
+                            }
                         />
                     </div>
                 </div>

@@ -22,8 +22,12 @@ export default function UserSummaryCards({
                     <Users className="h-5 w-5" />
                 </div>
                 <div>
-                    <div className="text-xs font-semibold text-muted-foreground">Total Pengguna</div>
-                    <div className="text-xl font-bold text-foreground">{totalUsers}</div>
+                    <div className="text-xs font-semibold text-muted-foreground">
+                        Total Pengguna
+                    </div>
+                    <div className="text-xl font-bold text-foreground">
+                        {totalUsers}
+                    </div>
                 </div>
             </div>
 
@@ -33,8 +37,12 @@ export default function UserSummaryCards({
                     <Shield className="h-5 w-5" />
                 </div>
                 <div>
-                    <div className="text-xs font-semibold text-muted-foreground">Total Role</div>
-                    <div className="text-xl font-bold text-foreground">{totalRoles}</div>
+                    <div className="text-xs font-semibold text-muted-foreground">
+                        Total Role
+                    </div>
+                    <div className="text-xl font-bold text-foreground">
+                        {totalRoles}
+                    </div>
                 </div>
             </div>
 
@@ -44,8 +52,12 @@ export default function UserSummaryCards({
                     <UserCheck className="h-5 w-5" />
                 </div>
                 <div>
-                    <div className="text-xs font-semibold text-muted-foreground">Pengguna Aktif</div>
-                    <div className="text-xl font-bold text-foreground">{activeCount}</div>
+                    <div className="text-xs font-semibold text-muted-foreground">
+                        Pengguna Aktif
+                    </div>
+                    <div className="text-xl font-bold text-foreground">
+                        {activeCount}
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,26 +1,7 @@
 import React from 'react';
+import type { Role, PermissionGroup } from '../types';
 import PermissionModulePanel from './PermissionModulePanel';
 import RoleControlCard from './RoleControlCard';
-
-interface PermissionItem {
-    id?: number | string;
-    name: string;
-    label?: string;
-}
-
-interface PermissionGroup {
-    module: string;
-    label: string;
-    permissions: PermissionItem[];
-}
-
-interface Role {
-    id: number;
-    name: string;
-    guard_name?: string;
-    is_protected?: boolean;
-    permissions?: string[];
-}
 
 interface RolePermissionWorkspaceProps {
     roles: Role[];
@@ -53,7 +34,8 @@ export default function RolePermissionWorkspace({
     onTogglePermission,
     onToggleGroup,
 }: RolePermissionWorkspaceProps) {
-    const isProtected = activeRole.name === 'Super System' || activeRole.is_protected;
+    const isProtected =
+        activeRole.name === 'Super System' || activeRole.is_protected;
     const canUpdateRole = !isProtected;
 
     const totalPermissionCount = permissionGroups.reduce(
@@ -66,10 +48,14 @@ export default function RolePermissionWorkspace({
 
     const isGroupChecked = (group: PermissionGroup) =>
         group.permissions.length > 0 &&
-        group.permissions.every((perm) => selectedPermissions.includes(perm.name));
+        group.permissions.every((perm) =>
+            selectedPermissions.includes(perm.name),
+        );
 
     const getSelectedCountInGroup = (group: PermissionGroup) =>
-        group.permissions.filter((perm) => selectedPermissions.includes(perm.name)).length;
+        group.permissions.filter((perm) =>
+            selectedPermissions.includes(perm.name),
+        ).length;
 
     return (
         <div className="grid gap-6 xl:grid-cols-[300px_1fr]">

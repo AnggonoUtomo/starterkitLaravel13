@@ -14,11 +14,11 @@ export default function UserShortcutPanel() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="rounded-xl border border-border bg-card shadow-xs overflow-hidden">
+        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xs">
             <button
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
-                className="flex w-full items-center justify-between gap-3 p-4 text-left transition hover:bg-muted/30 cursor-pointer"
+                className="flex w-full cursor-pointer items-center justify-between gap-3 p-4 text-left transition hover:bg-muted/30"
             >
                 <div className="flex items-center gap-3">
                     <div className="flex size-9 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-500">
@@ -29,7 +29,8 @@ export default function UserShortcutPanel() {
                             Keyboard Shortcuts
                         </h3>
                         <p className="text-xs text-muted-foreground">
-                            Perintah cepat papan ketik untuk navigasi dan kelola akun pengguna.
+                            Perintah cepat papan ketik untuk navigasi dan kelola
+                            akun pengguna.
                         </p>
                     </div>
                 </div>
@@ -60,7 +61,7 @@ export default function UserShortcutPanel() {
                                         key={shortcut.keys}
                                         className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background px-3 py-2 text-xs shadow-xs"
                                     >
-                                        <span className="text-muted-foreground font-medium">
+                                        <span className="font-medium text-muted-foreground">
                                             {shortcut.label}
                                         </span>
                                         <kbd className="shrink-0 rounded border border-border bg-muted px-2 py-0.5 font-mono text-[11px] font-semibold text-foreground">

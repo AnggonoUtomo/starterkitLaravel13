@@ -30,14 +30,17 @@ export default function ConsoleFilterBar({
 
     return (
         <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-sm">
-            <form onSubmit={handleFormSubmit} className="relative w-full max-w-md">
+            <form
+                onSubmit={handleFormSubmit}
+                className="relative w-full max-w-md"
+            >
                 <Search className="absolute top-3 left-3 h-4 w-4 text-muted-foreground" />
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => onSearchChange(e.target.value)}
                     placeholder={placeholder}
-                    className={`w-full rounded-lg border border-border bg-background py-2 pr-4 pl-9 text-sm text-foreground outline-none transition focus:ring-2 ${focusColorClass}`}
+                    className={`w-full rounded-lg border border-border bg-background py-2 pr-4 pl-9 text-sm text-foreground transition outline-none focus:ring-2 ${focusColorClass}`}
                 />
             </form>
             {typeof totalCount === 'number' && (

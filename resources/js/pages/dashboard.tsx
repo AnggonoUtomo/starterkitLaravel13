@@ -17,7 +17,7 @@ export default function Dashboard() {
                         <PlaceholderPattern className="absolute inset-0 size-full stroke-foreground/20" />
                     </div>
                 </div>
-                <div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border min-h-screen md:min-h-min">
+                <div className="relative min-h-screen flex-1 overflow-hidden rounded-xl border border-sidebar-border md:min-h-min">
                     <PlaceholderPattern className="absolute inset-0 size-full stroke-foreground/20" />
                 </div>
             </div>

@@ -46,7 +46,7 @@ export default function AuditPayloadDrawer({
                             </div>
                             <button
                                 onClick={onClose}
-                                className="text-muted-foreground hover:text-foreground cursor-pointer"
+                                className="cursor-pointer text-muted-foreground hover:text-foreground"
                             >
                                 <X className="h-5 w-5" />
                             </button>

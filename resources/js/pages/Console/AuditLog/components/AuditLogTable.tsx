@@ -28,7 +28,9 @@ export default function AuditLogTable({
                         <th className="px-6 py-4">Event Name</th>
                         <th className="px-6 py-4">Caused By User</th>
                         <th className="px-6 py-4">Timestamp</th>
-                        <th className="px-6 py-4 text-right">Payload Details</th>
+                        <th className="px-6 py-4 text-right">
+                            Payload Details
+                        </th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -55,7 +57,7 @@ export default function AuditLogTable({
                                 <td className="px-6 py-4 text-right">
                                     <button
                                         onClick={() => onSelectLog(log)}
-                                        className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-500 transition hover:bg-amber-500/20 cursor-pointer"
+                                        className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-500 transition hover:bg-amber-500/20"
                                     >
                                         <Eye className="h-3.5 w-3.5" /> View
                                         Payload

@@ -6,20 +6,7 @@ import AccessControlShortcutPanel from './components/AccessControlShortcutPanel'
 import CreateRoleModal from './components/CreateRoleModal';
 import DeleteRoleModal from './components/DeleteRoleModal';
 import RolePermissionWorkspace from './components/RolePermissionWorkspace';
-
-interface Permission {
-    id?: number | string;
-    name: string;
-    label?: string;
-}
-
-interface Role {
-    id: number;
-    name: string;
-    guard_name?: string;
-    is_protected?: boolean;
-    permissions: Permission[];
-}
+import type { Role } from './types';
 
 interface Props {
     title: string;
@@ -39,23 +26,32 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
 
     // Get current active role object
     const activeRole = useMemo(() => {
-        return (
-            roles.find((r) => r.id === activeRoleId) ||
-            roles[0] ||
-            null
-        );
+        return roles.find((r) => r.id === activeRoleId) || roles[0] || null;
     }, [roles, activeRoleId]);
 
+    // Helper to get permission names array from activeRole
+    const getRolePermissionNames = (role: Role | null): string[] => {
+        if (!role || !role.permissions) {
+            return [];
+        }
+
+        return role.permissions.map((p) =>
+            typeof p === 'string' ? p : p.name,
+        );
+    };
+
     // Local state for selected permissions of the active role
-    const [prevRoleId, setPrevRoleId] = useState<number | null>(activeRole?.id || null);
-    const [selectedPermissions, setSelectedPermissions] = useState<string[]>(() =>
-        activeRole ? activeRole.permissions.map((p) => p.name) : [],
+    const [prevRoleId, setPrevRoleId] = useState<number | null>(
+        activeRole?.id || null,
+    );
+    const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
+        () => getRolePermissionNames(activeRole),
     );
 
     // Sync selected permissions when activeRole changes during render
     if (activeRole && activeRole.id !== prevRoleId) {
         setPrevRoleId(activeRole.id);
-        setSelectedPermissions(activeRole.permissions.map((p) => p.name));
+        setSelectedPermissions(getRolePermissionNames(activeRole));
     }
 
     // Format groupedPermissions object into structured array for workspace
@@ -163,7 +159,7 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
 
     const handleReset = () => {
         if (activeRole) {
-            setSelectedPermissions(activeRole.permissions.map((p) => p.name));
+            setSelectedPermissions(getRolePermissionNames(activeRole));
         }
     };
 

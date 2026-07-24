@@ -47,16 +47,27 @@ export default function ImpersonateUserModal({
                             <UserCheck className="h-5 w-5" />
                         </div>
                         <div>
-                            <DialogTitle className="text-base font-bold">Konfirmasi Impersonation</DialogTitle>
-                            <DialogDescription>Masuk sebagai akun pengguna target untuk sementara waktu.</DialogDescription>
+                            <DialogTitle className="text-base font-bold">
+                                Konfirmasi Impersonation
+                            </DialogTitle>
+                            <DialogDescription>
+                                Masuk sebagai akun pengguna target untuk
+                                sementara waktu.
+                            </DialogDescription>
                         </div>
                     </div>
                 </DialogHeader>
 
                 {impersonatingUser && (
                     <div className="rounded-lg border border-border bg-muted/30 p-3 text-xs text-foreground">
-                        Anda akan beralih sementara untuk bertindak sebagai pengguna <span className="font-bold text-emerald-500">{impersonatingUser.name}</span> ({impersonatingUser.email}).
-                        Bilah peringatan impersonasi akan muncul di bagian atas untuk kembali ke akun Admin kapan saja.
+                        Anda akan beralih sementara untuk bertindak sebagai
+                        pengguna{' '}
+                        <span className="font-bold text-emerald-500">
+                            {impersonatingUser.name}
+                        </span>{' '}
+                        ({impersonatingUser.email}). Bilah peringatan
+                        impersonasi akan muncul di bagian atas untuk kembali ke
+                        akun Admin kapan saja.
                     </div>
                 )}
 
@@ -65,7 +76,7 @@ export default function ImpersonateUserModal({
                         type="button"
                         onClick={onClose}
                         disabled={isImpersonating}
-                        className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="cursor-pointer px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         Batal
                     </button>
@@ -73,7 +84,7 @@ export default function ImpersonateUserModal({
                         type="button"
                         onClick={handleConfirm}
                         disabled={isImpersonating}
-                        className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700 cursor-pointer shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="cursor-pointer rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {isImpersonating ? 'Memproses...' : 'Mulai Impersonate'}
                     </button>

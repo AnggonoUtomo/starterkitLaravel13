@@ -11,6 +11,8 @@ class AuditLogQueryService
 {
     /**
      * Get paginated audit logs from daily log files.
+     *
+     * @return LengthAwarePaginator<int, array<string, mixed>>
      */
     public function getPaginatedLogs(int $perPage = 15, ?string $search = null): LengthAwarePaginator
     {
@@ -22,17 +24,18 @@ class AuditLogQueryService
             preg_match_all('/\[(.*?)\] local\.INFO: \[AUDIT_TRAIL\] (.*?) (\{.*?\})/', $content, $matches, PREG_SET_ORDER);
 
             foreach ($matches as $index => $match) {
-                $timestamp = $match[1] ?? now()->toIso8601String();
-                $eventName = $match[2] ?? 'System Event';
-                $rawPayload = json_decode($match[3] ?? '{}', true) ?: [];
+                $timestamp = $match[1];
+                $eventName = $match[2];
+                $rawPayload = json_decode($match[3], true) ?: [];
 
                 $causedUserId = $rawPayload['caused_by_user_id'] ?? null;
                 $payloadData = $rawPayload['payload'] ?? [];
                 $causedUserName = null;
 
                 if ($causedUserId) {
+                    /** @var User|null $user */
                     $user = User::find($causedUserId);
-                    $causedUserName = $user?->name ?? "User #{$causedUserId}";
+                    $causedUserName = $user ? $user->name : "User #{$causedUserId}";
                 }
 
                 $dto = new AuditLogDTO(

@@ -62,16 +62,10 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: Check PHP Code Style (Laravel Pint)
-        run: vendor/bin/pint --test
-
-      - name: Check Frontend Code Quality (ESLint)
-        run: npm run lint
-
-      - name: Build Vite Production Assets
+      - name: Build Production Assets
         run: npm run build
 
-      - name: Execute Pest Feature Test Suite
+      - name: Execute Full CI Quality Checks
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ':memory:'
@@ -80,4 +74,4 @@ jobs:
           QUEUE_CONNECTION: redis
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
-        run: php artisan test --compact
+        run: composer ci:check
