@@ -24,6 +24,7 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $this->bootModuleRoutes();
         $this->bootModulePermissions();
+        $this->bootModuleMigrations();
     }
 
     /**
@@ -66,6 +67,26 @@ class ModuleServiceProvider extends ServiceProvider
                 $relative = end($parts);
                 $submoduleKey = str_replace('/permissions.php', '', $relative);
                 static::$discoveredPermissions[$submoduleKey] = $permissions;
+            }
+        }
+    }
+
+    /**
+     * Auto-discover and load database migrations from app/Modules/{Module}/{Submodule}/Database/Migrations
+     */
+    protected function bootModuleMigrations(): void
+    {
+        $modulesPath = app_path('Modules');
+
+        if (! File::isDirectory($modulesPath)) {
+            return;
+        }
+
+        $migrationDirs = File::glob($modulesPath.'/*/*/Database/Migrations');
+
+        foreach ($migrationDirs as $dir) {
+            if (File::isDirectory($dir)) {
+                $this->loadMigrationsFrom($dir);
             }
         }
     }

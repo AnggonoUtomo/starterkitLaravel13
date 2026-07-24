@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Modules\Console\SystemSetting\Services\SettingService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -46,5 +47,9 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+
+        if ($this->app->bound('db') && ! $this->app->runningInConsole()) {
+            app(SettingService::class)->applyGlobalSettings();
+        }
     }
 }

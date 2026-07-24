@@ -1,0 +1,408 @@
+<?php
+
+namespace App\Modules\Console\SystemSetting\Services;
+
+use App\Modules\Console\SystemSetting\Models\SystemSetting;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Password;
+
+class SettingService
+{
+    /**
+     * Default settings for all 10 domain panels.
+     */
+    public function defaultEmailSettings(): array
+    {
+        return [
+            'enabled' => false,
+            'mailer' => 'log',
+            'host' => '127.0.0.1',
+            'port' => 587,
+            'username' => '',
+            'password' => '',
+            'password_configured' => false,
+            'encryption' => 'tls',
+            'from_address' => 'admin@example.com',
+            'from_name' => config('app.name', 'Laravel Starter'),
+            'send_credentials_on_create' => true,
+            'send_credentials_on_password_update' => true,
+            'credential_subject' => 'Aktivasi Akun & Credentials Portal',
+            'credential_intro' => 'Selamat datang! Berikut kredensial masuk akun Anda:',
+        ];
+    }
+
+    public function defaultBrandingSettings(): array
+    {
+        return [
+            'app_name' => config('app.name', 'Laravel Starter Kit'),
+            'logo_url' => null,
+            'favicon_url' => null,
+        ];
+    }
+
+    public function defaultLocalizationSettings(): array
+    {
+        return [
+            'timezone' => 'Asia/Jakarta',
+            'date_format' => 'd M Y',
+            'time_format' => 'H:i',
+            'datetime_format' => 'd M Y H:i',
+        ];
+    }
+
+    public function defaultPaginationSettings(): array
+    {
+        return [
+            'default_per_page' => 10,
+            'per_page_options' => [5, 10, 15, 25, 50, 100],
+        ];
+    }
+
+    public function defaultSecurityPolicy(): array
+    {
+        return [
+            'require_email_verification' => false,
+            'audit_sensitive_actions' => true,
+            'single_session_per_user' => false,
+            'allow_account_deletion' => true,
+            'session_lifetime_minutes' => 120,
+            'login_max_attempts' => 5,
+            'login_decay_minutes' => 1,
+            'password_confirmation_timeout_seconds' => 10800,
+        ];
+    }
+
+    public function defaultPasswordPolicy(): array
+    {
+        return [
+            'min_length' => 8,
+            'require_uppercase' => true,
+            'require_lowercase' => true,
+            'require_numbers' => true,
+            'require_symbols' => false,
+            'uncompromised' => false,
+            'expiry_days' => 0,
+            'history_count' => 0,
+        ];
+    }
+
+    public function defaultMaintenanceMode(): array
+    {
+        return [
+            'enabled' => false,
+            'active' => false,
+            'message' => 'Aplikasi sedang dalam pemeliharaan rutin. Silakan kembali dalam beberapa saat.',
+            'page_style' => 'aurora',
+            'retry_seconds' => 300,
+            'refresh_seconds' => 60,
+            'secret' => null,
+            'secret_configured' => false,
+            'bypass_url' => null,
+        ];
+    }
+
+    public function defaultMapSettings(): array
+    {
+        return [
+            'enabled' => false,
+            'google_maps_api_key' => null,
+            'google_maps_map_id' => null,
+            'configured' => false,
+        ];
+    }
+
+    /**
+     * Getters for each domain setting group.
+     */
+    public function getEmailSettings(): array
+    {
+        return SystemSetting::getGroup('email', $this->defaultEmailSettings());
+    }
+
+    public function getBrandingSettings(): array
+    {
+        return SystemSetting::getGroup('branding', $this->defaultBrandingSettings());
+    }
+
+    public function getLocalizationSettings(): array
+    {
+        $settings = SystemSetting::getGroup('localization', $this->defaultLocalizationSettings());
+
+        $now = now()->setTimezone($settings['timezone'] ?? 'Asia/Jakarta');
+        $settings['preview_date'] = $now->format($this->convertPhpDateFormat($settings['date_format'] ?? 'd M Y'));
+        $settings['preview_time'] = $now->format($this->convertPhpDateFormat($settings['time_format'] ?? 'H:i'));
+        $settings['preview_datetime'] = $now->format($this->convertPhpDateFormat($settings['datetime_format'] ?? 'd M Y H:i'));
+
+        return $settings;
+    }
+
+    public function getPaginationSettings(): array
+    {
+        return SystemSetting::getGroup('pagination', $this->defaultPaginationSettings());
+    }
+
+    public function getSecurityPolicy(): array
+    {
+        return SystemSetting::getGroup('security', $this->defaultSecurityPolicy());
+    }
+
+    public function getPasswordPolicy(): array
+    {
+        return SystemSetting::getGroup('password', $this->defaultPasswordPolicy());
+    }
+
+    public function getMaintenanceMode(): array
+    {
+        return SystemSetting::getGroup('maintenance', $this->defaultMaintenanceMode());
+    }
+
+    public function getMapSettings(): array
+    {
+        return SystemSetting::getGroup('map', $this->defaultMapSettings());
+    }
+
+    /**
+     * Updaters for each domain setting group.
+     */
+    public function updateEmailSettings(array $data): array
+    {
+        $current = $this->getEmailSettings();
+
+        if (empty($data['password']) && ! empty($current['password'])) {
+            $data['password'] = $current['password'];
+            $data['password_configured'] = true;
+        } else {
+            $data['password_configured'] = ! empty($data['password']);
+        }
+
+        return SystemSetting::setGroup('email', array_merge($current, $data));
+    }
+
+    public function updateBrandingSettings(array $data, mixed $logoFile = null, mixed $faviconFile = null): array
+    {
+        $current = $this->getBrandingSettings();
+        $appName = $data['app_name'] ?? $current['app_name'];
+        $logoUrl = $current['logo_url'];
+        $faviconUrl = $current['favicon_url'];
+
+        if (! empty($data['remove_logo']) && $logoUrl) {
+            $path = str_replace('/storage/', '', $logoUrl);
+            Storage::disk('public')->delete($path);
+            $logoUrl = null;
+        }
+
+        if (! empty($data['remove_favicon']) && $faviconUrl) {
+            $path = str_replace('/storage/', '', $faviconUrl);
+            Storage::disk('public')->delete($path);
+            $faviconUrl = null;
+        }
+
+        if ($logoFile) {
+            $storedPath = $logoFile->store('branding', 'public');
+            $logoUrl = '/storage/'.$storedPath;
+        }
+
+        if ($faviconFile) {
+            $storedPath = $faviconFile->store('branding', 'public');
+            $faviconUrl = '/storage/'.$storedPath;
+        }
+
+        $payload = [
+            'app_name' => $appName,
+            'logo_url' => $logoUrl,
+            'favicon_url' => $faviconUrl,
+        ];
+
+        return SystemSetting::setGroup('branding', $payload);
+    }
+
+    public function updateLocalizationSettings(array $data): array
+    {
+        $current = $this->getLocalizationSettings();
+        $timezone = $data['timezone'] ?? 'Asia/Jakarta';
+        $dateFormat = $data['date_format'] ?? 'd M Y';
+        $timeFormat = $data['time_format'] ?? 'H:i';
+        $dateTimeFormat = $dateFormat.' '.$timeFormat;
+
+        $payload = [
+            'timezone' => $timezone,
+            'date_format' => $dateFormat,
+            'time_format' => $timeFormat,
+            'datetime_format' => $dateTimeFormat,
+        ];
+
+        return SystemSetting::setGroup('localization', array_merge($current, $payload));
+    }
+
+    public function updatePaginationSettings(array $data): array
+    {
+        $current = $this->getPaginationSettings();
+        $defaultPerPage = (int) ($data['default_per_page'] ?? 10);
+        $options = array_map('intval', (array) ($data['per_page_options'] ?? [5, 10, 15, 25, 50, 100]));
+        sort($options);
+
+        if (! in_array($defaultPerPage, $options, true) && ! empty($options)) {
+            $options[] = $defaultPerPage;
+            sort($options);
+        }
+
+        $payload = [
+            'default_per_page' => $defaultPerPage,
+            'per_page_options' => array_values(array_unique($options)),
+        ];
+
+        return SystemSetting::setGroup('pagination', $payload);
+    }
+
+    public function updateSecurityPolicy(array $data): array
+    {
+        $current = $this->getSecurityPolicy();
+
+        $payload = [
+            'require_email_verification' => (bool) ($data['require_email_verification'] ?? false),
+            'audit_sensitive_actions' => (bool) ($data['audit_sensitive_actions'] ?? true),
+            'single_session_per_user' => (bool) ($data['single_session_per_user'] ?? false),
+            'allow_account_deletion' => (bool) ($data['allow_account_deletion'] ?? true),
+            'session_lifetime_minutes' => (int) ($data['session_lifetime_minutes'] ?? 120),
+            'login_max_attempts' => (int) ($data['login_max_attempts'] ?? 5),
+            'login_decay_minutes' => (int) ($data['login_decay_minutes'] ?? 1),
+            'password_confirmation_timeout_seconds' => (int) ($data['password_confirmation_timeout_seconds'] ?? 10800),
+        ];
+
+        return SystemSetting::setGroup('security', array_merge($current, $payload));
+    }
+
+    public function updatePasswordPolicy(array $data): array
+    {
+        $current = $this->getPasswordPolicy();
+
+        $payload = [
+            'min_length' => (int) ($data['min_length'] ?? 8),
+            'require_uppercase' => (bool) ($data['require_uppercase'] ?? true),
+            'require_lowercase' => (bool) ($data['require_lowercase'] ?? true),
+            'require_numbers' => (bool) ($data['require_numbers'] ?? true),
+            'require_symbols' => (bool) ($data['require_symbols'] ?? false),
+            'uncompromised' => (bool) ($data['uncompromised'] ?? false),
+            'expiry_days' => (int) ($data['expiry_days'] ?? 0),
+            'history_count' => (int) ($data['history_count'] ?? 0),
+        ];
+
+        return SystemSetting::setGroup('password', array_merge($current, $payload));
+    }
+
+    public function updateMaintenanceMode(array $data): array
+    {
+        $current = $this->getMaintenanceMode();
+        $secret = $data['secret'] ?? null;
+        $secretConfigured = ! empty($secret) || ! empty($current['secret']);
+
+        $payload = [
+            'enabled' => (bool) ($data['enabled'] ?? false),
+            'active' => (bool) ($data['enabled'] ?? false),
+            'message' => $data['message'] ?? 'Aplikasi sedang dalam pemeliharaan rutin.',
+            'page_style' => $data['page_style'] ?? 'aurora',
+            'retry_seconds' => (int) ($data['retry_seconds'] ?? 300),
+            'refresh_seconds' => (int) ($data['refresh_seconds'] ?? 60),
+            'secret' => $secret ?: ($current['secret'] ?? null),
+            'secret_configured' => $secretConfigured,
+            'bypass_url' => ($secret || ($current['secret'] ?? null)) ? url('/'.($secret ?: $current['secret'])) : null,
+        ];
+
+        return SystemSetting::setGroup('maintenance', array_merge($current, $payload));
+    }
+
+    public function updateMapSettings(array $data): array
+    {
+        $current = $this->getMapSettings();
+        $apiKey = $data['google_maps_api_key'] ?? null;
+        $mapId = $data['google_maps_map_id'] ?? null;
+
+        $payload = [
+            'enabled' => (bool) ($data['enabled'] ?? false),
+            'google_maps_api_key' => $apiKey,
+            'google_maps_map_id' => $mapId,
+            'configured' => ! empty($apiKey),
+        ];
+
+        return SystemSetting::setGroup('map', array_merge($current, $payload));
+    }
+
+    /**
+     * Apply all global settings to Laravel's runtime config on app boot.
+     */
+    public function applyGlobalSettings(): void
+    {
+        try {
+            // 1. Branding
+            $branding = $this->getBrandingSettings();
+            if (! empty($branding['app_name'])) {
+                Config::set('app.name', $branding['app_name']);
+            }
+
+            // 2. Localization
+            $localization = $this->getLocalizationSettings();
+            if (! empty($localization['timezone'])) {
+                date_default_timezone_set($localization['timezone']);
+                Config::set('app.timezone', $localization['timezone']);
+            }
+
+            // 3. Email & SMTP
+            $email = $this->getEmailSettings();
+            if (! empty($email['enabled']) && ! empty($email['mailer'])) {
+                Config::set('mail.default', $email['mailer']);
+                if ($email['mailer'] === 'smtp') {
+                    Config::set('mail.mailers.smtp.host', $email['host'] ?? '127.0.0.1');
+                    Config::set('mail.mailers.smtp.port', $email['port'] ?? 587);
+                    Config::set('mail.mailers.smtp.username', $email['username'] ?? '');
+                    if (! empty($email['password'])) {
+                        Config::set('mail.mailers.smtp.password', $email['password']);
+                    }
+                    Config::set('mail.mailers.smtp.scheme', $email['encryption'] ?? 'tls');
+                }
+                if (! empty($email['from_address'])) {
+                    Config::set('mail.from.address', $email['from_address']);
+                    Config::set('mail.from.name', $email['from_name'] ?? config('app.name'));
+                }
+            }
+
+            // 4. Password Policy
+            $password = $this->getPasswordPolicy();
+            Password::defaults(function () use ($password) {
+                $rule = Password::min($password['min_length'] ?? 8);
+
+                if (! empty($password['require_uppercase'])) {
+                    $rule->mixedCase();
+                }
+                if (! empty($password['require_numbers'])) {
+                    $rule->numbers();
+                }
+                if (! empty($password['require_symbols'])) {
+                    $rule->symbols();
+                }
+                if (! empty($password['uncompromised'])) {
+                    $rule->uncompromised();
+                }
+
+                return $rule;
+            });
+
+            // 5. Security Policy
+            $security = $this->getSecurityPolicy();
+            if (! empty($security['session_lifetime_minutes'])) {
+                Config::set('session.lifetime', $security['session_lifetime_minutes']);
+            }
+            if (! empty($security['password_confirmation_timeout_seconds'])) {
+                Config::set('auth.password_timeout', $security['password_confirmation_timeout_seconds']);
+            }
+
+        } catch (\Throwable $e) {
+            // Fail safe during early migration/cli execution
+        }
+    }
+
+    private function convertPhpDateFormat(string $format): string
+    {
+        return $format;
+    }
+}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Modules\Console\SystemSetting\Services\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -36,10 +37,13 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        $settingService = app(SettingService::class);
+        $branding = $settingService->getBrandingSettings();
 
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
+            'name' => $branding['app_name'] ?? config('app.name'),
+            'branding' => $branding,
             'auth' => [
                 'user' => $user ? [
                     'id' => $user->id,
