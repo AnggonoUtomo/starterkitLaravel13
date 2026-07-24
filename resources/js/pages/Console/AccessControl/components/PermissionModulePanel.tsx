@@ -71,7 +71,7 @@ export default function PermissionModulePanel({
     }).filter((group) => group.permissions.length > 0);
 
     return (
-        <div className="flex flex-col rounded-xl border border-border bg-card shadow-xs overflow-hidden min-h-[550px]">
+        <div className="flex flex-col rounded-xl border border-border bg-card shadow-xs overflow-hidden min-h-137.5">
             {/* Header */}
             <div className="flex flex-col gap-3 border-b border-border p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
@@ -105,13 +105,13 @@ export default function PermissionModulePanel({
             </div>
 
             {!canUpdateRole && (
-                <div className="m-4 mb-0 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-600 dark:text-amber-400">
+                <div className="m-4 mb-0 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-500 font-medium">
                     Role sistem protected ini bersifat baca-saja (*read-only*).
                 </div>
             )}
 
             {/* Groups List */}
-            <div className="flex-1 space-y-3 p-4 overflow-y-auto max-h-[600px]">
+            <div className="flex-1 space-y-3 p-4 overflow-y-auto max-h-150">
                 {filteredGroups.length > 0 ? (
                     filteredGroups.map((group, groupIndex) => {
                         const isOpen = openedModule === group.module || searchQuery.length > 0;
