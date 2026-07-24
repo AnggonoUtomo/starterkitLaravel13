@@ -1,175 +1,493 @@
-import { Head } from '@inertiajs/react';
-import {
-    Settings,
-    Database,
-    Activity,
-    PackageCheck,
-    Cpu,
-    HardDrive,
-} from 'lucide-react';
-import React from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { Settings } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import type { FormEvent } from 'react';
+import { Badge } from '@/components/ui/badge';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
+import { BrandingSettingsPanel } from './components/BrandingSettingsPanel';
+import { EmailSettingsPanel } from './components/EmailSettingsPanel';
+import { EnvironmentInfoPanel } from './components/EnvironmentInfoPanel';
+import { LocalizationSettingsPanel } from './components/LocalizationSettingsPanel';
+import { MaintenanceModePanel } from './components/MaintenanceModePanel';
+import { MapSettingsPanel } from './components/MapSettingsPanel';
+import { PaginationSettingsPanel } from './components/PaginationSettingsPanel';
+import { PasswordPolicyPanel } from './components/PasswordPolicyPanel';
+import { SecurityPolicyPanel } from './components/SecurityPolicyPanel';
+import { SystemHealthPanel } from './components/SystemHealthPanel';
+import { SystemSettingMenu } from './components/SystemSettingMenu';
+import { retryMaximumSeconds, retryMinimumSeconds } from './options';
+import type {
+    BrandingForm,
+    EmailSettingForm,
+    LocalizationForm,
+    MaintenanceModeForm,
+    MapSettingForm,
+    PaginationForm,
+    PasswordPolicyForm,
+    RetryUnit,
+    SecurityPolicyForm,
+    SystemSettingSection,
+    SystemSettingsProps,
+    TestEmailForm,
+} from './types';
+import {
+    filePreview,
+    formatSecondsBreakdown,
+    retryPartsToSeconds,
+    retrySecondsToParts,
+} from './utils';
 
-interface HealthStatus {
-    php_version: string;
-    laravel_version: string;
-    database_status: string;
-    redis_status: string;
-    cache_driver: string;
-    session_driver: string;
-    queue_driver: string;
-    environment: string;
-    debug_mode: boolean;
-}
+const sectionLabels: Record<SystemSettingSection, string> = {
+    email: 'Email & SMTP',
+    branding: 'App Name & Logo',
+    localization: 'Timezone & Date',
+    pagination: 'Default Pagination',
+    security: 'Security Policy',
+    password: 'Password Policy',
+    maintenance: 'Maintenance Mode',
+    map: 'Google Maps',
+    health: 'System Health',
+    environment: 'Environment Info',
+};
 
-interface SubmoduleItem {
-    submodule: string;
-    path: string;
-    permission_count: number;
-    permissions: string[];
-}
+const defaultEmailSettings = {
+    enabled: false,
+    mailer: 'log' as const,
+    host: '',
+    port: 587,
+    username: '',
+    password: '',
+    password_configured: false,
+    encryption: 'tls' as const,
+    from_address: 'admin@example.com',
+    from_name: 'Laravel Starter',
+    send_credentials_on_create: true,
+    send_credentials_on_password_update: true,
+    credential_subject: 'Aktivasi Akun',
+    credential_intro: 'Selamat datang.',
+};
 
-interface Props {
-    title: string;
-    health: HealthStatus;
-    modules: Record<string, SubmoduleItem[]>;
-}
+const defaultBrandingSettings = {
+    app_name: 'Laravel Starter Kit',
+    logo_url: null,
+    favicon_url: null,
+};
 
-export default function Index({ title, health, modules }: Props) {
+const defaultLocalizationSettings = {
+    timezone: 'Asia/Jakarta',
+    date_format: 'd M Y',
+    time_format: 'H:i',
+    datetime_format: 'd M Y H:i',
+    preview_date: '31 Jan 2026',
+    preview_time: '23:45',
+    preview_datetime: '31 Jan 2026 23:45',
+};
+
+const defaultPaginationSettings = {
+    default_per_page: 10,
+    per_page_options: [5, 10, 15, 25, 50, 100],
+};
+
+const defaultSecurityPolicy = {
+    require_email_verification: false,
+    audit_sensitive_actions: true,
+    single_session_per_user: false,
+    allow_account_deletion: true,
+    session_lifetime_minutes: 120,
+    login_max_attempts: 5,
+    login_decay_minutes: 1,
+    password_confirmation_timeout_seconds: 10800,
+};
+
+const defaultPasswordPolicy = {
+    min_length: 8,
+    require_uppercase: true,
+    require_lowercase: true,
+    require_numbers: true,
+    require_symbols: false,
+    uncompromised: false,
+    expiry_days: 0,
+    history_count: 0,
+};
+
+const defaultMaintenanceMode = {
+    enabled: false,
+    active: false,
+    message: 'Aplikasi sedang dalam pemeliharaan rutin.',
+    page_style: 'aurora' as const,
+    retry_seconds: 300,
+    refresh_seconds: 60,
+    secret: null,
+    secret_configured: false,
+    bypass_url: null,
+};
+
+const defaultMapSettings = {
+    enabled: false,
+    google_maps_api_key: null,
+    google_maps_map_id: null,
+    configured: false,
+};
+
+const defaultSystemHealth = {
+    summary: {
+        status: 'ok' as const,
+        ok: 6,
+        warning: 0,
+        error: 0,
+        checked_at: new Date().toLocaleString(),
+    },
+    runtime: { environment: 'local', debug: true },
+    checks: [],
+};
+
+const defaultEnvironmentInfo = {
+    summary: {
+        mode: 'local',
+        generated_at: new Date().toLocaleString(),
+        notice: 'Read-only environment diagnostics',
+    },
+    groups: [],
+};
+
+export default function Index(props: Partial<SystemSettingsProps>) {
+    const emailSettings = props.emailSettings ?? defaultEmailSettings;
+    const brandingSettings = props.brandingSettings ?? defaultBrandingSettings;
+    const localizationSettings =
+        props.localizationSettings ?? defaultLocalizationSettings;
+    const paginationSettings =
+        props.paginationSettings ?? defaultPaginationSettings;
+    const securityPolicy = props.securityPolicy ?? defaultSecurityPolicy;
+    const passwordPolicy = props.passwordPolicy ?? defaultPasswordPolicy;
+    const maintenanceMode = props.maintenanceMode ?? defaultMaintenanceMode;
+    const mapSettings = props.mapSettings ?? defaultMapSettings;
+    const systemHealth = props.systemHealth ?? defaultSystemHealth;
+    const environmentInfo = props.environmentInfo ?? defaultEnvironmentInfo;
+    const can = props.can ?? { update: true };
+
+    const [activeSection, setActiveSection] =
+        useState<SystemSettingSection>('email');
+
+    const form = useForm<EmailSettingForm>({
+        enabled: emailSettings.enabled,
+        mailer: emailSettings.mailer,
+        host: emailSettings.host ?? '',
+        port: emailSettings.port ? String(emailSettings.port) : '',
+        username: emailSettings.username ?? '',
+        password: '',
+        encryption: emailSettings.encryption ?? 'none',
+        from_address: emailSettings.from_address,
+        from_name: emailSettings.from_name,
+        send_credentials_on_create: emailSettings.send_credentials_on_create,
+        send_credentials_on_password_update:
+            emailSettings.send_credentials_on_password_update,
+        credential_subject: emailSettings.credential_subject ?? '',
+        credential_intro: emailSettings.credential_intro ?? '',
+    });
+
+    const brandingForm = useForm<BrandingForm>({
+        app_name: brandingSettings.app_name,
+        logo: null,
+        favicon: null,
+        remove_logo: false,
+        remove_favicon: false,
+        _method: 'put',
+    });
+
+    const localizationForm = useForm<LocalizationForm>({
+        timezone: localizationSettings.timezone,
+        date_format: localizationSettings.date_format,
+        time_format: localizationSettings.time_format,
+    });
+
+    const paginationForm = useForm<PaginationForm>({
+        default_per_page: String(paginationSettings.default_per_page),
+        per_page_options: paginationSettings.per_page_options,
+    });
+
+    const securityForm = useForm<SecurityPolicyForm>({
+        require_email_verification: securityPolicy.require_email_verification,
+        audit_sensitive_actions: securityPolicy.audit_sensitive_actions,
+        single_session_per_user: securityPolicy.single_session_per_user,
+        allow_account_deletion: securityPolicy.allow_account_deletion,
+        session_lifetime_minutes: String(
+            securityPolicy.session_lifetime_minutes,
+        ),
+        login_max_attempts: String(securityPolicy.login_max_attempts),
+        login_decay_minutes: String(securityPolicy.login_decay_minutes),
+        password_confirmation_timeout_seconds: String(
+            securityPolicy.password_confirmation_timeout_seconds,
+        ),
+    });
+
+    const passwordPolicyForm = useForm<PasswordPolicyForm>({
+        min_length: String(passwordPolicy.min_length),
+        require_uppercase: passwordPolicy.require_uppercase,
+        require_lowercase: passwordPolicy.require_lowercase,
+        require_numbers: passwordPolicy.require_numbers,
+        require_symbols: passwordPolicy.require_symbols,
+        uncompromised: passwordPolicy.uncompromised,
+        expiry_days: String(passwordPolicy.expiry_days),
+        history_count: String(passwordPolicy.history_count),
+    });
+
+    const maintenanceForm = useForm<MaintenanceModeForm>({
+        enabled: maintenanceMode.enabled,
+        message: maintenanceMode.message ?? '',
+        page_style: maintenanceMode.page_style ?? 'aurora',
+        retry_seconds: maintenanceMode.retry_seconds
+            ? String(maintenanceMode.retry_seconds)
+            : '',
+        refresh_seconds: maintenanceMode.refresh_seconds
+            ? String(maintenanceMode.refresh_seconds)
+            : '',
+        secret: '',
+    });
+
+    const mapForm = useForm<MapSettingForm>({
+        enabled: mapSettings.enabled,
+        google_maps_api_key: mapSettings.google_maps_api_key ?? '',
+        google_maps_map_id: mapSettings.google_maps_map_id ?? '',
+    });
+
+    const testForm = useForm<TestEmailForm>({
+        recipient: '',
+    });
+
+    const initialRetry = retrySecondsToParts(maintenanceMode.retry_seconds);
+    const [retryAmount, setRetryAmount] = useState(initialRetry.amount);
+    const [retryUnit, setRetryUnit] = useState<RetryUnit>(initialRetry.unit);
+    const retrySecondsPreview =
+        Number(retryPartsToSeconds(retryAmount, retryUnit)) || null;
+    const retryBreakdownPreview = formatSecondsBreakdown(retrySecondsPreview);
+    const retryIsOutOfRange =
+        retrySecondsPreview !== null &&
+        (retrySecondsPreview < retryMinimumSeconds ||
+            retrySecondsPreview > retryMaximumSeconds);
+
+    const logoPreview = useMemo(
+        () =>
+            filePreview(
+                brandingForm.data.logo,
+                brandingSettings.logo_url,
+                brandingForm.data.remove_logo,
+            ),
+        [
+            brandingForm.data.logo,
+            brandingForm.data.remove_logo,
+            brandingSettings.logo_url,
+        ],
+    );
+    const faviconPreview = useMemo(
+        () =>
+            filePreview(
+                brandingForm.data.favicon,
+                brandingSettings.favicon_url,
+                brandingForm.data.remove_favicon,
+            ),
+        [
+            brandingForm.data.favicon,
+            brandingForm.data.remove_favicon,
+            brandingSettings.favicon_url,
+        ],
+    );
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        form.put('/console/system-settings/email', { preserveScroll: true });
+    };
+
+    const submitBranding = (event: FormEvent) => {
+        event.preventDefault();
+        brandingForm.post('/console/system-settings/branding', {
+            forceFormData: true,
+            preserveScroll: true,
+        });
+    };
+
+    const submitLocalization = (event: FormEvent) => {
+        event.preventDefault();
+        localizationForm.put('/console/system-settings/localization', {
+            preserveScroll: true,
+        });
+    };
+
+    const submitPagination = (event: FormEvent) => {
+        event.preventDefault();
+        paginationForm.put('/console/system-settings/pagination', {
+            preserveScroll: true,
+        });
+    };
+
+    const submitSecurityPolicy = (event: FormEvent) => {
+        event.preventDefault();
+        securityForm.put('/console/system-settings/security-policy', {
+            preserveScroll: true,
+        });
+    };
+
+    const submitPasswordPolicy = (event: FormEvent) => {
+        event.preventDefault();
+        passwordPolicyForm.put('/console/system-settings/password-policy', {
+            preserveScroll: true,
+        });
+    };
+
+    const submitMaintenanceMode = (event: FormEvent) => {
+        event.preventDefault();
+        maintenanceForm.transform((data) => ({
+            ...data,
+            retry_seconds: retryPartsToSeconds(retryAmount, retryUnit),
+        }));
+        maintenanceForm.put('/console/system-settings/maintenance-mode', {
+            preserveScroll: true,
+        });
+    };
+
+    const submitMapSettings = (event: FormEvent) => {
+        event.preventDefault();
+        mapForm.put('/console/system-settings/map', { preserveScroll: true });
+    };
+
+    const togglePerPageOption = (option: number, checked: boolean) => {
+        const nextOptions = checked
+            ? [...paginationForm.data.per_page_options, option]
+            : paginationForm.data.per_page_options.filter(
+                  (item) => item !== option,
+              );
+
+        const sortedOptions = [...new Set(nextOptions)].sort((a, b) => a - b);
+        paginationForm.setData('per_page_options', sortedOptions);
+
+        if (
+            !sortedOptions.includes(
+                Number(paginationForm.data.default_per_page),
+            ) &&
+            sortedOptions.length > 0
+        ) {
+            paginationForm.setData(
+                'default_per_page',
+                String(sortedOptions[0]),
+            );
+        }
+    };
+
+    const submitTestEmail = (event: FormEvent) => {
+        event.preventDefault();
+        testForm.post('/console/system-settings/email/test', {
+            preserveScroll: true,
+        });
+    };
+
+    const mailerUsesSmtp = form.data.mailer === 'smtp';
+
     return (
         <ConsoleLayout>
-            <Head title={title} />
-            <div className="mx-auto max-w-7xl space-y-6 p-6">
-                {/* Header Section */}
-                <div>
-                    <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-                        <Settings className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                        <span>{title}</span>
-                    </h1>
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                        System health metrics, Redis status, and Auto-Discovered
-                        DDD-Lite Modules Registry.
-                    </p>
+            <Head title="System Settings" />
+
+            <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 sm:p-6">
+                {/* Header Submodul */}
+                <div className="flex flex-col gap-3 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-1">
+                        <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
+                            <Settings className="size-6 text-emerald-600 dark:text-emerald-400" />
+                            <span>System Settings</span>
+                        </h1>
+                        <p className="text-xs text-muted-foreground">
+                            Kelola identitas aplikasi, email, kebijakan
+                            keamanan, dan konfigurasi sistem inti secara
+                            terpusat.
+                        </p>
+                    </div>
+                    <Badge
+                        variant="outline"
+                        className="w-fit px-3 py-1 font-mono text-xs"
+                    >
+                        {sectionLabels[activeSection]}
+                    </Badge>
                 </div>
 
-                {/* System Health Cards */}
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-                        <div className="rounded-lg border border-emerald-500/30 bg-emerald-50 p-3 text-emerald-600 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
-                            <Database className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                                Database Status
-                            </div>
-                            <div className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                                {health.database_status}
-                            </div>
-                            <div className="font-mono text-[10px] text-slate-500">
-                                SQLite / MySQL
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-                        <div className="rounded-lg border border-rose-500/30 bg-rose-50 p-3 text-rose-600 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
-                            <HardDrive className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                                Redis Infrastructure
-                            </div>
-                            <div className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                                {health.redis_status}
-                            </div>
-                            <div className="font-mono text-[10px] text-slate-500">
-                                Cache: {health.cache_driver} | Session:{' '}
-                                {health.session_driver}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-                        <div className="rounded-lg border border-blue-500/30 bg-blue-50 p-3 text-blue-600 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400">
-                            <Cpu className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                                PHP Environment
-                            </div>
-                            <div className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                                v{health.php_version}
-                            </div>
-                            <div className="font-mono text-[10px] text-slate-500">
-                                Laravel v{health.laravel_version}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-                        <div className="rounded-lg border border-purple-500/30 bg-purple-50 p-3 text-purple-600 dark:border-purple-500/20 dark:bg-purple-500/10 dark:text-purple-400">
-                            <Activity className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                                Queue & Env
-                            </div>
-                            <div className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                                {health.environment}
-                            </div>
-                            <div className="font-mono text-[10px] text-slate-500">
-                                Queue: {health.queue_driver}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Registered Modules List */}
-                <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 dark:shadow-xl">
-                    <div className="flex items-center gap-2 border-b border-slate-200 pb-3 text-lg font-bold text-slate-900 dark:border-slate-800 dark:text-slate-100">
-                        <PackageCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                        <span>Auto-Discovered DDD-Lite Modules</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {Object.entries(modules).map(
-                            ([moduleName, submodules]) => (
-                                <div
-                                    key={moduleName}
-                                    className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800/80 dark:bg-slate-950"
-                                >
-                                    <div className="flex items-center justify-between text-sm font-bold tracking-wider text-emerald-700 uppercase dark:text-emerald-400">
-                                        <span>Module: {moduleName}</span>
-                                        <span className="font-mono text-xs font-normal text-slate-500">
-                                            {submodules.length} Submodule(s)
-                                        </span>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        {submodules.map((sub) => (
-                                            <div
-                                                key={sub.submodule}
-                                                className="rounded-md border border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-900"
-                                            >
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                                                        {sub.submodule}
-                                                    </span>
-                                                    <span className="rounded border border-emerald-500/30 bg-emerald-50 px-2 py-0.5 font-mono text-xs font-medium text-emerald-700 dark:border-transparent dark:bg-emerald-500/10 dark:text-emerald-400">
-                                                        {sub.permission_count}{' '}
-                                                        permissions
-                                                    </span>
-                                                </div>
-                                                <div className="mt-1 font-mono text-[10px] text-slate-500">
-                                                    {sub.path}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ),
-                        )}
-                    </div>
+                {/* Grid Split View: Main Active Panel & Sidebar Menu */}
+                <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
+                    {activeSection === 'email' ? (
+                        <EmailSettingsPanel
+                            can={can}
+                            emailSettings={emailSettings}
+                            form={form}
+                            testForm={testForm}
+                            mailerUsesSmtp={mailerUsesSmtp}
+                            submit={submit}
+                            submitTestEmail={submitTestEmail}
+                        />
+                    ) : activeSection === 'branding' ? (
+                        <BrandingSettingsPanel
+                            can={can}
+                            form={brandingForm}
+                            logoPreview={logoPreview}
+                            faviconPreview={faviconPreview}
+                            submit={submitBranding}
+                        />
+                    ) : activeSection === 'localization' ? (
+                        <LocalizationSettingsPanel
+                            can={can}
+                            localizationSettings={localizationSettings}
+                            form={localizationForm}
+                            submit={submitLocalization}
+                        />
+                    ) : activeSection === 'pagination' ? (
+                        <PaginationSettingsPanel
+                            can={can}
+                            paginationSettings={paginationSettings}
+                            form={paginationForm}
+                            togglePerPageOption={togglePerPageOption}
+                            submit={submitPagination}
+                        />
+                    ) : activeSection === 'security' ? (
+                        <SecurityPolicyPanel
+                            can={can}
+                            securityPolicy={securityPolicy}
+                            form={securityForm}
+                            submit={submitSecurityPolicy}
+                        />
+                    ) : activeSection === 'password' ? (
+                        <PasswordPolicyPanel
+                            can={can}
+                            passwordPolicy={passwordPolicy}
+                            form={passwordPolicyForm}
+                            submit={submitPasswordPolicy}
+                        />
+                    ) : activeSection === 'health' ? (
+                        <SystemHealthPanel systemHealth={systemHealth} />
+                    ) : activeSection === 'environment' ? (
+                        <EnvironmentInfoPanel
+                            environmentInfo={environmentInfo}
+                        />
+                    ) : activeSection === 'map' ? (
+                        <MapSettingsPanel
+                            can={can}
+                            mapSettings={mapSettings}
+                            form={mapForm}
+                            submit={submitMapSettings}
+                        />
+                    ) : (
+                        <MaintenanceModePanel
+                            can={can}
+                            maintenanceMode={maintenanceMode}
+                            form={maintenanceForm}
+                            retryAmount={retryAmount}
+                            retryUnit={retryUnit}
+                            retrySecondsPreview={retrySecondsPreview}
+                            retryBreakdownPreview={retryBreakdownPreview}
+                            retryIsOutOfRange={retryIsOutOfRange}
+                            setRetryAmount={setRetryAmount}
+                            setRetryUnit={setRetryUnit}
+                            submit={submitMaintenanceMode}
+                        />
+                    )}
+                    <SystemSettingMenu
+                        activeSection={activeSection}
+                        onSectionChange={setActiveSection}
+                    />
                 </div>
             </div>
         </ConsoleLayout>
