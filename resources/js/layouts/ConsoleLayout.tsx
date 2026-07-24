@@ -83,7 +83,7 @@ export default function ConsoleLayout({ children }: Props) {
     ];
 
     return (
-        <div className="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+        <div className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
             {/* Impersonation Alert Banner */}
             <ImpersonationBanner />
 
@@ -91,11 +91,11 @@ export default function ConsoleLayout({ children }: Props) {
             <ToastNotification />
 
             {/* Top Navigation Bar */}
-            <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
+            <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar/90 px-4 backdrop-blur">
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setSidebarOpen((prev) => !prev)}
-                        className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                        className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground"
                     >
                         {sidebarOpen ? (
                             <X className="h-5 w-5" />
@@ -106,10 +106,10 @@ export default function ConsoleLayout({ children }: Props) {
 
                     <Link
                         href="/console/users"
-                        className="flex items-center gap-2 text-lg font-bold tracking-tight text-emerald-600 dark:text-emerald-400"
+                        className="flex items-center gap-2 text-lg font-bold tracking-tight text-emerald-500"
                     >
                         <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-1.5">
-                            <LayoutDashboard className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                            <LayoutDashboard className="h-5 w-5 text-emerald-500" />
                         </div>
                         <span>Console Admin</span>
                     </Link>
@@ -125,24 +125,24 @@ export default function ConsoleLayout({ children }: Props) {
                             });
                             window.dispatchEvent(event);
                         }}
-                        className="hidden items-center gap-2 rounded-lg border border-slate-300 bg-slate-100 px-3 py-1.5 text-xs text-slate-600 transition hover:bg-slate-200 sm:inline-flex dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-400 dark:hover:bg-slate-800"
+                        className="hidden items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar px-3 py-1.5 text-xs text-muted-foreground transition hover:bg-sidebar-accent sm:inline-flex"
                     >
                         <Command className="h-3.5 w-3.5" />
                         <span>Search / Commands</span>
-                        <kbd className="rounded border border-slate-300 bg-white px-1.5 py-0.5 font-mono text-[10px] text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
+                        <kbd className="rounded border border-sidebar-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
                             Ctrl K
                         </kbd>
                     </button>
 
                     {/* Theme Switcher Toggle */}
-                    <div className="flex items-center rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-slate-800 dark:bg-slate-950">
+                    <div className="flex items-center rounded-lg border border-sidebar-border bg-background p-1">
                         <button
                             onClick={() => updateAppearance('dark')}
                             title="Dark Mode"
                             className={`rounded-md p-1.5 text-xs transition ${
                                 appearance === 'dark'
-                                    ? 'bg-white text-amber-500 shadow-sm dark:bg-slate-800 dark:text-amber-400'
-                                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-500 dark:hover:text-slate-300'
+                                    ? 'bg-sidebar text-amber-500 shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'
                             }`}
                         >
                             <Moon className="h-3.5 w-3.5" />
@@ -152,8 +152,8 @@ export default function ConsoleLayout({ children }: Props) {
                             title="Light Mode"
                             className={`rounded-md p-1.5 text-xs transition ${
                                 appearance === 'light'
-                                    ? 'bg-white text-amber-500 shadow-sm dark:bg-slate-800 dark:text-amber-400'
-                                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-500 dark:hover:text-slate-300'
+                                    ? 'bg-sidebar text-amber-500 shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'
                             }`}
                         >
                             <Sun className="h-3.5 w-3.5" />
@@ -163,8 +163,8 @@ export default function ConsoleLayout({ children }: Props) {
                             title="System Mode"
                             className={`rounded-md p-1.5 text-xs transition ${
                                 appearance === 'system'
-                                    ? 'bg-white text-emerald-600 shadow-sm dark:bg-slate-800 dark:text-emerald-400'
-                                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-500 dark:hover:text-slate-300'
+                                    ? 'bg-sidebar text-emerald-500 shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'
                             }`}
                         >
                             <Monitor className="h-3.5 w-3.5" />
@@ -173,12 +173,12 @@ export default function ConsoleLayout({ children }: Props) {
 
                     {/* User profile pill */}
                     {auth?.user && (
-                        <div className="flex items-center gap-3 border-l border-slate-200 pl-3 dark:border-slate-800">
+                        <div className="flex items-center gap-3 border-l border-sidebar-border pl-3">
                             <div className="hidden text-right sm:block">
-                                <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                                <div className="text-xs font-semibold text-foreground">
                                     {auth.user.name}
                                 </div>
-                                <div className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
+                                <div className="font-mono text-[10px] text-emerald-500">
                                     {auth.user.roles?.[0] || 'User'}
                                 </div>
                             </div>
@@ -186,7 +186,7 @@ export default function ConsoleLayout({ children }: Props) {
                                 href="/logout"
                                 method="post"
                                 as="button"
-                                className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-rose-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-rose-400"
+                                className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-rose-500"
                                 title="Logout"
                             >
                                 <LogOut className="h-4 w-4" />
@@ -199,8 +199,8 @@ export default function ConsoleLayout({ children }: Props) {
             <div className="flex flex-1">
                 {/* Sidebar Navigation */}
                 {sidebarOpen && (
-                    <aside className="flex w-64 shrink-0 flex-col gap-1 border-r border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/50">
-                        <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-slate-400 uppercase dark:text-slate-500">
+                    <aside className="flex w-64 shrink-0 flex-col gap-1 border-r border-sidebar-border bg-sidebar p-4">
+                        <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
                             Console Modules
                         </div>
                         {navItems.map((item) => {
@@ -212,8 +212,8 @@ export default function ConsoleLayout({ children }: Props) {
                                     href={item.href}
                                     className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
                                         item.active
-                                            ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/60 dark:hover:text-slate-200'
+                                            ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-500'
+                                            : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
                                     }`}
                                 >
                                     <Icon className="h-4 w-4" />

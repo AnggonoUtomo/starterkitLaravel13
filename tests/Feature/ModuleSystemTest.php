@@ -44,7 +44,7 @@ test('make:module artisan command generates scaffold files', function () {
 
 test('authenticated user can access console user management index', function () {
     $user = User::factory()->create();
-    $role = Role::findOrCreate('Super Admin', 'web');
+    $role = Role::findOrCreate('Super System', 'web');
     $user->assignRole($role);
 
     $response = $this->actingAs($user)->get(route('console.user-management.index'));
@@ -54,7 +54,7 @@ test('authenticated user can access console user management index', function () 
 
 test('authenticated user can access access control matrix', function () {
     $user = User::factory()->create();
-    $role = Role::findOrCreate('Super Admin', 'web');
+    $role = Role::findOrCreate('Super System', 'web');
     $user->assignRole($role);
 
     $response = $this->actingAs($user)->get(route('console.access-control.index'));
@@ -64,7 +64,7 @@ test('authenticated user can access access control matrix', function () {
 
 test('authenticated user can access system settings index', function () {
     $user = User::factory()->create();
-    $role = Role::findOrCreate('Super Admin', 'web');
+    $role = Role::findOrCreate('Super System', 'web');
     $user->assignRole($role);
 
     $response = $this->actingAs($user)->get(route('console.system-setting.index'));
@@ -74,7 +74,7 @@ test('authenticated user can access system settings index', function () {
 
 test('authenticated user can access audit logs index', function () {
     $user = User::factory()->create();
-    $role = Role::findOrCreate('Super Admin', 'web');
+    $role = Role::findOrCreate('Super System', 'web');
     $user->assignRole($role);
 
     $response = $this->actingAs($user)->get(route('console.audit-log.index'));
@@ -84,7 +84,7 @@ test('authenticated user can access audit logs index', function () {
 
 test('authenticated user can access profile index', function () {
     $user = User::factory()->create();
-    $role = Role::findOrCreate('Super Admin', 'web');
+    $role = Role::findOrCreate('Super System', 'web');
     $user->assignRole($role);
 
     $response = $this->actingAs($user)->get(route('console.profile.index'));

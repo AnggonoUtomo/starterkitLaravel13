@@ -27,16 +27,16 @@ class DatabaseSeeder extends Seeder
         }
 
         // 2. Create Roles
-        $superAdminRole = Role::findOrCreate('Super Admin', 'web');
+        $superSystemRole = Role::findOrCreate('Super System', 'web');
         $adminRole = Role::findOrCreate('Admin', 'web');
         $userRole = Role::findOrCreate('User', 'web');
 
-        // Give all permissions to Super Admin & Admin
+        // Give all permissions to Super System & Admin
         $allPermissions = Permission::all();
-        $superAdminRole->syncPermissions($allPermissions);
+        $superSystemRole->syncPermissions($allPermissions);
         $adminRole->syncPermissions($allPermissions);
 
-        // 3. Create Super Admin User
+        // 3. Create Super System User
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
             ]
         );
-        $adminUser->assignRole($superAdminRole);
+        $adminUser->assignRole($superSystemRole);
 
         // 4. Create Standard Sample User
         $sampleUser = User::firstOrCreate(

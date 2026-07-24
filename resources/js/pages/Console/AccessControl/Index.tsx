@@ -102,7 +102,7 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
                                             <span className="font-bold text-slate-900 dark:text-slate-200">
                                                 {role.name}
                                             </span>
-                                            {role.name !== 'Super Admin' && (
+                                            {role.name !== 'Super System' && (
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteRole(role)
@@ -156,9 +156,9 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
                                                                 p.name ===
                                                                 permName,
                                                         );
-                                                    const isSuperAdmin =
+                                                    const isSuperSystem =
                                                         role.name ===
-                                                        'Super Admin';
+                                                        'Super System';
 
                                                     return (
                                                         <td
@@ -167,20 +167,20 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
                                                         >
                                                             <button
                                                                 onClick={() =>
-                                                                    !isSuperAdmin &&
+                                                                    !isSuperSystem &&
                                                                     handleTogglePermission(
                                                                         role,
                                                                         permName,
                                                                     )
                                                                 }
                                                                 disabled={
-                                                                    isSuperAdmin
+                                                                    isSuperSystem
                                                                 }
                                                                 className={`inline-flex h-7 w-7 items-center justify-center rounded-lg border transition ${
                                                                     hasPerm
                                                                         ? 'border-emerald-500 bg-emerald-100 text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/20 dark:text-emerald-400'
                                                                         : 'border-slate-300 bg-slate-50 text-slate-400 hover:border-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-600 dark:hover:border-slate-700'
-                                                                } ${isSuperAdmin ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+                                                                } ${isSuperSystem ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                                                             >
                                                                 {hasPerm && (
                                                                     <Check className="h-4 w-4" />

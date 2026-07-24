@@ -53,8 +53,8 @@ class RoleController extends Controller
 
     public function destroy(Role $role): RedirectResponse
     {
-        if ($role->name === 'Super Admin') {
-            return back()->with('error', 'The Super Admin role cannot be deleted.');
+        if ($role->name === 'Super System') {
+            return back()->with('error', 'The Super System role cannot be deleted.');
         }
 
         $this->roleService->deleteRole($role);
