@@ -7,20 +7,26 @@ import {
     FileText,
     LayoutDashboard,
     LogOut,
-    Menu,
     Monitor,
     Moon,
+    PanelLeftClose,
+    PanelLeftOpen,
     Settings,
     Shield,
     Sun,
     User,
     Users,
-    X,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import CommandPalette from '@/components/CommandPalette';
 import ImpersonationBanner from '@/components/ImpersonationBanner';
 import ToastNotification from '@/components/ToastNotification';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useAppearance } from '@/hooks/use-appearance';
 
 interface Props {
@@ -83,177 +89,210 @@ export default function ConsoleLayout({ children }: Props) {
     ];
 
     return (
-        <div className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
-            {/* Impersonation Alert Banner */}
-            <ImpersonationBanner />
+        <TooltipProvider delayDuration={0}>
+            <div className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
+                {/* Impersonation Alert Banner */}
+                <ImpersonationBanner />
 
-            {/* Real-time Toast Notifications */}
-            <ToastNotification />
+                {/* Real-time Toast Notifications */}
+                <ToastNotification />
 
-            {/* Top Navigation Bar */}
-            <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar/90 px-4 backdrop-blur">
-                <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => setSidebarOpen((prev) => !prev)}
-                        className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground"
-                    >
-                        {sidebarOpen ? (
-                            <X className="h-5 w-5" />
-                        ) : (
-                            <Menu className="h-5 w-5" />
-                        )}
-                    </button>
+                {/* Top Navigation Bar */}
+                <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar/90 px-4 backdrop-blur">
+                    <div className="flex items-center gap-3">
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    onClick={() => setSidebarOpen((prev) => !prev)}
+                                    className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground cursor-pointer"
+                                    aria-label="Toggle Sidebar"
+                                >
+                                    {sidebarOpen ? (
+                                        <PanelLeftClose className="h-5 w-5" />
+                                    ) : (
+                                        <PanelLeftOpen className="h-5 w-5" />
+                                    )}
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                                {sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'}
+                            </TooltipContent>
+                        </Tooltip>
 
-                    <Link
-                        href="/console/users"
-                        className="flex items-center gap-2 text-lg font-bold tracking-tight text-emerald-500"
-                    >
-                        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-1.5">
-                            <LayoutDashboard className="h-5 w-5 text-emerald-500" />
-                        </div>
-                        <span>Console Admin</span>
-                    </Link>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    {/* Command Palette Trigger */}
-                    <button
-                        onClick={() => {
-                            const event = new KeyboardEvent('keydown', {
-                                key: 'k',
-                                ctrlKey: true,
-                            });
-                            window.dispatchEvent(event);
-                        }}
-                        className="hidden items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar px-3 py-1.5 text-xs text-muted-foreground transition hover:bg-sidebar-accent sm:inline-flex"
-                    >
-                        <Command className="h-3.5 w-3.5" />
-                        <span>Search / Commands</span>
-                        <kbd className="rounded border border-sidebar-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-                            Ctrl K
-                        </kbd>
-                    </button>
-
-                    {/* Theme Switcher Toggle */}
-                    <div className="flex items-center rounded-lg border border-sidebar-border bg-background p-1">
-                        <button
-                            onClick={() => updateAppearance('dark')}
-                            title="Dark Mode"
-                            className={`rounded-md p-1.5 text-xs transition ${
-                                appearance === 'dark'
-                                    ? 'bg-sidebar text-amber-500 shadow-sm'
-                                    : 'text-muted-foreground hover:text-foreground'
-                            }`}
+                        <Link
+                            href="/console/users"
+                            className="flex items-center gap-2 text-lg font-bold tracking-tight text-emerald-500"
                         >
-                            <Moon className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                            onClick={() => updateAppearance('light')}
-                            title="Light Mode"
-                            className={`rounded-md p-1.5 text-xs transition ${
-                                appearance === 'light'
-                                    ? 'bg-sidebar text-amber-500 shadow-sm'
-                                    : 'text-muted-foreground hover:text-foreground'
-                            }`}
-                        >
-                            <Sun className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                            onClick={() => updateAppearance('system')}
-                            title="System Mode"
-                            className={`rounded-md p-1.5 text-xs transition ${
-                                appearance === 'system'
-                                    ? 'bg-sidebar text-emerald-500 shadow-sm'
-                                    : 'text-muted-foreground hover:text-foreground'
-                            }`}
-                        >
-                            <Monitor className="h-3.5 w-3.5" />
-                        </button>
+                            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-1.5">
+                                <LayoutDashboard className="h-5 w-5 text-emerald-500" />
+                            </div>
+                            {sidebarOpen && <span>Console Admin</span>}
+                        </Link>
                     </div>
 
-                    {/* User profile pill */}
-                    {auth?.user && (
-                        <div className="flex items-center gap-3 border-l border-sidebar-border pl-3">
-                            <div className="hidden text-right sm:block">
-                                <div className="text-xs font-semibold text-foreground">
-                                    {auth.user.name}
-                                </div>
-                                <div className="font-mono text-[10px] text-emerald-500">
-                                    {auth.user.roles?.[0] || 'User'}
-                                </div>
-                            </div>
-                            <Link
-                                href="/logout"
-                                method="post"
-                                as="button"
-                                className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-rose-500"
-                                title="Logout"
-                            >
-                                <LogOut className="h-4 w-4" />
-                            </Link>
-                        </div>
-                    )}
-                </div>
-            </header>
+                    <div className="flex items-center gap-3">
+                        {/* Command Palette Trigger */}
+                        <button
+                            onClick={() => {
+                                const event = new KeyboardEvent('keydown', {
+                                    key: 'k',
+                                    ctrlKey: true,
+                                });
+                                window.dispatchEvent(event);
+                            }}
+                            className="hidden items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar px-3 py-1.5 text-xs text-muted-foreground transition hover:bg-sidebar-accent sm:inline-flex cursor-pointer"
+                        >
+                            <Command className="h-3.5 w-3.5" />
+                            <span>Search / Commands</span>
+                            <kbd className="rounded border border-sidebar-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                                Ctrl K
+                            </kbd>
+                        </button>
 
-            <div className="flex flex-1">
-                {/* Sidebar Navigation */}
-                {sidebarOpen && (
-                    <aside className="flex w-64 shrink-0 flex-col gap-1 border-r border-sidebar-border bg-sidebar p-4">
-                        <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
-                            Console Modules
+                        {/* Theme Switcher Toggle */}
+                        <div className="flex items-center rounded-lg border border-sidebar-border bg-background p-1">
+                            <button
+                                onClick={() => updateAppearance('dark')}
+                                title="Dark Mode"
+                                className={`rounded-md p-1.5 text-xs transition cursor-pointer ${
+                                    appearance === 'dark'
+                                        ? 'bg-sidebar text-amber-500 shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                <Moon className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                                onClick={() => updateAppearance('light')}
+                                title="Light Mode"
+                                className={`rounded-md p-1.5 text-xs transition cursor-pointer ${
+                                    appearance === 'light'
+                                        ? 'bg-sidebar text-amber-500 shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                <Sun className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                                onClick={() => updateAppearance('system')}
+                                title="System Mode"
+                                className={`rounded-md p-1.5 text-xs transition cursor-pointer ${
+                                    appearance === 'system'
+                                        ? 'bg-sidebar text-emerald-500 shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                <Monitor className="h-3.5 w-3.5" />
+                            </button>
                         </div>
+
+                        {/* User profile pill */}
+                        {auth?.user && (
+                            <div className="flex items-center gap-3 border-l border-sidebar-border pl-3">
+                                <div className="hidden text-right sm:block">
+                                    <div className="text-xs font-semibold text-foreground">
+                                        {auth.user.name}
+                                    </div>
+                                    <div className="font-mono text-[10px] text-emerald-500">
+                                        {auth.user.roles?.[0] || 'User'}
+                                    </div>
+                                </div>
+                                <Link
+                                    href="/logout"
+                                    method="post"
+                                    as="button"
+                                    className="rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-rose-500 cursor-pointer"
+                                    title="Logout"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </header>
+
+                <div className="flex flex-1">
+                    {/* Sidebar Navigation */}
+                    <aside
+                        className={`flex shrink-0 flex-col gap-1 border-r border-sidebar-border bg-sidebar p-3 transition-all duration-300 ease-in-out ${
+                            sidebarOpen ? 'w-64' : 'w-16 items-center'
+                        }`}
+                    >
+                        {sidebarOpen && (
+                            <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                Console Modules
+                            </div>
+                        )}
                         {navItems.map((item) => {
                             const Icon = item.icon;
 
-                            return (
+                            const linkElement = (
                                 <Link
                                     key={item.name}
                                     href={item.href}
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+                                    className={`flex items-center gap-3 rounded-lg text-sm font-medium transition ${
+                                        sidebarOpen
+                                            ? 'w-full justify-start px-3 py-2.5'
+                                            : 'justify-center p-2.5'
+                                    } ${
                                         item.active
-                                            ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-500'
+                                            ? 'border border-emerald-500/20 bg-emerald-500/10 font-semibold text-emerald-500'
                                             : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
                                     }`}
                                 >
-                                    <Icon className="h-4 w-4" />
-                                    <span>{item.name}</span>
+                                    <Icon className="h-5 w-5 shrink-0" />
+                                    {sidebarOpen && <span>{item.name}</span>}
                                 </Link>
                             );
+
+                            if (!sidebarOpen) {
+                                return (
+                                    <Tooltip key={item.name}>
+                                        <TooltipTrigger asChild>
+                                            {linkElement}
+                                        </TooltipTrigger>
+                                        <TooltipContent side="right">
+                                            {item.name}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                );
+                            }
+
+                            return linkElement;
                         })}
                     </aside>
-                )}
 
-                {/* Main Content Area */}
-                <div className="flex flex-1 flex-col overflow-x-hidden">
-                    {/* Flash messages */}
-                    {flash?.success && (
-                        <div className="m-4 mb-0 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-950/60 p-3 text-sm text-emerald-300">
-                            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-                            <span>{flash.success}</span>
-                        </div>
-                    )}
+                    {/* Main Content Area */}
+                    <div className="flex flex-1 flex-col overflow-x-hidden">
+                        {/* Flash messages */}
+                        {flash?.success && (
+                            <div className="m-4 mb-0 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-950/60 p-3 text-sm text-emerald-300">
+                                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                                <span>{flash.success}</span>
+                            </div>
+                        )}
 
-                    {flash?.error && (
-                        <div className="m-4 mb-0 flex items-center gap-2 rounded-lg border border-rose-500/30 bg-rose-950/60 p-3 text-sm text-rose-300">
-                            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
-                            <span>{flash.error}</span>
-                        </div>
-                    )}
+                        {flash?.error && (
+                            <div className="m-4 mb-0 flex items-center gap-2 rounded-lg border border-rose-500/30 bg-rose-950/60 p-3 text-sm text-rose-300">
+                                <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+                                <span>{flash.error}</span>
+                            </div>
+                        )}
 
-                    <motion.main
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="flex-1"
-                    >
-                        {children}
-                    </motion.main>
+                        <motion.main
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="flex-1"
+                        >
+                            {children}
+                        </motion.main>
+                    </div>
                 </div>
-            </div>
 
-            {/* Global Command Palette */}
-            <CommandPalette />
-        </div>
+                {/* Global Command Palette */}
+                <CommandPalette />
+            </div>
+        </TooltipProvider>
     );
 }
