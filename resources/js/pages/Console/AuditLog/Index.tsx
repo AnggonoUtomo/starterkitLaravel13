@@ -2,6 +2,7 @@ import { Head, router } from '@inertiajs/react';
 import React, { useState } from 'react';
 import ConsoleFilterBar from '@/components/console/ConsoleFilterBar';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
+import type { PaginationLink } from '../UserManagement/components/UserTable';
 import AuditLogHeader from './components/AuditLogHeader';
 import AuditLogTable from './components/AuditLogTable';
 import AuditPayloadDrawer from './components/AuditPayloadDrawer';
@@ -17,7 +18,13 @@ interface AuditLog {
 
 interface PaginatedLogs {
     data: AuditLog[];
+    links: PaginationLink[];
     total: number;
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    from: number;
+    to: number;
 }
 
 interface Props {
@@ -49,14 +56,23 @@ export default function Index({ title, logs, filters }: Props) {
                     search={search}
                     onSearchChange={setSearch}
                     onSubmit={handleSearch}
-                    placeholder="Search by event or user name..."
+                    placeholder="Cari berdasarkan nama event atau nama pengguna... (/)"
                     totalCount={logs.total}
-                    totalCountLabel="Total Audit Logs"
+                    totalCountLabel="Total Log Audit"
                     focusColorClass="focus:ring-amber-500"
                 />
 
                 {/* Audit Logs Table */}
-                <AuditLogTable logs={logs.data} onSelectLog={setSelectedLog} />
+                <AuditLogTable
+                    logs={logs.data}
+                    totalLogs={logs.total}
+                    currentPage={logs.current_page}
+                    lastPage={logs.last_page}
+                    from={logs.from}
+                    to={logs.to}
+                    paginationLinks={logs.links}
+                    onSelectLog={setSelectedLog}
+                />
             </div>
 
             {/* Slide-over Detail Drawer */}

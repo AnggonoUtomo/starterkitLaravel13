@@ -18,11 +18,17 @@ import UserWorkspaceCard from './components/UserWorkspaceCard';
 
 interface PaginatedUsers {
     data: UserData[];
-    links: any[];
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
     total: number;
     current_page: number;
     last_page: number;
     per_page: number;
+    from: number;
+    to: number;
 }
 
 interface Props {
@@ -284,6 +290,11 @@ export default function Index({
                             roleFilter={roleFilter}
                             availableRoles={availableRoles}
                             totalUsers={users.total}
+                            currentPage={users.current_page}
+                            lastPage={users.last_page}
+                            from={users.from}
+                            to={users.to}
+                            paginationLinks={users.links}
                             onSearchChange={setSearch}
                             onRoleFilterChange={handleRoleFilterChange}
                             onSearchSubmit={handleSearchSubmit}
