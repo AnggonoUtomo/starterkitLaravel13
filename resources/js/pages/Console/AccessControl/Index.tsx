@@ -4,6 +4,7 @@ import ConsoleLayout from '@/layouts/ConsoleLayout';
 import AccessControlHeader from './components/AccessControlHeader';
 import AccessControlShortcutPanel from './components/AccessControlShortcutPanel';
 import CreateRoleModal from './components/CreateRoleModal';
+import DeleteRoleModal from './components/DeleteRoleModal';
 import RolePermissionWorkspace from './components/RolePermissionWorkspace';
 
 interface Permission {
@@ -33,6 +34,8 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
         roles[0]?.id || null,
     );
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
+    const [deletingRole, setDeletingRole] = useState<Role | null>(null);
 
     // Get current active role object
     const activeRole = useMemo(() => {
@@ -182,6 +185,7 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
 
     const handleCreateRole = (e: React.FormEvent) => {
         e.preventDefault();
+        setIsCreating(true);
         router.post(
             '/console/access-control/roles',
             { name: newRoleName },
@@ -190,14 +194,19 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
                     setNewRoleName('');
                     setIsRoleModalOpen(false);
                 },
+                onFinish: () => setIsCreating(false),
             },
         );
     };
 
     const handleDeleteRole = (role: Role) => {
-        if (confirm(`Apakah Anda yakin ingin menghapus role ${role.name}?`)) {
-            router.delete(`/console/access-control/roles/${role.id}`);
-        }
+        setDeletingRole(role);
+    };
+
+    const handleConfirmDeleteRole = (role: Role) => {
+        router.delete(`/console/access-control/roles/${role.id}`, {
+            onSuccess: () => setDeletingRole(null),
+        });
     };
 
     return (
@@ -240,6 +249,14 @@ export default function Index({ title, roles, groupedPermissions }: Props) {
                 roleName={newRoleName}
                 onRoleNameChange={setNewRoleName}
                 onSubmit={handleCreateRole}
+                isProcessing={isCreating}
+            />
+
+            {/* Delete Role Modal */}
+            <DeleteRoleModal
+                deletingRole={deletingRole}
+                onClose={() => setDeletingRole(null)}
+                onConfirmDelete={handleConfirmDeleteRole}
             />
         </ConsoleLayout>
     );
