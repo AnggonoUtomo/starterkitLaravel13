@@ -60,30 +60,45 @@ export default function ConsoleLayout({ children }: Props) {
             name: 'User Management',
             href: '/console/users',
             icon: Users,
+            iconColor: 'text-emerald-500',
+            activeClass:
+                'border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 font-semibold shadow-xs',
             active: url.startsWith('/console/users'),
         },
         {
             name: 'Access Control',
             href: '/console/access-control',
             icon: Shield,
+            iconColor: 'text-indigo-500',
+            activeClass:
+                'border border-indigo-500/30 bg-indigo-500/10 text-indigo-500 font-semibold shadow-xs',
             active: url.startsWith('/console/access-control'),
         },
         {
             name: 'System Settings',
             href: '/console/system-settings',
             icon: Settings,
+            iconColor: 'text-blue-500',
+            activeClass:
+                'border border-blue-500/30 bg-blue-500/10 text-blue-500 font-semibold shadow-xs',
             active: url.startsWith('/console/system-settings'),
         },
         {
             name: 'Audit Logs',
             href: '/console/audit-logs',
             icon: FileText,
+            iconColor: 'text-amber-500',
+            activeClass:
+                'border border-amber-500/30 bg-amber-500/10 text-amber-500 font-semibold shadow-xs',
             active: url.startsWith('/console/audit-logs'),
         },
         {
             name: 'My Profile',
             href: '/console/profile',
             icon: User,
+            iconColor: 'text-rose-500',
+            activeClass:
+                'border border-rose-500/30 bg-rose-500/10 text-rose-500 font-semibold shadow-xs',
             active: url.startsWith('/console/profile'),
         },
     ];
@@ -236,11 +251,17 @@ export default function ConsoleLayout({ children }: Props) {
                                             : 'justify-center p-2.5'
                                     } ${
                                         item.active
-                                            ? 'border border-emerald-500/20 bg-emerald-500/10 font-semibold text-emerald-500'
+                                            ? item.activeClass
                                             : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
                                     }`}
                                 >
-                                    <Icon className="h-5 w-5 shrink-0" />
+                                    <Icon
+                                        className={`h-5 w-5 shrink-0 transition-colors ${
+                                            item.active
+                                                ? item.iconColor
+                                                : `${item.iconColor} opacity-75 group-hover:opacity-100`
+                                        }`}
+                                    />
                                     {sidebarOpen && <span>{item.name}</span>}
                                 </Link>
                             );
