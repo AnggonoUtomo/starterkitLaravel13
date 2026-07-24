@@ -220,9 +220,11 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
    - Seluruh dokumen teknis (`spec.md`, `plan.md`, `todo.md`, ADR) dan pesan git commit WAJIB menggunakan Bahasa Indonesia yang sederhana dan jelas tanpa mengubah konteks teknis.
    - Format prefix commit: `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `ci: ...`, `chore: ...`.
 
-3. **Sentralisasi Dokumentasi:**
+3. **Sentralisasi & Kategorisasi Dokumentasi:**
    - Semua dokumentasi tersimpan terpusat di folder `docs/`.
-   - Dokumentasi per-submodul tersimpan di `docs/project/{Module}/{Submodule}/` (`spec.md`, `plan.md`, `todo.md`).
+   - Dokumentasi per-submodul WAJIB dikategorikan secara terpisah ke dalam subfolder `frontend/` dan `backend/`:
+     - FrontEnd: `docs/project/{Module}/{Submodule}/frontend/` (`spec.md`, `plan.md`, `todo.md`)
+     - BackEnd: `docs/project/{Module}/{Submodule}/backend/` (`spec.md`, `plan.md`, `todo.md`)
 
 4. **Arsitektur Modular DDD-Lite:**
    - Setiap fitur dibungkus sebagai submodul di `app/Modules/{Module}/{Submodule}/`.
