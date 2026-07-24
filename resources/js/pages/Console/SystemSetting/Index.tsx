@@ -407,8 +407,13 @@ export default function Index(props: Partial<SystemSettingsProps>) {
                     </Badge>
                 </div>
 
-                {/* Grid Split View: Main Active Panel & Sidebar Menu */}
-                <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
+                {/* Grid Split View: Sidebar Menu (Left) & Main Active Panel (Right) */}
+                <div className="grid gap-6 xl:grid-cols-[300px_minmax(0,1fr)]">
+                    <SystemSettingMenu
+                        activeSection={activeSection}
+                        onSectionChange={setActiveSection}
+                    />
+
                     {activeSection === 'email' ? (
                         <EmailSettingsPanel
                             can={can}
@@ -484,10 +489,6 @@ export default function Index(props: Partial<SystemSettingsProps>) {
                             submit={submitMaintenanceMode}
                         />
                     )}
-                    <SystemSettingMenu
-                        activeSection={activeSection}
-                        onSectionChange={setActiveSection}
-                    />
                 </div>
             </div>
         </ConsoleLayout>

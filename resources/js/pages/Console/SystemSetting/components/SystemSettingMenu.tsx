@@ -18,12 +18,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import type { SystemSettingSection } from '../types';
 
 type MenuItem = {
@@ -119,66 +113,46 @@ type Props = {
 
 export function SystemSettingMenu({ activeSection, onSectionChange }: Props) {
     return (
-        <TooltipProvider>
-            <Card data-dashboard-card className="h-fit overflow-hidden">
-                <CardHeader className="border-b px-4 py-3.5">
-                    <CardTitle className="text-sm font-bold">
-                        Menu System Setting
-                    </CardTitle>
-                    <CardDescription className="text-xs">
-                        Pilih kategori konfigurasi sistem yang ingin dikelola.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-1.5 p-2">
-                    {menuItems.map((item) => {
-                        const Icon = item.icon;
-                        const active = activeSection === item.key;
+        <Card data-dashboard-card className="h-fit overflow-hidden">
+            <CardHeader className="border-b px-4 py-3.5">
+                <CardTitle className="text-sm font-bold">
+                    Menu System Setting
+                </CardTitle>
+                <CardDescription className="text-xs">
+                    Pilih kategori konfigurasi sistem yang ingin dikelola.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-1.5 p-2">
+                {menuItems.map((item) => {
+                    const Icon = item.icon;
+                    const active = activeSection === item.key;
 
-                        return (
-                            <Tooltip key={item.key}>
-                                <TooltipTrigger asChild>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            onSectionChange(item.key)
-                                        }
-                                        className={
-                                            active
-                                                ? 'flex w-full items-start gap-3 rounded-lg border border-primary/40 bg-primary/10 p-2.5 text-left text-primary transition enabled:cursor-pointer'
-                                                : 'flex w-full items-start gap-3 rounded-lg border border-transparent p-2.5 text-left transition hover:bg-muted/60 enabled:cursor-pointer'
-                                        }
-                                    >
-                                        <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-muted/40">
-                                            <Icon
-                                                className={`size-4 ${item.color}`}
-                                            />
-                                        </span>
-                                        <span className="min-w-0">
-                                            <span className="block text-xs font-bold">
-                                                {item.title}
-                                            </span>
-                                            <span className="mt-0.5 line-clamp-1 block text-[11px] leading-tight text-muted-foreground">
-                                                {item.description}
-                                            </span>
-                                        </span>
-                                    </button>
-                                </TooltipTrigger>
-                                <TooltipContent
-                                    side="right"
-                                    className="max-w-xs text-xs"
-                                >
-                                    <p className="font-semibold">
-                                        {item.title}
-                                    </p>
-                                    <p className="text-[11px] text-muted-foreground">
-                                        {item.description}
-                                    </p>
-                                </TooltipContent>
-                            </Tooltip>
-                        );
-                    })}
-                </CardContent>
-            </Card>
-        </TooltipProvider>
+                    return (
+                        <button
+                            key={item.key}
+                            type="button"
+                            onClick={() => onSectionChange(item.key)}
+                            className={
+                                active
+                                    ? 'flex w-full items-start gap-3 rounded-lg border border-primary/40 bg-primary/10 p-2.5 text-left text-primary transition enabled:cursor-pointer'
+                                    : 'flex w-full items-start gap-3 rounded-lg border border-transparent p-2.5 text-left transition hover:bg-muted/60 enabled:cursor-pointer'
+                            }
+                        >
+                            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-muted/40">
+                                <Icon className={`size-4 ${item.color}`} />
+                            </span>
+                            <span className="min-w-0">
+                                <span className="block text-xs font-bold">
+                                    {item.title}
+                                </span>
+                                <span className="mt-0.5 line-clamp-1 block text-[11px] leading-tight text-muted-foreground">
+                                    {item.description}
+                                </span>
+                            </span>
+                        </button>
+                    );
+                })}
+            </CardContent>
+        </Card>
     );
 }
