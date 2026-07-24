@@ -228,4 +228,17 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
    - Setiap fitur dibungkus sebagai submodul di `app/Modules/{Module}/{Submodule}/`.
    - Generator CLI `php artisan make:module {Module}/{Submodule}` otomatis membuat struktur backend, frontend React, dan dokumentasi submodul dalam Bahasa Indonesia.
 
+5. **Pola Implementasi Bertahap (*Incremental Slicing*):**
+   - Setiap tugas/fitur WAJIB dikerjakan secara iris-demi-iris (*incremental slicing*) bagian per bagian sesuai dokumen/rencana.
+   - Dilarang keras mengerjakan seluruh perubahan sekaligus dalam satu langkah besar.
+   - Selesaikan 1 slice kecil, komunikasikan & tunjukkan hasilnya agar pengguna dapat mempelajari pola kode yang terbentuk, lalu kembangkan slice berikutnya.
+
+6. **Pemisahan Komponen Spesifik Submodul (*Submodule Frontend Modularization*):**
+   - Dilarang menumpuk seluruh elemen UI dalam 1 file `Index.tsx`.
+   - Pisahkan komponen spesifik submodul (misal: Header, Table, Modals) ke dalam folder `components/` lokal di samping `Index.tsx` submodul tersebut (contoh: `resources/js/pages/Console/{Submodule}/components/`).
+   - `Index.tsx` hanya bertugas menyusun state utama dan memanggil komponen-komponen submodul tersebut.
+   - Komponen bersama (*Global Shared Components*) seperti layout atau UI primitives tetap berada di folder global aslinya (`resources/js/components/`).
+
+
+
 
