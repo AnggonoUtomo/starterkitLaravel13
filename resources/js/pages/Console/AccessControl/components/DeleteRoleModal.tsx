@@ -75,7 +75,7 @@ export default function DeleteRoleModal({
                         type="button"
                         onClick={onClose}
                         disabled={isDeleting}
-                        className="cursor-pointer px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                        className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         Batal
                     </button>
@@ -83,7 +83,7 @@ export default function DeleteRoleModal({
                         type="button"
                         onClick={handleConfirm}
                         disabled={isDeleting}
-                        className="cursor-pointer rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-rose-700 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {isDeleting ? 'Menghapus...' : 'Hapus Role'}
                     </button>

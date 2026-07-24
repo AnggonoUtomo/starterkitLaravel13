@@ -36,39 +36,58 @@ Setiap kali perintah `make:module` dijalankan, tiga lokasi direktori utama akan 
 
 ### 1. Struktur Backend (`app/Modules/{Module}/{Submodule}/`)
 - `Database/` (Migrations, Factories, Seeders)
-- `DTO/` (Data Transfer Objects)
+- `DTO/` (Data Transfer Objects — `final readonly class` atau constructor property promotion)
 - `Http/Controllers/` (`{Submodule}Controller.php`)
-- `Http/Requests/` (Form Requests)
+- `Http/Requests/` (Form Requests dengan method `$request->toDto()`)
 - `Http/Resources/` (Eloquent API Resources)
 - `Integration/` (Integrasi layanan eksternal)
 - `Models/` (Model Eloquent internal submodul)
-- `Policies/` (Policy otorisasi)
+- `Policies/` (Policy otorisasi submodul)
 - `Providers/` (ServiceProvider spesifik submodul)
-- `Services/` (Logika bisnis utama)
+- `Services/` (Logika bisnis utama + audit logging)
 - `Support/` (Helper & Utility)
-- `Transactions/` (Database Transaction Wrappers)
+- `Transactions/` (Database Transaction Wrappers untuk mutasi atomik)
 - `routes.php` (Auto-discovered otomatis oleh `ModuleServiceProvider`)
 - `permissions.php` (Auto-discovered & ter-sync otomatis ke database Spatie RBAC)
+- `module.php` (Manifest nama, label, deskripsi modul)
+- `navigation.php` (Item menu navigasi sidebar & urutan)
 
 ### 2. Struktur Frontend React (`resources/js/pages/{Module}/{Submodule}/`)
 - `Index.tsx` (Halaman utama React Inertia)
 - `components/` (Komponen UI khusus submodul)
-- `types/` (Tipe TypeScript khusus submodul)
+- `types.ts` (Tipe TypeScript khusus submodul)
 
-### 3. Dokumentasi Terpusat (`docs/project/{Module}/{Submodule}/`)
-- `spec.md` (Spesifikasi & Acceptance Criteria submodul dalam Bahasa Indonesia)
-- `plan.md` (Rencana arsitektur & breakdown pelaksanaan tugas)
-- `todo.md` (Checklist tugas submodul)
+### 3. Dokumentasi Terpusat Dikategorikan (`docs/project/{Module}/{Submodule}/`)
+- `backend/` (`spec.md`, `plan.md`, `todo.md` — Spesifikasi & checklist domain backend)
+- `frontend/` (`spec.md`, `plan.md`, `todo.md` — Spesifikasi & checklist UI frontend)
+
+---
+
+## Pola & Standar Arsitektur Backend (Backend Architecture Pattern)
+
+1. **Layer Form Request & DTO:**
+   - Validasi HTTP disentralkan di `Http/Requests/`. Form Request menyediakan method `toDto()` yang mengubah `validated()` input menjadi DTO imutabel (`DTO/`).
+
+2. **Layer Transaksi & Layanan (Services & Transactions):**
+   - Operasi mutasi data (Create, Update, Delete, Sync) dibungkus dalam kelas `Transactions/` atau `DB::transaction()` untuk menjamin atomisitas.
+   - Layanan (`Services/`) mengontrol alur bisnis, pembersihan cache RBAC (`PermissionRegistrar::forgetCachedPermissions()`), dan pencatatan jejak audit (`AuditLogService`).
+
+3. **Otorisasi & Kebijakan (Policies & Protection):**
+   - Seluruh endpoint controller dilindungi oleh Policy Otorisasi Laravel via `HasMiddleware` atau `$this->authorize()`.
+   - Proteksi peran khusus (`User::SUPER_SYSTEM_ROLE`) wajib ditegakkan pada Policy, Controller, dan Service.
+
+4. **Payload Respon Rich DTO & Otorisasi UI:**
+   - Respon Inertia mengirimkan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `permissions`, `effectivePermissions`, `rolePermissions`, `created_at` (format `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`, dll.).
 
 ---
 
 ## Alur Kerja Setelah Membuat Modul Baru
 
 1. **Lengkapi Dokumentasi Submodul:**
-   Buka `docs/project/{Module}/{Submodule}/spec.md` dan tuliskan kriteria keberhasilan fitur.
+   Buka `docs/project/{Module}/{Submodule}/backend/spec.md` dan `frontend/spec.md` untuk menuliskan kriteria keberhasilan fitur.
 
 2. **Implementasikan Logika Bisnis & DTO:**
-   Buat DTO di `DTO/` dan tuliskan logika bisnis pada `Services/`.
+   Buat DTO di `DTO/`, Request di `Http/Requests/`, dan tuliskan logika bisnis pada `Services/`.
 
 3. **Buat Pengujian Unit/Fitur:**
    Tambahkan pengujian Pest PHP di `tests/Feature/` untuk memastikan endpoint modul berfungsi 100%.
@@ -77,5 +96,5 @@ Setiap kali perintah `make:module` dijalankan, tiga lokasi direktori utama akan 
    Sebelum commit, jalankan format kode PHP:
    ```bash
    vendor/bin/pint --format agent
-   php artisan test
+   composer ci:check
    ```

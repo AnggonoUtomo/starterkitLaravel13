@@ -258,12 +258,18 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
    - **Frontend Global Layout & Sticky Sidebar Standard:**
      - Header Nav: `sticky top-0 z-40 h-16` dengan efek backdrop blur.
      - Sidebar Navigation: Terkunci di tempatnya secara permanen (`sticky top-16 z-30 h-[calc(100vh-4rem)] flex-col shrink-0`) dengan scrollbar mandiri di dalam kontainer (`overflow-y-auto`) agar tidak terpengaruh oleh scroll area halaman utama.
-   - **Frontend Tailwind v4 & Clean Class Standard (`cssConflict` Prevention):**
-     - Bebas Konflik Kelas Tailwind: Dilarang menumpuk modifier warna/opasitas redundan yang memicu peringatan `cssConflict` (contoh: gunakan `bg-emerald-500/10` tanpa menumpuk `dark:bg-emerald-500/15`, atau gunakan arbitrary values standar `min-h-[550px]` tanpa konflik).
+   - **Frontend Tailwind v4 & Clean Class Standard (`cssConflict` Prevention & Sanitization):**
+     - **Aturan Cursor Disabled**: Dilarang menumpuk `cursor-pointer` langsung pada elemen yang memiliki `disabled:cursor-not-allowed`. WAJIB gunakan `enabled:cursor-pointer disabled:cursor-not-allowed` agar tidak memicu `cssConflict`.
+     - **Aturan Border Grid**: Dilarang menumpuk `border-r last:border-r-0` atau `border-b last:border-b-0`. WAJIB gunakan modifier `not-last:border-r` dan `not-last:border-b`.
+     - **Aturan Token Warna Semantik**: Dilarang menumpuk warna hex/arbitrer bertumpuk dengan varian dark (misal: `bg-[#fff2f2] dark:bg-[#1D0002]` atau `text-black dark:text-white`). WAJIB gunakan token warna semantik (`bg-background`, `bg-card`, `bg-muted`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-destructive/10`, `text-destructive`).
+     - **Aturan Sintaks Kanonikal**: Gunakan sintaks Tailwind v4 standar: `size-5!` (bukan `!size-5`), `aspect-335/364` (bukan `aspect-[335/364]`), `mt-[-6.6rem]` (bukan `-mt-[6.6rem]`), `w-109.5` (bukan `w-[438px]`).
      - Seluruh penulisan utility class Tailwind v4 WAJIB divalidasi dan dibersihkan dari peringatan linter `tailwindcss-intellisense`.
-   - **Backend Payload & DTO Pattern:**
-     - DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`).
-     - Support query filtering untuk `search` dan `role` pada method pagination.
+   - **Backend Layered Architecture & Payload Standard:**
+     - **Form Request & DTO Layer:** Validasi HTTP disentralkan di `Http/Requests/`. Form Request menyediakan method `toDto()` yang memetakan data tervalidasi ke DTO imutabel (`DTO/`).
+     - **Transaction & Service Layer:** Operasi mutasi data (Create, Update, Sync, Delete, Impersonate) wajib dibungkus dalam kelas `Transactions/` atau `DB::transaction()` untuk eksekusi atomik. Logika bisnis disentralkan di `Services/` yang menangani aturan domain, pembersihan cache RBAC (`PermissionRegistrar::forgetCachedPermissions()`), dan pencatatan jejak audit via `AuditLogService`.
+     - **Policy & Otorisasi Layer:** Seluruh endpoint controller dilindungi oleh Policy Otorisasi (`Policies/`) via `HasMiddleware` atau `$this->authorize()`. Proteksi peran khusus (`User::SUPER_SYSTEM_ROLE`) ditegakkan secara ketat pada Policy, Controller, dan Service.
+     - **Payload & DTO Pattern:** DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `permissions`, `effectivePermissions`, `rolePermissions`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`, `restore`, `forceDelete`).
+     - **Manifest Submodul:** Setiap submodul memiliki `module.php` (manifest), `navigation.php` (menu sidebar), `permissions.php` (daftar izin RBAC), dan `routes.php` (rute ternama).
 
 9. **Pelarangan Total Wayfinder & Penegakan Ziggy / Standard Routing:**
    - Dilarang keras menggunakan atau memasang kembali dependensi `laravel/wayfinder` maupun `@laravel/vite-plugin-wayfinder`.
