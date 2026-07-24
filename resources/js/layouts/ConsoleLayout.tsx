@@ -6,7 +6,6 @@ import {
     Command,
     FileText,
     LayoutDashboard,
-    LogOut,
     Monitor,
     Moon,
     PanelLeftClose,
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 import CommandPalette from '@/components/CommandPalette';
+import UserHeaderDropdown from '@/components/console/UserHeaderDropdown';
 import ImpersonationBanner from '@/components/ImpersonationBanner';
 import ToastNotification from '@/components/ToastNotification';
 import {
@@ -205,26 +205,10 @@ export default function ConsoleLayout({ children }: Props) {
                             </button>
                         </div>
 
-                        {/* User profile pill */}
+                        {/* User Profile Avatar Card Dropdown */}
                         {auth?.user && (
-                            <div className="flex items-center gap-3 border-l border-sidebar-border pl-3">
-                                <div className="hidden text-right sm:block">
-                                    <div className="text-xs font-semibold text-foreground">
-                                        {auth.user.name}
-                                    </div>
-                                    <div className="font-mono text-[10px] text-emerald-500">
-                                        {auth.user.roles?.[0] || 'User'}
-                                    </div>
-                                </div>
-                                <Link
-                                    href="/logout"
-                                    method="post"
-                                    as="button"
-                                    className="cursor-pointer rounded-lg p-2 text-muted-foreground transition hover:bg-sidebar-accent hover:text-rose-500"
-                                    title="Logout"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                </Link>
+                            <div className="border-l border-sidebar-border pl-3">
+                                <UserHeaderDropdown user={auth.user} />
                             </div>
                         )}
                     </div>
