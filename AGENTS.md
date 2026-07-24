@@ -26,7 +26,6 @@ Aplikasi ini adalah aplikasi Laravel dan versi paket utama ekosistem Laravel yan
 - @inertiajs/react (INERTIA_REACT) - v3
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
-- @laravel/vite-plugin-wayfinder (WAYFINDER_VITE) - v0
 - eslint (ESLINT) - v9
 - prettier (PRETTIER) - v3
 
@@ -265,3 +264,8 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
    - **Backend Payload & DTO Pattern:**
      - DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`).
      - Support query filtering untuk `search` dan `role` pada method pagination.
+
+9. **Pelarangan Total Wayfinder & Penegakan Ziggy / Standard Routing:**
+   - Dilarang keras menggunakan atau memasang kembali dependensi `laravel/wayfinder` maupun `@laravel/vite-plugin-wayfinder`.
+   - Folder `resources/js/actions`, `resources/js/routes`, dan `resources/js/wayfinder` telah dicopot secara permanen dan DILARANG dibuat ulang.
+   - Seluruh routing frontend WAJIB menggunakan Ziggy (`route('...')`) atau URL string standar.

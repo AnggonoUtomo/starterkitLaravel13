@@ -21,7 +21,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { useAppearance } from '@/hooks/use-appearance';
 import { useClipboard } from '@/hooks/use-clipboard';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
-import { confirm } from '@/routes/two-factor';
 
 function GridScanIcon() {
     return (
@@ -31,7 +30,7 @@ function GridScanIcon() {
                     {Array.from({ length: 5 }, (_, i) => (
                         <div
                             key={`col-${i + 1}`}
-                            className="border-r border-border last:border-r-0"
+                            className="border-border not-last:border-r"
                         />
                     ))}
                 </div>
@@ -39,7 +38,7 @@ function GridScanIcon() {
                     {Array.from({ length: 5 }, (_, i) => (
                         <div
                             key={`row-${i + 1}`}
-                            className="border-b border-border last:border-b-0"
+                            className="border-border not-last:border-b"
                         />
                     ))}
                 </div>
@@ -156,7 +155,8 @@ function TwoFactorVerificationStep({
 
     return (
         <Form
-            {...confirm.form()}
+            action="/user/confirmed-two-factor-authentication"
+            method="post"
             onSuccess={() => onClose()}
             resetOnError
             resetOnSuccess

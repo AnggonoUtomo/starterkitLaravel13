@@ -125,8 +125,8 @@ export default function Index({ title }: Props) {
         <ConsoleLayout>
             <Head title={title} />
             <div className="p-6">
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{title}</h1>
-                <p className="mt-2 text-slate-600 dark:text-slate-400">
+                <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+                <p className="mt-2 text-sm text-muted-foreground">
                     Welcome to the {$submodule} submodule of {$module}.
                 </p>
             </div>
