@@ -264,6 +264,10 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
      - **Aturan Token Warna Semantik**: Dilarang menumpuk warna hex/arbitrer bertumpuk dengan varian dark (misal: `bg-[#fff2f2] dark:bg-[#1D0002]` atau `text-black dark:text-white`). WAJIB gunakan token warna semantik (`bg-background`, `bg-card`, `bg-muted`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-destructive/10`, `text-destructive`).
      - **Aturan Sintaks Kanonikal**: Gunakan sintaks Tailwind v4 standar: `size-5!` (bukan `!size-5`), `aspect-335/364` (bukan `aspect-[335/364]`), `mt-[-6.6rem]` (bukan `-mt-[6.6rem]`), `w-109.5` (bukan `w-[438px]`).
      - Seluruh penulisan utility class Tailwind v4 WAJIB divalidasi dan dibersihkan dari peringatan linter `tailwindcss-intellisense`.
+    - **Frontend Form & Button UX Standard:**
+      - **Asterisk Input Wajib (`*`)**: Setiap label input yang wajib diisi WAJIB menyertakan tanda asterik merah (`<span className="text-rose-500 font-bold ml-0.5">*</span>`).
+      - **Ikon Informasi & Tooltip Input**: Setiap label input WAJIB menyertakan ikon bantuan `HelpCircle` (size-3.5) yang menampilkan tooltip informasi penggunaan saat di-hover/focus.
+      - **Tooltip Tombol Aksi**: Setiap tombol aksi interaktif (Create, Edit, Delete, Impersonate, Filter, Reset, Collapse, Select All) WAJIB dibungkus atau dilengkapi dengan Tooltip petunjuk penggunaan.
    - **Backend Layered Architecture & Payload Standard:**
      - **Form Request & DTO Layer:** Validasi HTTP disentralkan di `Http/Requests/`. Form Request menyediakan method `toDto()` yang memetakan data tervalidasi ke DTO imutabel (`DTO/`).
      - **Transaction & Service Layer:** Operasi mutasi data (Create, Update, Sync, Delete, Impersonate) wajib dibungkus dalam kelas `Transactions/` atau `DB::transaction()` untuk eksekusi atomik. Logika bisnis disentralkan di `Services/` yang menangani aturan domain, pembersihan cache RBAC (`PermissionRegistrar::forgetCachedPermissions()`), dan pencatatan jejak audit via `AuditLogService`.

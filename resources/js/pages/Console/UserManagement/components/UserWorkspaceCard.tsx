@@ -10,6 +10,12 @@ import {
     Lock,
 } from 'lucide-react';
 import React from 'react';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export type UserWorkspaceMode = 'detail' | 'create' | 'edit';
 
@@ -447,181 +453,215 @@ export default function UserWorkspaceCard({
     const effectivePerms = selectedUser?.effectivePermissions || [];
 
     return (
-        <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
-            {selectedUser ? (
-                <div className="space-y-4">
-                    {/* User Avatar & Name Header */}
-                    <div className="flex items-center gap-3 border-b border-border pb-4">
-                        <div className="flex size-12 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-base font-bold text-emerald-500">
-                            {selectedUser.initials ||
-                                selectedUser.name.slice(0, 2).toUpperCase()}
-                        </div>
-                        <div>
-                            <h3 className="text-sm font-bold text-foreground">
-                                {selectedUser.name}
-                            </h3>
-                            <p className="text-xs text-muted-foreground">
-                                {selectedUser.email}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Details Info Grid */}
-                    <div className="space-y-2 text-xs">
-                        <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-2.5">
-                            <span className="flex items-center gap-2 text-muted-foreground">
-                                <Shield className="h-3.5 w-3.5 text-emerald-500" />
-                                Role Utama
-                            </span>
-                            <span className="font-semibold text-foreground">
-                                {selectedUser.primaryRole || 'User'}
-                            </span>
-                        </div>
-
-                        <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-2.5">
-                            <span className="flex items-center gap-2 text-muted-foreground">
-                                <Calendar className="h-3.5 w-3.5 text-blue-500" />
-                                Terdaftar Pada
-                            </span>
-                            <span className="font-mono text-foreground">
-                                {selectedUser.created_at || '-'}
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Assigned Roles Pills */}
-                    <div>
-                        <div className="mb-1.5 text-xs font-semibold text-muted-foreground">
-                            Assigned Roles
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                            {selectedUser.roles.map((r) => (
-                                <span
-                                    key={r}
-                                    className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-0.5 text-xs font-semibold text-emerald-500"
-                                >
-                                    {r}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Scrollable Effective Permission Grouped by Role & Module */}
-                    <div className="space-y-2.5 border-t border-border pt-2">
-                        <div className="flex items-center justify-between">
-                            <div className="text-xs font-bold text-foreground">
-                                Effective Permissions (Per Role & Modul)
+        <TooltipProvider>
+            <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
+                {selectedUser ? (
+                    <div className="space-y-4">
+                        {/* User Avatar & Name Header */}
+                        <div className="flex items-center gap-3 border-b border-border pb-4">
+                            <div className="flex size-12 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-base font-bold text-emerald-500">
+                                {selectedUser.initials ||
+                                    selectedUser.name.slice(0, 2).toUpperCase()}
                             </div>
-                            <span className="rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500">
-                                {effectivePerms.length} Total
-                            </span>
+                            <div>
+                                <h3 className="text-sm font-bold text-foreground">
+                                    {selectedUser.name}
+                                </h3>
+                                <p className="text-xs text-muted-foreground">
+                                    {selectedUser.email}
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="max-h-72 space-y-3 overflow-y-auto rounded-lg border border-border bg-muted/10 p-3">
-                            {/* Inherited Permissions Grouped by Assigned Role & Module */}
-                            {selectedUser.roles && selectedUser.roles.length > 0
-                                ? selectedUser.roles.map((roleName) => {
-                                      const perms =
-                                          selectedUser.rolePermissions?.[
-                                              roleName
-                                          ] || [];
+                        {/* Details Info Grid */}
+                        <div className="space-y-2 text-xs">
+                            <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-2.5">
+                                <span className="flex items-center gap-2 text-muted-foreground">
+                                    <Shield className="h-3.5 w-3.5 text-emerald-500" />
+                                    Role Utama
+                                </span>
+                                <span className="font-semibold text-foreground">
+                                    {selectedUser.primaryRole || 'User'}
+                                </span>
+                            </div>
 
-                                      return (
-                                          <div
-                                              key={roleName}
-                                              className="space-y-2 rounded-lg border border-border bg-background p-3 shadow-2xs"
-                                          >
-                                              <div className="flex items-center justify-between border-b border-border/60 pb-1.5">
-                                                  <span className="text-xs font-bold text-foreground capitalize">
-                                                      Role: {roleName}
-                                                  </span>
-                                                  <span className="font-mono text-xs text-muted-foreground">
-                                                      {perms.length} permission
-                                                  </span>
-                                              </div>
-                                              <RenderGroupedPermissions
-                                                  permissions={perms}
-                                                  permissionGroups={
-                                                      permissionGroups
-                                                  }
-                                              />
-                                          </div>
-                                      );
-                                  })
-                                : null}
+                            <div className="flex items-center justify-between rounded-lg border border-border bg-muted/20 p-2.5">
+                                <span className="flex items-center gap-2 text-muted-foreground">
+                                    <Calendar className="h-3.5 w-3.5 text-blue-500" />
+                                    Terdaftar Pada
+                                </span>
+                                <span className="font-mono text-foreground">
+                                    {selectedUser.created_at || '-'}
+                                </span>
+                            </div>
+                        </div>
 
-                            {/* Direct Permissions Grouped by Module */}
-                            {directPerms.length > 0 && (
-                                <div className="space-y-2 rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-3 shadow-2xs">
-                                    <div className="flex items-center justify-between border-b border-indigo-500/20 pb-1.5">
-                                        <span className="text-xs font-bold text-indigo-500">
-                                            Direct Permissions Tambahan
-                                        </span>
-                                        <span className="font-mono text-xs text-indigo-400">
-                                            {directPerms.length} custom
-                                        </span>
-                                    </div>
-                                    <RenderGroupedPermissions
-                                        permissions={directPerms}
-                                        permissionGroups={permissionGroups}
-                                        icon={CheckCircle2}
-                                        iconClassName="text-indigo-500"
-                                    />
+                        {/* Assigned Roles Pills */}
+                        <div>
+                            <div className="mb-1.5 text-xs font-semibold text-muted-foreground">
+                                Assigned Roles
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                                {selectedUser.roles.map((r) => (
+                                    <span
+                                        key={r}
+                                        className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-0.5 text-xs font-semibold text-emerald-500"
+                                    >
+                                        {r}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Scrollable Effective Permission Grouped by Role & Module */}
+                        <div className="space-y-2.5 border-t border-border pt-2">
+                            <div className="flex items-center justify-between">
+                                <div className="text-xs font-bold text-foreground">
+                                    Effective Permissions (Per Role & Modul)
                                 </div>
-                            )}
+                                <span className="rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500">
+                                    {effectivePerms.length} Total
+                                </span>
+                            </div>
 
-                            {!selectedUser.roles?.length &&
-                                !directPerms.length && (
-                                    <div className="py-2 text-center text-xs text-muted-foreground">
-                                        Belum ada role atau permission aktif.
+                            <div className="max-h-72 space-y-3 overflow-y-auto rounded-lg border border-border bg-muted/10 p-3">
+                                {/* Inherited Permissions Grouped by Assigned Role & Module */}
+                                {selectedUser.roles &&
+                                selectedUser.roles.length > 0
+                                    ? selectedUser.roles.map((roleName) => {
+                                          const perms =
+                                              selectedUser.rolePermissions?.[
+                                                  roleName
+                                              ] || [];
+
+                                          return (
+                                              <div
+                                                  key={roleName}
+                                                  className="space-y-2 rounded-lg border border-border bg-background p-3 shadow-2xs"
+                                              >
+                                                  <div className="flex items-center justify-between border-b border-border/60 pb-1.5">
+                                                      <span className="text-xs font-bold text-foreground capitalize">
+                                                          Role: {roleName}
+                                                      </span>
+                                                      <span className="font-mono text-xs text-muted-foreground">
+                                                          {perms.length}{' '}
+                                                          permission
+                                                      </span>
+                                                  </div>
+                                                  <RenderGroupedPermissions
+                                                      permissions={perms}
+                                                      permissionGroups={
+                                                          permissionGroups
+                                                      }
+                                                  />
+                                              </div>
+                                          );
+                                      })
+                                    : null}
+
+                                {/* Direct Permissions Grouped by Module */}
+                                {directPerms.length > 0 && (
+                                    <div className="space-y-2 rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-3 shadow-2xs">
+                                        <div className="flex items-center justify-between border-b border-indigo-500/20 pb-1.5">
+                                            <span className="text-xs font-bold text-indigo-500">
+                                                Direct Permissions Tambahan
+                                            </span>
+                                            <span className="font-mono text-xs text-indigo-400">
+                                                {directPerms.length} custom
+                                            </span>
+                                        </div>
+                                        <RenderGroupedPermissions
+                                            permissions={directPerms}
+                                            permissionGroups={permissionGroups}
+                                            icon={CheckCircle2}
+                                            iconClassName="text-indigo-500"
+                                        />
                                     </div>
                                 )}
+
+                                {!selectedUser.roles?.length &&
+                                    !directPerms.length && (
+                                        <div className="py-2 text-center text-xs text-muted-foreground">
+                                            Belum ada role atau permission
+                                            aktif.
+                                        </div>
+                                    )}
+                            </div>
+                        </div>
+
+                        {/* Action Panel Buttons */}
+                        <div className="flex flex-col gap-2 border-t border-border pt-2">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            onStartImpersonate(selectedUser)
+                                        }
+                                        className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-500 transition hover:bg-emerald-500/20 enabled:cursor-pointer"
+                                    >
+                                        <UserCheck className="h-4 w-4" />
+                                        Impersonate User Sesi Ini
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top">
+                                    Masuk dan bertindak sebagai pengguna ini (
+                                    {selectedUser.name})
+                                </TooltipContent>
+                            </Tooltip>
+
+                            <div className="flex gap-2">
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                onStartEdit(selectedUser)
+                                            }
+                                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-2 text-xs font-semibold text-indigo-500 transition hover:bg-indigo-500/20 enabled:cursor-pointer"
+                                        >
+                                            <Edit2 className="h-3.5 w-3.5" />
+                                            Ubah Data
+                                        </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        Buka modal edit data pengguna
+                                    </TooltipContent>
+                                </Tooltip>
+
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                onStartDelete(selectedUser)
+                                            }
+                                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-500 transition hover:bg-rose-500/20 enabled:cursor-pointer"
+                                        >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                            Hapus
+                                        </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        Buka konfirmasi hapus pengguna
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
                         </div>
                     </div>
-
-                    {/* Action Panel Buttons */}
-                    <div className="flex flex-col gap-2 border-t border-border pt-2">
-                        <button
-                            type="button"
-                            onClick={() => onStartImpersonate(selectedUser)}
-                            className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-500 transition hover:bg-emerald-500/20"
-                        >
-                            <UserCheck className="h-4 w-4" />
-                            Impersonate User Sesi Ini
-                        </button>
-
-                        <div className="flex gap-2">
-                            <button
-                                type="button"
-                                onClick={() => onStartEdit(selectedUser)}
-                                className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-2 text-xs font-semibold text-indigo-500 transition hover:bg-indigo-500/20"
-                            >
-                                <Edit2 className="h-3.5 w-3.5" />
-                                Ubah Data
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => onStartDelete(selectedUser)}
-                                className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-500 transition hover:bg-rose-500/20"
-                            >
-                                <Trash2 className="h-3.5 w-3.5" />
-                                Hapus
-                            </button>
-                        </div>
+                ) : (
+                    <div className="py-12 text-center text-xs text-muted-foreground">
+                        <User className="mx-auto h-8 w-8 text-muted-foreground/50" />
+                        <p className="mt-2 font-medium">
+                            Pilih pengguna dari tabel
+                        </p>
+                        <p className="text-[11px] text-muted-foreground/70">
+                            Klik salah satu baris tabel di sebelah kiri untuk
+                            melihat detail akun.
+                        </p>
                     </div>
-                </div>
-            ) : (
-                <div className="py-12 text-center text-xs text-muted-foreground">
-                    <User className="mx-auto h-8 w-8 text-muted-foreground/50" />
-                    <p className="mt-2 font-medium">
-                        Pilih pengguna dari tabel
-                    </p>
-                    <p className="text-[11px] text-muted-foreground/70">
-                        Klik salah satu baris tabel di sebelah kiri untuk
-                        melihat detail akun.
-                    </p>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </TooltipProvider>
     );
 }
