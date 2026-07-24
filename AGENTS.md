@@ -279,3 +279,7 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
    - Dilarang keras menggunakan atau memasang kembali dependensi `laravel/wayfinder` maupun `@laravel/vite-plugin-wayfinder`.
    - Folder `resources/js/actions`, `resources/js/routes`, dan `resources/js/wayfinder` telah dicopot secara permanen dan DILARANG dibuat ulang.
    - Seluruh routing frontend WAJIB menggunakan Ziggy (`route('...')`) atau URL string standar.
+
+10. **Aturan Eksekusi Verification & `composer ci:check`:**
+   - DILARANG menjalankan perintah `composer ci:check` secara otomatis setelah selesai coding kecuali diinstruksikan secara eksplisit oleh pengguna.
+

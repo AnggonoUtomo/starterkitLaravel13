@@ -5,15 +5,17 @@ import {
     CheckCircle2,
     Command,
     FileText,
+    KeyRound,
     LayoutDashboard,
     Monitor,
     Moon,
+    Palette,
     PanelLeftClose,
     PanelLeftOpen,
     Settings,
     Shield,
     Sun,
-    User,
+    UserCircle,
     Users,
 } from 'lucide-react';
 import React, { useState } from 'react';
@@ -92,16 +94,77 @@ export default function ConsoleLayout({ children }: Props) {
                 'border border-amber-500/30 bg-amber-500/10 text-amber-500 font-semibold shadow-xs',
             active: url.startsWith('/console/audit-logs'),
         },
+    ];
+
+    const footerNavItems = [
         {
-            name: 'My Profile',
+            name: 'Profil Saya',
             href: '/console/profile',
-            icon: User,
+            icon: UserCircle,
             iconColor: 'text-rose-500',
             activeClass:
                 'border border-rose-500/30 bg-rose-500/10 text-rose-500 font-semibold shadow-xs',
             active: url.startsWith('/console/profile'),
         },
+        {
+            name: 'Kata Sandi',
+            href: '/settings/security',
+            icon: KeyRound,
+            iconColor: 'text-amber-500',
+            activeClass:
+                'border border-amber-500/30 bg-amber-500/10 text-amber-500 font-semibold shadow-xs',
+            active: url.startsWith('/settings/security'),
+        },
+        {
+            name: 'Tampilan',
+            href: '/settings/appearance',
+            icon: Palette,
+            iconColor: 'text-indigo-500',
+            activeClass:
+                'border border-indigo-500/30 bg-indigo-500/10 text-indigo-500 font-semibold shadow-xs',
+            active: url.startsWith('/settings/appearance'),
+        },
     ];
+
+    const renderNavItem = (item: (typeof navItems)[0]) => {
+        const Icon = item.icon;
+
+        const linkElement = (
+            <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center gap-3 rounded-lg text-sm font-medium transition ${
+                    sidebarOpen
+                        ? 'w-full justify-start px-3 py-2.5'
+                        : 'justify-center p-2.5'
+                } ${
+                    item.active
+                        ? item.activeClass
+                        : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
+                }`}
+            >
+                <Icon
+                    className={`h-5 w-5 shrink-0 transition-colors ${
+                        item.active
+                            ? item.iconColor
+                            : `${item.iconColor} opacity-75 group-hover:opacity-100`
+                    }`}
+                />
+                {sidebarOpen && <span>{item.name}</span>}
+            </Link>
+        );
+
+        if (!sidebarOpen) {
+            return (
+                <Tooltip key={item.name}>
+                    <TooltipTrigger asChild>{linkElement}</TooltipTrigger>
+                    <TooltipContent side="right">{item.name}</TooltipContent>
+                </Tooltip>
+            );
+        }
+
+        return linkElement;
+    };
 
     return (
         <TooltipProvider delayDuration={0}>
@@ -221,57 +284,66 @@ export default function ConsoleLayout({ children }: Props) {
                             sidebarOpen ? 'w-64' : 'w-16 items-center'
                         }`}
                     >
+                        {/* Main Console Modules */}
                         <div className="flex flex-1 scrollbar-thin flex-col gap-1 overflow-y-auto p-3">
                             {sidebarOpen && (
                                 <div className="px-3 py-2 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
                                     Console Modules
                                 </div>
                             )}
-                            {navItems.map((item) => {
-                                const Icon = item.icon;
+                            {navItems.map((item) => renderNavItem(item))}
+                        </div>
 
-                                const linkElement = (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        className={`flex items-center gap-3 rounded-lg text-sm font-medium transition ${
-                                            sidebarOpen
-                                                ? 'w-full justify-start px-3 py-2.5'
-                                                : 'justify-center p-2.5'
-                                        } ${
-                                            item.active
-                                                ? item.activeClass
-                                                : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
-                                        }`}
-                                    >
-                                        <Icon
-                                            className={`h-5 w-5 shrink-0 transition-colors ${
-                                                item.active
-                                                    ? item.iconColor
-                                                    : `${item.iconColor} opacity-75 group-hover:opacity-100`
-                                            }`}
-                                        />
-                                        {sidebarOpen && (
-                                            <span>{item.name}</span>
-                                        )}
-                                    </Link>
-                                );
+                        {/* Sidebar Footer: Horizontal Icon Only Buttons (Profile, Kata Sandi, Appearance) */}
+                        <div className="w-full border-t border-sidebar-border/80 bg-sidebar/50 p-2">
+                            <div
+                                className={`flex ${
+                                    sidebarOpen
+                                        ? 'flex-row items-center justify-between gap-1.5 px-1'
+                                        : 'flex-col items-center gap-2'
+                                }`}
+                            >
+                                {footerNavItems.map((item) => {
+                                    const Icon = item.icon;
+                                    const active = item.active;
 
-                                if (!sidebarOpen) {
                                     return (
                                         <Tooltip key={item.name}>
                                             <TooltipTrigger asChild>
-                                                {linkElement}
+                                                <Link
+                                                    href={item.href}
+                                                    className={`flex items-center justify-center rounded-lg border transition enabled:cursor-pointer ${
+                                                        sidebarOpen
+                                                            ? 'flex-1 px-2.5 py-2'
+                                                            : 'size-9 p-2'
+                                                    } ${
+                                                        active
+                                                            ? item.activeClass
+                                                            : 'border-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
+                                                    }`}
+                                                >
+                                                    <Icon
+                                                        className={`size-4.5 shrink-0 ${
+                                                            active
+                                                                ? item.iconColor
+                                                                : 'opacity-80'
+                                                        }`}
+                                                    />
+                                                </Link>
                                             </TooltipTrigger>
-                                            <TooltipContent side="right">
+                                            <TooltipContent
+                                                side={
+                                                    sidebarOpen
+                                                        ? 'top'
+                                                        : 'right'
+                                                }
+                                            >
                                                 {item.name}
                                             </TooltipContent>
                                         </Tooltip>
                                     );
-                                }
-
-                                return linkElement;
-                            })}
+                                })}
+                            </div>
                         </div>
                     </aside>
 
