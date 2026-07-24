@@ -1,13 +1,13 @@
 <laravel-boost-guidelines>
-=== foundation rules ===
+=== panduan dasar ===
 
-# Laravel Boost Guidelines
+# Panduan Laravel Boost
 
-The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
+Panduan Laravel Boost dikurasi secara khusus oleh pengembang Laravel untuk aplikasi ini. Panduan ini harus diikuti secara ketat untuk memastikan pengalaman terbaik saat membangun aplikasi Laravel.
 
-## Foundational Context
+## Konteks Dasar
 
-This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
+Aplikasi ini adalah aplikasi Laravel dan versi paket utama ekosistem Laravel yang digunakan tercantum di bawah ini. Anda adalah seorang ahli pada seluruh ekosistem ini. Pastikan Anda mematuhi versi paket berikut:
 
 - php - 8.4
 - inertiajs/inertia-laravel (INERTIA_LARAVEL) - v3
@@ -30,191 +30,191 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - eslint (ESLINT) - v9
 - prettier (PRETTIER) - v3
 
-## Skills Activation
+## Aktivasi Skill
 
-This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
+Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda WAJIB mengaktifkan skill yang relevan setiap kali bekerja pada domain tersebut—jangan menunggu sampai menemui jalan buntu.
 
-## Conventions
+## Konvensi Kode
 
-- You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
-- Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
-- Check for existing components to reuse before writing a new one.
+- Anda harus mengikuti seluruh konvensi kode yang sudah ada pada aplikasi ini. Saat membuat atau mengubah berkas, periksa berkas sejenis untuk memastikan struktur, pendekatan, dan penamaan yang sesuai.
+- Gunakan nama variabel dan method yang deskriptif. Contoh: `isRegisteredForDiscounts`, bukan `discount()`.
+- Periksa komponen yang sudah ada untuk digunakan kembali sebelum membuat komponen baru.
 
-## Verification Scripts
+## Skrip Verifikasi
 
-- Do not create verification scripts or tinker when tests cover that functionality and prove they work. Unit and feature tests are more important.
+- Jangan membuat skrip verifikasi atau pengujian manual via tinker jika sudah terdapat pengujian (test) yang mencakup fungsionalitas tersebut. Pengujian unit (unit test) dan fitur (feature test) jauh lebih diutamakan.
 
-## Application Structure & Architecture
+## Struktur & Arsitektur Aplikasi
 
-- Stick to existing directory structure; don't create new base folders without approval.
-- Do not change the application's dependencies without approval.
+- Tetap ikuti struktur direktori yang ada; dilarang membuat folder utama baru tanpa persetujuan pengguna.
+- Dilarang mengubah dependensi aplikasi tanpa persetujuan pengguna.
 
 ## Frontend Bundling
 
-- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
+- Jika pengguna tidak melihat perubahan frontend pada tampilan UI, minta pengguna untuk menjalankan `npm run build`, `npm run dev`, atau `composer run dev`.
 
-## Documentation Files
+## Berkas Dokumentasi
 
-- You must only create documentation files if explicitly requested by the user.
+- Anda hanya boleh membuat berkas dokumentasi jika diminta secara eksplisit oleh pengguna.
 
-## Replies
+## Penyampaian Respon
 
-- Be concise in your explanations - focus on what's important rather than explaining obvious details.
+- Berikan penjelasan yang ringkas dan jelas - fokus pada poin-poin penting tanpa mengulang detail yang sudah jelas.
 
-=== boost rules ===
+=== aturan boost ===
 
 # Laravel Boost
 
-## Tools
+## Alat (Tools)
 
-- Laravel Boost is an MCP server with tools designed specifically for this application. Prefer Boost tools over manual alternatives like shell commands or file reads.
-- Use `database-query` to run read-only queries against the database instead of writing raw SQL in tinker.
-- Use `database-schema` to inspect table structure before writing migrations or models.
-- Use `get-absolute-url` to resolve the correct scheme, domain, and port for project URLs. Always use this before sharing a URL with the user.
-- Use `browser-logs` to read browser logs, errors, and exceptions. Only recent logs are useful, ignore old entries.
+- Laravel Boost adalah MCP server dengan alat yang dirancang khusus untuk aplikasi ini. Utamakan penggunaan alat Boost daripada opsi manual seperti perintah shell atau pembacaan berkas langsung.
+- Gunakan `database-query` untuk menjalankan query *read-only* ke database alih-alih menulis SQL mentah di tinker.
+- Gunakan `database-schema` untuk memeriksa struktur tabel sebelum membuat migrasi atau model.
+- Gunakan `get-absolute-url` untuk mendapatkan skema URL, domain, dan port proyek secara tepat sebelum membagikan URL kepada pengguna.
+- Gunakan `browser-logs` untuk membaca log, error, dan pengecualian browser. Hanya log terbaru yang berguna, abaikan log lama.
 
-## Searching Documentation (IMPORTANT)
+## Pencarian Dokumentasi (PENTING)
 
-- Always use `search-docs` before making code changes. Do not skip this step. It returns version-specific docs based on installed packages automatically.
-- Pass a `packages` array to scope results when you know which packages are relevant.
-- Use multiple broad, topic-based queries: `['rate limiting', 'routing rate limiting', 'routing']`. Expect the most relevant results first.
-- Do not add package names to queries because package info is already shared. Use `test resource table`, not `filament 4 test resource table`.
+- Selalu gunakan alat `search-docs` sebelum melakukan perubahan kode. Jangan lewati langkah ini. Alat ini mengembalikan dokumentasi versi spesifik berdasarkan paket terpasang secara otomatis.
+- Sertakan array `packages` untuk mempersempit hasil saat mengetahui paket mana yang relevan.
+- Gunakan beberapa kata kunci topik yang luas: `['rate limiting', 'routing rate limiting', 'routing']`. Hasil yang paling relevan akan muncul di awal.
+- Jangan menambahkan nama paket pada query pencarian karena informasi paket sudah disertakan otomatis (contoh: gunakan `test resource table`, bukan `filament 4 test resource table`).
 
-### Search Syntax
+### Sintaks Pencarian
 
-1. Use words for auto-stemmed AND logic: `rate limit` matches both "rate" AND "limit".
-2. Use `"quoted phrases"` for exact position matching: `"infinite scroll"` requires adjacent words in order.
-3. Combine words and phrases for mixed queries: `middleware "rate limit"`.
-4. Use multiple queries for OR logic: `queries=["authentication", "middleware"]`.
+1. Gunakan kata untuk logika AND (pencarian kata otomatis): `rate limit` mencocokkan kata "rate" DAN "limit".
+2. Gunakan `"frase dalam kutip"` untuk pencarian posisi presisi: `"infinite scroll"` membutuhkan kata yang berdampingan secara berurutan.
+3. Kombinasikan kata dan frase untuk query campuran: `middleware "rate limit"`.
+4. Gunakan banyak query untuk logika OR: `queries=["authentication", "middleware"]`.
 
-## Artisan
+## Perintah Artisan
 
-- Run Artisan commands directly via the command line (e.g., `php artisan route:list`). Use `php artisan list` to discover available commands and `php artisan [command] --help` to check parameters.
-- Inspect routes with `php artisan route:list`. Filter with: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
-- Read configuration values using dot notation: `php artisan config:show app.name`, `php artisan config:show database.default`. Or read config files directly from the `config/` directory.
+- Jalankan perintah Artisan langsung melalui baris perintah (contoh: `php artisan route:list`). Gunakan `php artisan list` untuk melihat perintah yang tersedia dan `php artisan [command] --help` untuk memeriksa parameter.
+- Periksa rute dengan `php artisan route:list`. Filter dengan: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
+- Baca nilai konfigurasi menggunakan notasi titik: `php artisan config:show app.name`, `php artisan config:show database.default`. Atau baca berkas konfigurasi langsung dari direktori `config/`.
 
 ## Tinker
 
-- Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
-- Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
-  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
+- Eksekusi PHP dalam konteks aplikasi untuk debugging dan pengujian kode. Jangan membuat model tanpa persetujuan pengguna, utamakan pengujian dengan factory. Utamakan perintah Artisan yang ada dibanding menulis kode tinker kustom.
+- Selalu gunakan kutip tunggal untuk mencegah ekspansi shell: `php artisan tinker --execute 'Your::code();'`
+  - Gunakan kutip ganda untuk string PHP di dalamnya: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
-=== php rules ===
+=== aturan php ===
 
 # PHP
 
-- Always use curly braces for control structures, even for single-line bodies.
-- Use PHP 8 constructor property promotion: `public function __construct(public GitHub $github) { }`. Do not leave empty zero-parameter `__construct()` methods unless the constructor is private.
-- Use explicit return type declarations and type hints for all method parameters: `function isAccessible(User $user, ?string $path = null): bool`
-- Use TitleCase for Enum keys: `FavoritePerson`, `BestLake`, `Monthly`.
-- Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
-- Use array shape type definitions in PHPDoc blocks.
+- Selalu gunakan kurung kurawal untuk struktur kontrol, bahkan untuk baris tunggal.
+- Gunakan fitur PHP 8 constructor property promotion: `public function __construct(public GitHub $github) { }`. Jangan tinggalkan method `__construct()` tanpa parameter kecuali konstruktor bersifat privat.
+- Gunakan deklarasi tipe kembalian (return type) dan type hint yang eksplisit untuk semua parameter method: `function isAccessible(User $user, ?string $path = null): bool`.
+- Gunakan format TitleCase untuk kunci Enum: `FavoritePerson`, `BestLake`, `Monthly`.
+- Utamakan blok PHPDoc daripada komentar inline. Hanya tambahkan komentar inline untuk logika yang sangat kompleks.
+- Gunakan definisi bentuk array (array shape) pada blok PHPDoc.
 
-=== deployments rules ===
+=== aturan deployment ===
 
 # Deployment
 
-- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
+- Laravel dapat dideploy menggunakan [Laravel Cloud](https://cloud.laravel.com/), yang merupakan cara tercepat untuk merilis dan menskalakan aplikasi Laravel produksi.
 
-=== tests rules ===
+=== aturan pengujian ===
 
-# Test Enforcement
+# Penegakan Pengujian (Testing)
 
-- Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
-- Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
+- Setiap perubahan kode WAJIB diuji secara terprogram. Tulis pengujian baru atau perbarui pengujian yang sudah ada, lalu jalankan pengujian terkait untuk memastikan semuanya lulus (pass).
+- Jalankan pengujian minimal yang diperlukan untuk memastikan kualitas kode dan kecepatan. Gunakan `php artisan test --compact` dengan nama berkas atau filter spesifik.
 
-=== inertia-laravel/core rules ===
+=== aturan inertia-laravel/core ===
 
 # Inertia
 
-- Inertia creates fully client-side rendered SPAs without modern SPA complexity, leveraging existing server-side patterns.
-- Components live in `resources/js/pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
-- ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
-- IMPORTANT: Activate `inertia-react-development` when working with Inertia client-side patterns.
+- Inertia membangun aplikasi SPA client-side secara penuh tanpa kompleksitas SPA modern, dengan memanfaatkan pola server-side yang sudah ada.
+- Komponen berada di `resources/js/pages` (kecuali ditentukan di `vite.config.js`). Gunakan `Inertia::render()` untuk routing server-side alih-alih Blade view.
+- SELALU gunakan alat `search-docs` untuk melihat dokumentasi spesifik versi Inertia dan contoh kode terbaru.
+- PENTING: Aktifkan skill `inertia-react-development` saat bekerja dengan pola client-side Inertia.
 
 # Inertia v3
 
-- Use all Inertia features from v1, v2, and v3. Check the documentation before making changes to ensure the correct approach.
-- New v3 features: standalone HTTP requests (`useHttp` hook), optimistic updates with automatic rollback, layout props (`useLayoutProps` hook), instant visits, simplified SSR via `@inertiajs/vite` plugin, custom exception handling for error pages.
-- Carried over from v2: deferred props, infinite scroll, merging props, polling, prefetching, once props, flash data.
-- When using deferred props, add an empty state with a pulsing or animated skeleton.
-- Axios has been removed. Use the built-in XHR client with interceptors, or install Axios separately if needed.
-- `Inertia::lazy()` / `LazyProp` has been removed. Use `Inertia::optional()` instead.
-- Prop types (`Inertia::optional()`, `Inertia::defer()`, `Inertia::merge()`) work inside nested arrays with dot-notation paths.
-- SSR works automatically in Vite dev mode with `@inertiajs/vite` - no separate Node.js server needed during development.
-- Event renames: `invalid` is now `httpException`, `exception` is now `networkError`.
-- `router.cancel()` replaced by `router.cancelAll()`.
-- The `future` configuration namespace has been removed - all v2 future options are now always enabled.
+- Gunakan seluruh fitur Inertia dari v1, v2, dan v3. Periksa dokumentasi sebelum melakukan perubahan untuk memastikan pendekatan yang tepat.
+- Fitur baru v3: standalone HTTP requests (hook `useHttp`), optimistic updates dengan automatic rollback, layout props (hook `useLayoutProps`), instant visits, penyederhanaan SSR via plugin `@inertiajs/vite`, penanganan kustom exception untuk halaman error.
+- Fitur turunan v2: deferred props, infinite scroll, merging props, polling, prefetching, once props, flash data.
+- Saat menggunakan deferred props, tambahkan kondisi tampilan kosong (*empty state*) dengan animasi pulsing atau skeleton.
+- Axios telah dihapus. Gunakan client XHR bawaan dengan interceptor, atau instal Axios secara terpisah jika diperlukan.
+- `Inertia::lazy()` / `LazyProp` telah dihapus. Gunakan `Inertia::optional()` sebagai gantinya.
+- Tipe prop (`Inertia::optional()`, `Inertia::defer()`, `Inertia::merge()`) bekerja di dalam array bersarang menggunakan notasi titik (dot notation).
+- SSR bekerja otomatis dalam mode pengembangan Vite dengan `@inertiajs/vite` - tidak memerlukan server Node.js terpisah saat pengembangan.
+- Perubahan nama event: `invalid` sekarang menjadi `httpException`, `exception` sekarang menjadi `networkError`.
+- `router.cancel()` digantikan oleh `router.cancelAll()`.
+- Ruang lingkup konfigurasi `future` telah dihapus - seluruh opsi masa depan v2 sekarang selalu aktif secara otomatis.
 
-=== laravel/core rules ===
+=== aturan laravel/core ===
 
-# Do Things the Laravel Way
+# Lakukan dengan Cara Laravel (The Laravel Way)
 
-- Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using `php artisan list` and check their parameters with `php artisan [command] --help`.
-- If you're creating a generic PHP class, use `php artisan make:class`.
-- Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
+- Gunakan perintah `php artisan make:` untuk membuat berkas baru (migrasi, controller, model, dll.). Anda dapat melihat daftar perintah Artisan menggunakan `php artisan list` dan memeriksa parameternya dengan `php artisan [command] --help`.
+- Jika membuat kelas PHP generik, gunakan `php artisan make:class`.
+- Berikan argumen `--no-interaction` pada seluruh perintah Artisan agar berjalan tanpa input pengguna. Berikan juga `--options` yang tepat untuk memastikan perilaku yang sesuai.
 
-### Model Creation
+### Pembuatan Model
 
-- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `php artisan make:model --help` to check the available options.
+- Saat membuat model baru, buat juga factory dan seeder yang berguna. Tanyakan kepada pengguna jika membutuhkan hal lain, menggunakan `php artisan make:model --help` untuk memeriksa opsi yang tersedia.
 
-## APIs & Eloquent Resources
+## API & Eloquent Resources
 
-- For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
+- Untuk API, utamakan penggunaan Eloquent API Resources dan versi API (API versioning) kecuali rute API yang sudah ada tidak menggunakannya.
 
-## URL Generation
+## Pembentukan URL
 
-- When generating links to other pages, prefer named routes and the `route()` function.
+- Saat membuat tautan ke halaman lain, utamakan penggunaan rute ternama (named routes) dan fungsi `route()`.
 
-## Testing
+## Pengujian (Testing)
 
-- When creating models for tests, use the factories for the models. Check if the factory has custom states that can be used before manually setting up the model.
-- Faker: Use methods such as `$this->faker->word()` or `fake()->randomDigit()`. Follow existing conventions whether to use `$this->faker` or `fake()`.
-- When creating tests, make use of `php artisan make:test [options] {name}` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
+- Saat membuat model untuk pengujian, gunakan factory model tersebut. Periksa apakah factory memiliki state kustom yang dapat digunakan sebelum mengonfigurasi model secara manual.
+- Faker: Gunakan method seperti `$this->faker->word()` atau `fake()->randomDigit()`. Ikuti konvensi yang ada apakah menggunakan `$this->faker` atau `fake()`.
+- Saat membuat pengujian, manfaatkan `php artisan make:test [options] {name}` untuk membuat feature test, dan berikan opsi `--unit` untuk membuat unit test. Sebagian besar pengujian harus berupa feature test.
 
-## Vite Error
+## Error Vite
 
-- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+- Jika menerima error "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest", Anda dapat menjalankan `npm run build` atau meminta pengguna menjalankan `npm run dev` atau `composer run dev`.
 
-=== pint/core rules ===
+=== aturan pint/core ===
 
-# Laravel Pint Code Formatter
+# Format Kode Laravel Pint
 
-- If you have modified any PHP files, you must run `vendor/bin/pint --dirty --format agent` before finalizing changes to ensure your code matches the project's expected style.
-- Do not run `vendor/bin/pint --test --format agent`, simply run `vendor/bin/pint --format agent` to fix any formatting issues.
+- Jika Anda mengubah berkas PHP apa pun, Anda WAJIB menjalankan `vendor/bin/pint --dirty --format agent` sebelum menyelesaikan perubahan untuk memastikan kode sesuai dengan gaya standar proyek.
+- Jangan jalankan `vendor/bin/pint --test --format agent`, cukup jalankan `vendor/bin/pint --format agent` untuk memperbaiki format kode secara otomatis.
 
-=== pest/core rules ===
+=== aturan pest/core ===
 
 ## Pest
 
-- This project uses Pest for testing. Create tests: `php artisan make:test --pest {name}`.
-- The `{name}` argument should not include the test suite directory. Use `php artisan make:test --pest SomeFeatureTest` instead of `php artisan make:test --pest Feature/SomeFeatureTest`.
-- Run tests: `php artisan test --compact` or filter: `php artisan test --compact --filter=testName`.
-- Do NOT delete tests without approval.
+- Proyek ini menggunakan Pest untuk pengujian. Buat pengujian: `php artisan make:test --pest {name}`.
+- Argumen `{name}` tidak boleh menyertakan direktori suite pengujian. Gunakan `php artisan make:test --pest SomeFeatureTest` alih-alih `php artisan make:test --pest Feature/SomeFeatureTest`.
+- Jalankan pengujian: `php artisan test --compact` atau filter: `php artisan test --compact --filter=testName`.
+- DILARANG menghapus pengujian tanpa persetujuan pengguna.
 
-=== inertia-react/core rules ===
+=== aturan inertia-react/core ===
 
 # Inertia + React
 
-- IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
+- PENTING: Aktifkan skill `inertia-react-development` saat bekerja dengan pola client-side Inertia React.
 
 </laravel-boost-guidelines>
 
-=== git rules ===
+=== aturan git ===
 
-# Git Commit & Push Confirmation
+# Konfirmasi Git Commit & Push
 
-- ALWAYS request explicit confirmation from the user before executing `git commit` or `git push`.
-- Present a detailed summary of all added, modified, or deleted files along with the proposed commit message before asking for confirmation.
-- Use Indonesian language for all git commit messages (e.g. `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `chore: ...`).
+- WAJIB meminta konfirmasi eksplisit dari pengguna sebelum menjalankan `git commit` atau `git push`.
+- Tampilkan rincian daftar berkas yang ditambah, diubah, atau dihapus beserta usulan pesan commit sebelum meminta konfirmasi.
+- Gunakan Bahasa Indonesia untuk seluruh pesan commit git (contoh: `fitur: ...`, `dokumentasi: ...`, `perbaikan: ...`, `chore: ...`).
 
-=== user preferences & project conventions ===
+=== preferensi pengguna & konvensi proyek ===
 
 # Standar & Aturan Pengembangan Proyek (Persisten)
 
 1. **Konfirmasi Commit & Push Git:**
    - WAJIB meminta konfirmasi eksplisit dari pengguna sebelum menjalankan `git commit` atau `git push`.
-   - Tampilkan rincian daftar file yang ditambah/diubah/dihapus beserta usulan pesan commit sebelum meminta konfirmasi.
+   - Tampilkan rincian daftar berkas yang ditambah/diubah/dihapus beserta usulan pesan commit sebelum meminta konfirmasi.
 
 2. **Bahasa Dokumentasi & Commit:**
    - Seluruh dokumen teknis (`spec.md`, `plan.md`, `todo.md`, ADR) dan pesan git commit WAJIB menggunakan Bahasa Indonesia yang sederhana dan jelas tanpa mengubah konteks teknis.
@@ -255,11 +255,13 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
      - Header Sub-Modul / Kategori: `text-[11.5px] font-bold uppercase tracking-wider text-muted-foreground/90`.
      - Header Parent Card / Role: `text-xs font-bold text-foreground`.
      - Label Input & Badge Status: `text-xs font-semibold`.
+     - Susunan Item Permission / Data: Dibariskas secara vertikal dari atas ke bawah (`flex flex-col gap-1.5`) per kategori sub-modul.
    - **Frontend Global Layout & Sticky Sidebar Standard:**
      - Header Nav: `sticky top-0 z-40 h-16` dengan efek backdrop blur.
      - Sidebar Navigation: Terkunci di tempatnya secara permanen (`sticky top-16 z-30 h-[calc(100vh-4rem)] flex-col shrink-0`) dengan scrollbar mandiri di dalam kontainer (`overflow-y-auto`) agar tidak terpengaruh oleh scroll area halaman utama.
+   - **Frontend Tailwind v4 & Clean Class Standard (`cssConflict` Prevention):**
+     - Bebas Konflik Kelas Tailwind: Dilarang menumpuk modifier warna/opasitas redundan yang memicu peringatan `cssConflict` (contoh: gunakan `bg-emerald-500/10` tanpa menumpuk `dark:bg-emerald-500/15`, atau gunakan arbitrary values standar `min-h-[550px]` tanpa konflik).
+     - Seluruh penulisan utility class Tailwind v4 WAJIB divalidasi dan dibersihkan dari peringatan linter `tailwindcss-intellisense`.
    - **Backend Payload & DTO Pattern:**
      - DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`).
      - Support query filtering untuk `search` dan `role` pada method pagination.
-
-
