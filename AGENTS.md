@@ -244,3 +244,20 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 7. **Kelengkapan Dokumentasi `todo.md` (*Detailed Todo Checklist*):**
    - Pada setiap item checklist `todo.md` yang selesai dikerjakan, WAJIB menyertakan penjelasan detail mengenai apa yang telah diselesaikan.
    - Cantumkan rincian tautan berkas yang dibuat (`[NEW]`), diubah (`[MODIFY]`), atau dijadikan referensi (`[REFERENCE]`) beserta deskripsi singkat kontribusinya.
+
+8. **Pola Adaptasi Visual & Logika Backend Submodul (*Submodule Architecture Patterns*):**
+   - **Frontend Workspace Layout Pattern:**
+     - Area Atas: Header khusus submodul, Kartu Ringkasan Metrik (`SummaryCards.tsx`), dan Banner Lipat Pintasan Papan Ketik (`ShortcutPanel.tsx`).
+     - Area Utama: Layout Grid Split View (Sisi Kiri 2-Cols: Tabel Data / Datatable interaktif dengan live search & filter dropdown; Sisi Kanan 1-Col: `WorkspaceCard` yang beralih mode secara halus antara Detail Card, Form Create, atau Form Edit).
+     - Modals: Modals terpisah untuk aksi destructive / konfirmasi (seperti Delete Modal & Impersonate Modal).
+   - **Frontend Typography & Font Sizing Standard:**
+     - Item Rows / Badge Items: `text-xs font-mono font-medium` (12px) dengan padding `px-3 py-1.5` untuk keterbacaan yang nyaman dan jelas.
+     - Header Sub-Modul / Kategori: `text-[11.5px] font-bold uppercase tracking-wider text-muted-foreground/90`.
+     - Header Parent Card / Role: `text-xs font-bold text-foreground`.
+     - Label Input & Badge Status: `text-xs font-semibold`.
+     - Susunan Item Permission / Data: Dibariskas secara vertikal dari atas ke bawah (`flex flex-col gap-1.5`) per kategori sub-modul.
+   - **Backend Payload & DTO Pattern:**
+     - DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`).
+     - Support query filtering untuk `search` dan `role` pada method pagination.
+
+
