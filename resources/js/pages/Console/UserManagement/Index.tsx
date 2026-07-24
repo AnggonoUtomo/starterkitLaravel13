@@ -1,14 +1,15 @@
 import { Head, useForm, router } from '@inertiajs/react';
 import React, { useState, useEffect, useCallback } from 'react';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
+import CreateUserModal from './components/CreateUserModal';
 import DeleteUserModal from './components/DeleteUserModal';
+import EditUserModal from './components/EditUserModal';
 import ImpersonateUserModal from './components/ImpersonateUserModal';
 import UserManagementHeader from './components/UserManagementHeader';
 import UserShortcutPanel from './components/UserShortcutPanel';
 import UserSummaryCards from './components/UserSummaryCards';
 import UserTable from './components/UserTable';
 import type {
-    UserWorkspaceMode,
     RoleOptionItem,
     PermissionGroupItem,
     UserData,
@@ -49,8 +50,10 @@ export default function Index({
     const [selectedUser, setSelectedUser] = useState<UserData | null>(
         users.data[0] || null,
     );
-    const [workspaceMode, setWorkspaceMode] =
-        useState<UserWorkspaceMode>('detail');
+
+    // Modal Visibility States
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [editingUser, setEditingUser] = useState<UserData | null>(null);
     const [deletingUser, setDeletingUser] = useState<UserData | null>(null);
     const [impersonatingUser, setImpersonatingUser] = useState<UserData | null>(
         null,
@@ -70,8 +73,17 @@ export default function Index({
         }
     }
 
-    // Form Hook for Create / Edit
-    const form = useForm({
+    // Form Hook for Create
+    const createForm = useForm({
+        name: '',
+        email: '',
+        password: '',
+        roles: [] as string[],
+        permissions: [] as string[],
+    });
+
+    // Form Hook for Edit
+    const editForm = useForm({
         name: '',
         email: '',
         password: '',
@@ -80,20 +92,26 @@ export default function Index({
     });
 
     const handleStartCreate = useCallback(() => {
-        form.setData({
-            name: '',
-            email: '',
-            password: '',
-            roles: [],
-            permissions: [],
-        });
-        setWorkspaceMode('create');
-    }, [form]);
+        createForm.reset();
+        createForm.clearErrors();
+        setIsCreateModalOpen(true);
+    }, [createForm]);
 
-    const handleCancelWorkspace = useCallback(() => {
-        form.reset();
-        setWorkspaceMode('detail');
-    }, [form]);
+    const handleStartEdit = useCallback(
+        (user: UserData) => {
+            setSelectedUser(user);
+            setEditingUser(user);
+            editForm.clearErrors();
+            editForm.setData({
+                name: user.name,
+                email: user.email,
+                password: '',
+                roles: user.roles || [],
+                permissions: user.permissions || [],
+            });
+        },
+        [editForm],
+    );
 
     // Keyboard Shortcuts Listener
     useEffect(() => {
@@ -111,7 +129,7 @@ export default function Index({
         const handleShortcut = (e: KeyboardEvent) => {
             const key = e.key.toLowerCase();
 
-            // Ctrl/Cmd + Shift + A -> Open Create Form
+            // Ctrl/Cmd + Shift + A -> Open Create User Modal
             if ((e.metaKey || e.ctrlKey) && e.shiftKey && key === 'a') {
                 e.preventDefault();
                 handleStartCreate();
@@ -147,16 +165,19 @@ export default function Index({
                 return;
             }
 
-            // Escape Key -> Cancel Workspace Mode
+            // Escape Key -> Close Modals
             if (e.key === 'Escape') {
-                handleCancelWorkspace();
+                setIsCreateModalOpen(false);
+                setEditingUser(null);
+                setDeletingUser(null);
+                setImpersonatingUser(null);
             }
         };
 
         window.addEventListener('keydown', handleShortcut);
 
         return () => window.removeEventListener('keydown', handleShortcut);
-    }, [selectedUser, handleStartCreate, handleCancelWorkspace]);
+    }, [selectedUser, handleStartCreate]);
 
     // SPA Search & Filter Handlers
     const handleSearchSubmit = (e: React.FormEvent) => {
@@ -179,30 +200,17 @@ export default function Index({
 
     const handleSelectUser = (user: UserData) => {
         setSelectedUser(user);
-        setWorkspaceMode('detail');
-    };
-
-    const handleStartEdit = (user: UserData) => {
-        setSelectedUser(user);
-        form.setData({
-            name: user.name,
-            email: user.email,
-            password: '',
-            roles: user.roles || [],
-            permissions: user.permissions || [],
-        });
-        setWorkspaceMode('edit');
     };
 
     // SPA CRUD Form Handlers
     const handleCreateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        form.post('/console/users', {
+        createForm.post('/console/users', {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
-                form.reset();
-                setWorkspaceMode('detail');
+                createForm.reset();
+                setIsCreateModalOpen(false);
             },
         });
     };
@@ -210,16 +218,16 @@ export default function Index({
     const handleEditSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!selectedUser) {
+        if (!editingUser) {
             return;
         }
 
-        form.put(`/console/users/${selectedUser.id}`, {
+        editForm.put(`/console/users/${editingUser.id}`, {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
-                form.reset();
-                setWorkspaceMode('detail');
+                editForm.reset();
+                setEditingUser(null);
             },
         });
     };
@@ -265,7 +273,7 @@ export default function Index({
                 {/* Keyboard Shortcuts Banner */}
                 <UserShortcutPanel />
 
-                {/* Grid Split Workspace (Left: User Datatable, Right: User Workspace Card) */}
+                {/* Grid Split Workspace (Left: User Datatable, Right: User Workspace Detail Card) */}
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
                     {/* Left Column (2-Cols Table) */}
                     <div className="xl:col-span-2">
@@ -289,22 +297,22 @@ export default function Index({
                         />
                     </div>
 
-                    {/* Right Column (1-Col Workspace Card: Detail / Form) */}
+                    {/* Right Column (1-Col Workspace Detail Card) */}
                     <div className="xl:col-span-1">
                         <UserWorkspaceCard
-                            mode={workspaceMode}
+                            mode="detail"
                             selectedUser={selectedUser}
-                            formData={form.data}
+                            formData={editForm.data}
                             availableRoles={availableRoles}
                             rolesWithPermissions={rolesWithPermissions}
                             permissionGroups={permissionGroups}
-                            isProcessing={form.processing}
+                            isProcessing={editForm.processing}
                             onFieldChange={(field, val) =>
-                                form.setData(field as any, val)
+                                editForm.setData(field as any, val)
                             }
                             onSubmitCreate={handleCreateSubmit}
                             onSubmitEdit={handleEditSubmit}
-                            onCancel={handleCancelWorkspace}
+                            onCancel={() => setEditingUser(null)}
                             onStartEdit={handleStartEdit}
                             onStartDelete={(user) => setDeletingUser(user)}
                             onStartImpersonate={(user) =>
@@ -316,6 +324,36 @@ export default function Index({
             </div>
 
             {/* Modals */}
+            <CreateUserModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                formData={createForm.data}
+                errors={createForm.errors}
+                onFieldChange={(field, val) =>
+                    createForm.setData(field as any, val)
+                }
+                availableRoles={availableRoles}
+                rolesWithPermissions={rolesWithPermissions}
+                permissionGroups={permissionGroups}
+                onSubmit={handleCreateSubmit}
+                isProcessing={createForm.processing}
+            />
+
+            <EditUserModal
+                editingUser={editingUser}
+                onClose={() => setEditingUser(null)}
+                formData={editForm.data}
+                errors={editForm.errors}
+                onFieldChange={(field, val) =>
+                    editForm.setData(field as any, val)
+                }
+                availableRoles={availableRoles}
+                rolesWithPermissions={rolesWithPermissions}
+                permissionGroups={permissionGroups}
+                onSubmit={handleEditSubmit}
+                isProcessing={editForm.processing}
+            />
+
             <DeleteUserModal
                 deletingUser={deletingUser}
                 onClose={() => setDeletingUser(null)}
