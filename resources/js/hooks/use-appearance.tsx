@@ -3,14 +3,31 @@ import { useSyncExternalStore } from 'react';
 export type ResolvedAppearance = 'light' | 'dark';
 export type Appearance = ResolvedAppearance | 'system';
 
+export type ColorTheme =
+    | 'urban'
+    | 'saffron'
+    | 'ruby'
+    | 'ocean'
+    | 'forest'
+    | 'plum'
+    | 'copper'
+    | 'aurora'
+    | 'harbor'
+    | 'graphite'
+    | 'mist'
+    | 'quartz';
+
 export type UseAppearanceReturn = {
     readonly appearance: Appearance;
     readonly resolvedAppearance: ResolvedAppearance;
+    readonly colorTheme: ColorTheme;
     readonly updateAppearance: (mode: Appearance) => void;
+    readonly updateColorTheme: (theme: ColorTheme) => void;
 };
 
 const listeners = new Set<() => void>();
 let currentAppearance: Appearance = 'system';
+let currentColorTheme: ColorTheme = 'urban';
 
 const prefersDark = (): boolean => {
     if (typeof window === 'undefined') {
@@ -37,11 +54,19 @@ const getStoredAppearance = (): Appearance => {
     return (localStorage.getItem('appearance') as Appearance) || 'system';
 };
 
+const getStoredColorTheme = (): ColorTheme => {
+    if (typeof window === 'undefined') {
+        return 'urban';
+    }
+
+    return (localStorage.getItem('color_theme') as ColorTheme) || 'urban';
+};
+
 const isDarkMode = (appearance: Appearance): boolean => {
     return appearance === 'dark' || (appearance === 'system' && prefersDark());
 };
 
-const applyTheme = (appearance: Appearance): void => {
+const applyTheme = (appearance: Appearance, colorTheme: ColorTheme): void => {
     if (typeof document === 'undefined') {
         return;
     }
@@ -50,6 +75,7 @@ const applyTheme = (appearance: Appearance): void => {
 
     document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', colorTheme);
 };
 
 const subscribe = (callback: () => void) => {
@@ -68,7 +94,8 @@ const mediaQuery = (): MediaQueryList | null => {
     return window.matchMedia('(prefers-color-scheme: dark)');
 };
 
-const handleSystemThemeChange = (): void => applyTheme(currentAppearance);
+const handleSystemThemeChange = (): void =>
+    applyTheme(currentAppearance, currentColorTheme);
 
 export function initializeTheme(): void {
     if (typeof window === 'undefined') {
@@ -80,8 +107,14 @@ export function initializeTheme(): void {
         setCookie('appearance', 'system');
     }
 
+    if (!localStorage.getItem('color_theme')) {
+        localStorage.setItem('color_theme', 'urban');
+        setCookie('color_theme', 'urban');
+    }
+
     currentAppearance = getStoredAppearance();
-    applyTheme(currentAppearance);
+    currentColorTheme = getStoredColorTheme();
+    applyTheme(currentAppearance, currentColorTheme);
 
     // Set up system theme change listener
     mediaQuery()?.addEventListener('change', handleSystemThemeChange);
@@ -94,6 +127,12 @@ export function useAppearance(): UseAppearanceReturn {
         () => 'system',
     );
 
+    const colorTheme: ColorTheme = useSyncExternalStore(
+        subscribe,
+        () => currentColorTheme,
+        () => 'urban',
+    );
+
     const resolvedAppearance: ResolvedAppearance = isDarkMode(appearance)
         ? 'dark'
         : 'light';
@@ -101,15 +140,28 @@ export function useAppearance(): UseAppearanceReturn {
     const updateAppearance = (mode: Appearance): void => {
         currentAppearance = mode;
 
-        // Store in localStorage for client-side persistence...
         localStorage.setItem('appearance', mode);
-
-        // Store in cookie for SSR...
         setCookie('appearance', mode);
 
-        applyTheme(mode);
+        applyTheme(mode, currentColorTheme);
         notify();
     };
 
-    return { appearance, resolvedAppearance, updateAppearance } as const;
+    const updateColorTheme = (theme: ColorTheme): void => {
+        currentColorTheme = theme;
+
+        localStorage.setItem('color_theme', theme);
+        setCookie('color_theme', theme);
+
+        applyTheme(currentAppearance, theme);
+        notify();
+    };
+
+    return {
+        appearance,
+        resolvedAppearance,
+        colorTheme,
+        updateAppearance,
+        updateColorTheme,
+    } as const;
 }
