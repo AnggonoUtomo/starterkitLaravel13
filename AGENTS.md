@@ -291,5 +291,9 @@ Proyek ini memiliki keahlian domain khusus yang tersedia di `**/skills/**`. Anda
    - Tooltip DILARANG terbuka/muncul secara otomatis saat halaman atau modal di-mount, maupun saat elemen menerima auto-focus (seperti setelah login, buka modal Add/Edit/Delete, dll.).
    - Tooltip HANYA boleh muncul saat pengguna mengarahkan kursor (hover) secara eksplisit pada elemen trigger. `TooltipProvider` WAJIB dikonfigurasi dengan `delayDuration = 200` (atau lebih tinggi) dan elemen tombol info WAJIB memiliki penanganan agar tidak terfokus secara otomatis (`tabIndex={-1}`).
 
+13. **Mandatory Pagination & Live Search Filter pada Datatable Submodul:**
+   - Setiap submodul atau halaman yang menampilkan tabel data (Datatable) WAJIB mengimplementasikan fitur Pencarian Live (*Live Search Filter*) dan Navigasi Halaman (*Pagination UI & Control*) baik secara server-side via Inertia request maupun client-side filtering.
+
+
 
 
