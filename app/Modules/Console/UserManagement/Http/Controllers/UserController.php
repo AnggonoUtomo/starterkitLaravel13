@@ -4,6 +4,7 @@ namespace App\Modules\Console\UserManagement\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Modules\Console\SystemSetting\Services\SettingService;
 use App\Modules\Console\UserManagement\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,9 +24,12 @@ class UserController extends Controller
     {
         $search = $request->query('search');
         $role = $request->query('role');
+        $paginationSettings = app(SettingService::class)->getPaginationSettings();
+        $defaultPerPage = (int) ($paginationSettings['default_per_page'] ?? 10);
+        $perPage = (int) $request->query('per_page', $defaultPerPage);
 
         $users = $this->userService->getPaginatedUsers(
-            perPage: 10,
+            perPage: $perPage,
             search: $search,
             role: $role
         );
