@@ -49,7 +49,12 @@ class AppServiceProvider extends ServiceProvider
         );
 
         if ($this->app->bound('db') && ! $this->app->runningInConsole()) {
-            app(SettingService::class)->applyGlobalSettings();
+            $settings = app(SettingService::class);
+            $settings->applyMailSettings();
+            $settings->applyLocalizationSettings();
+            $settings->applySecurityPolicy();
+            $settings->applyPasswordPolicy();
+            $settings->applyBrandingSettings();
         }
     }
 }

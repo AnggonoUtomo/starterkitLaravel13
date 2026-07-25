@@ -3,6 +3,7 @@
 namespace App\Modules\Console\SystemSetting\Services;
 
 use App\Modules\Console\SystemSetting\Models\SystemSetting;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rules\Password;
 
@@ -112,11 +113,39 @@ class SettingService
     }
 
     /**
+     * Runtime in-memory cache per HTTP request lifecycle.
+     *
+     * @var array<string, array<string, mixed>>
+     */
+    protected array $runtimeCache = [];
+
+    protected function getGroupCached(string $group, array $default): array
+    {
+        if (isset($this->runtimeCache[$group])) {
+            return $this->runtimeCache[$group];
+        }
+
+        $settings = SystemSetting::getGroup($group, $default);
+        $this->runtimeCache[$group] = $settings;
+
+        return $settings;
+    }
+
+    public function clearRuntimeCache(?string $group = null): void
+    {
+        if ($group) {
+            unset($this->runtimeCache[$group]);
+        } else {
+            $this->runtimeCache = [];
+        }
+    }
+
+    /**
      * Getters for each domain setting group.
      */
     public function getEmailSettings(): array
     {
-        return SystemSetting::getGroup('email', $this->defaultEmailSettings());
+        return $this->getGroupCached('email', $this->defaultEmailSettings());
     }
 
     private function formatRelativeMediaUrl(?string $url): ?string
@@ -132,7 +161,7 @@ class SettingService
 
     public function getBrandingSettings(): array
     {
-        $settings = SystemSetting::getGroup('branding', $this->defaultBrandingSettings());
+        $settings = $this->getGroupCached('branding', $this->defaultBrandingSettings());
 
         $settingModel = SystemSetting::query()->where('key', 'branding')->first();
         if ($settingModel) {
@@ -158,7 +187,7 @@ class SettingService
 
     public function getLocalizationSettings(): array
     {
-        $settings = SystemSetting::getGroup('localization', $this->defaultLocalizationSettings());
+        $settings = $this->getGroupCached('localization', $this->defaultLocalizationSettings());
 
         $now = now()->setTimezone($settings['timezone'] ?? 'Asia/Jakarta');
         $settings['preview_date'] = $now->format($this->convertPhpDateFormat($settings['date_format'] ?? 'd M Y'));
@@ -170,27 +199,27 @@ class SettingService
 
     public function getPaginationSettings(): array
     {
-        return SystemSetting::getGroup('pagination', $this->defaultPaginationSettings());
+        return $this->getGroupCached('pagination', $this->defaultPaginationSettings());
     }
 
     public function getSecurityPolicy(): array
     {
-        return SystemSetting::getGroup('security', $this->defaultSecurityPolicy());
+        return $this->getGroupCached('security', $this->defaultSecurityPolicy());
     }
 
     public function getPasswordPolicy(): array
     {
-        return SystemSetting::getGroup('password', $this->defaultPasswordPolicy());
+        return $this->getGroupCached('password', $this->defaultPasswordPolicy());
     }
 
     public function getMaintenanceMode(): array
     {
-        return SystemSetting::getGroup('maintenance', $this->defaultMaintenanceMode());
+        return $this->getGroupCached('maintenance', $this->defaultMaintenanceMode());
     }
 
     public function getMapSettings(): array
     {
-        return SystemSetting::getGroup('map', $this->defaultMapSettings());
+        return $this->getGroupCached('map', $this->defaultMapSettings());
     }
 
     /**
@@ -206,6 +235,8 @@ class SettingService
         } else {
             $data['password_configured'] = ! empty($data['password']);
         }
+
+        $this->clearRuntimeCache('email');
 
         return SystemSetting::setGroup('email', array_merge($current, $data));
     }
@@ -248,6 +279,7 @@ class SettingService
             'favicon_url' => $faviconUrl,
         ];
 
+        $this->clearRuntimeCache('branding');
         $updated = SystemSetting::setGroup('branding', $payload);
         Config::set('app.name', $appName);
 
@@ -269,6 +301,8 @@ class SettingService
             'datetime_format' => $dateTimeFormat,
         ];
 
+        $this->clearRuntimeCache('localization');
+
         return SystemSetting::setGroup('localization', array_merge($current, $payload));
     }
 
@@ -289,6 +323,8 @@ class SettingService
             'per_page_options' => array_values(array_unique($options)),
         ];
 
+        $this->clearRuntimeCache('pagination');
+
         return SystemSetting::setGroup('pagination', $payload);
     }
 
@@ -307,6 +343,8 @@ class SettingService
             'password_confirmation_timeout_seconds' => (int) ($data['password_confirmation_timeout_seconds'] ?? 10800),
         ];
 
+        $this->clearRuntimeCache('security');
+
         return SystemSetting::setGroup('security', array_merge($current, $payload));
     }
 
@@ -324,6 +362,8 @@ class SettingService
             'expiry_days' => (int) ($data['expiry_days'] ?? 0),
             'history_count' => (int) ($data['history_count'] ?? 0),
         ];
+
+        $this->clearRuntimeCache('password');
 
         return SystemSetting::setGroup('password', array_merge($current, $payload));
     }
@@ -346,6 +386,8 @@ class SettingService
             'bypass_url' => ($secret || ($current['secret'] ?? null)) ? url('/'.($secret ?: $current['secret'])) : null,
         ];
 
+        $this->clearRuntimeCache('maintenance');
+
         return SystemSetting::setGroup('maintenance', array_merge($current, $payload));
     }
 
@@ -362,6 +404,8 @@ class SettingService
             'configured' => ! empty($apiKey),
         ];
 
+        $this->clearRuntimeCache('map');
+
         return SystemSetting::setGroup('map', array_merge($current, $payload));
     }
 
@@ -371,71 +415,106 @@ class SettingService
     public function applyGlobalSettings(): void
     {
         try {
-            // 1. Branding
-            $branding = $this->getBrandingSettings();
-            if (! empty($branding['app_name'])) {
-                Config::set('app.name', $branding['app_name']);
-            }
-
-            // 2. Localization
-            $localization = $this->getLocalizationSettings();
-            if (! empty($localization['timezone'])) {
-                date_default_timezone_set($localization['timezone']);
-                Config::set('app.timezone', $localization['timezone']);
-            }
-
-            // 3. Email & SMTP
-            $email = $this->getEmailSettings();
-            if (! empty($email['enabled']) && ! empty($email['mailer'])) {
-                Config::set('mail.default', $email['mailer']);
-                if ($email['mailer'] === 'smtp') {
-                    Config::set('mail.mailers.smtp.host', $email['host'] ?? '127.0.0.1');
-                    Config::set('mail.mailers.smtp.port', $email['port'] ?? 587);
-                    Config::set('mail.mailers.smtp.username', $email['username'] ?? '');
-                    if (! empty($email['password'])) {
-                        Config::set('mail.mailers.smtp.password', $email['password']);
-                    }
-                    Config::set('mail.mailers.smtp.scheme', $email['encryption'] ?? 'tls');
-                }
-                if (! empty($email['from_address'])) {
-                    Config::set('mail.from.address', $email['from_address']);
-                    Config::set('mail.from.name', $email['from_name'] ?? config('app.name'));
-                }
-            }
-
-            // 4. Password Policy
-            $password = $this->getPasswordPolicy();
-            Password::defaults(function () use ($password) {
-                $rule = Password::min($password['min_length'] ?? 8);
-
-                if (! empty($password['require_uppercase'])) {
-                    $rule->mixedCase();
-                }
-                if (! empty($password['require_numbers'])) {
-                    $rule->numbers();
-                }
-                if (! empty($password['require_symbols'])) {
-                    $rule->symbols();
-                }
-                if (! empty($password['uncompromised'])) {
-                    $rule->uncompromised();
-                }
-
-                return $rule;
-            });
-
-            // 5. Security Policy
-            $security = $this->getSecurityPolicy();
-            if (! empty($security['session_lifetime_minutes'])) {
-                Config::set('session.lifetime', $security['session_lifetime_minutes']);
-            }
-            if (! empty($security['password_confirmation_timeout_seconds'])) {
-                Config::set('auth.password_timeout', $security['password_confirmation_timeout_seconds']);
-            }
-
+            $this->applyBrandingSettings();
+            $this->applyLocalizationSettings();
+            $this->applyMailSettings();
+            $this->applyPasswordPolicy();
+            $this->applySecurityPolicy();
         } catch (\Throwable $e) {
             // Fail safe during early migration/cli execution
         }
+    }
+
+    public function applyBrandingSettings(): void
+    {
+        $branding = $this->getBrandingSettings();
+        if (! empty($branding['app_name'])) {
+            Config::set('app.name', $branding['app_name']);
+        }
+    }
+
+    public function applyLocalizationSettings(): void
+    {
+        $localization = $this->getLocalizationSettings();
+        if (! empty($localization['timezone'])) {
+            date_default_timezone_set($localization['timezone']);
+            Config::set('app.timezone', $localization['timezone']);
+        }
+    }
+
+    public function applyMailSettings(): void
+    {
+        $email = $this->getEmailSettings();
+        if (! empty($email['enabled']) && ! empty($email['mailer'])) {
+            Config::set('mail.default', $email['mailer']);
+            if ($email['mailer'] === 'smtp') {
+                Config::set('mail.mailers.smtp.host', $email['host'] ?? '127.0.0.1');
+                Config::set('mail.mailers.smtp.port', $email['port'] ?? 587);
+                Config::set('mail.mailers.smtp.username', $email['username'] ?? '');
+                if (! empty($email['password'])) {
+                    Config::set('mail.mailers.smtp.password', $email['password']);
+                }
+                Config::set('mail.mailers.smtp.scheme', $email['encryption'] ?? 'tls');
+            }
+            if (! empty($email['from_address'])) {
+                Config::set('mail.from.address', $email['from_address']);
+                Config::set('mail.from.name', $email['from_name'] ?? config('app.name'));
+            }
+        }
+    }
+
+    public function applyPasswordPolicy(): void
+    {
+        $password = $this->getPasswordPolicy();
+        Password::defaults(function () use ($password) {
+            $rule = Password::min($password['min_length'] ?? 8);
+
+            if (! empty($password['require_uppercase'])) {
+                $rule->mixedCase();
+            }
+            if (! empty($password['require_numbers'])) {
+                $rule->numbers();
+            }
+            if (! empty($password['require_symbols'])) {
+                $rule->symbols();
+            }
+            if (! empty($password['uncompromised'])) {
+                $rule->uncompromised();
+            }
+
+            return $rule;
+        });
+    }
+
+    public function applySecurityPolicy(): void
+    {
+        $security = $this->getSecurityPolicy();
+        if (! empty($security['session_lifetime_minutes'])) {
+            Config::set('session.lifetime', $security['session_lifetime_minutes']);
+        }
+        if (! empty($security['password_confirmation_timeout_seconds'])) {
+            Config::set('auth.password_timeout', $security['password_confirmation_timeout_seconds']);
+        }
+    }
+
+    public function formatDateTime(?\DateTimeInterface $date, string $type = 'date'): ?string
+    {
+        if (! $date) {
+            return null;
+        }
+
+        $localization = $this->getLocalizationSettings();
+        $tz = $localization['timezone'] ?? 'Asia/Jakarta';
+
+        $carbon = Carbon::instance($date)->setTimezone($tz);
+
+        $format = match ($type) {
+            'time' => $localization['time_format'] ?? 'H:i',
+            'datetime' => $localization['datetime_format'] ?? 'd M Y H:i',
+            default => $localization['date_format'] ?? 'd M Y',
+        };
+
+        return $carbon->format($format);
     }
 
     private function convertPhpDateFormat(string $format): string

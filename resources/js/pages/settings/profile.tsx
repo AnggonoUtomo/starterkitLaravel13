@@ -25,14 +25,25 @@ type PageProps = {
     auth: Auth;
 };
 
-export default function Profile({
-    mustVerifyEmail,
-    status,
-}: {
+export default function Profile(props: {
     mustVerifyEmail: boolean;
     status?: string;
+    allowAccountDeletion?: boolean;
 }) {
-    const { auth } = usePage<PageProps>().props;
+    const pageProps = usePage<
+        PageProps & {
+            allowAccountDeletion?: boolean;
+            securityPolicy?: { allow_account_deletion?: boolean };
+        }
+    >().props;
+
+    const canDeleteAccount =
+        props.allowAccountDeletion ??
+        pageProps.allowAccountDeletion ??
+        pageProps.securityPolicy?.allow_account_deletion ??
+        true;
+
+    const auth = pageProps.auth;
 
     return (
         <div className="space-y-6">
@@ -107,7 +118,7 @@ export default function Profile({
                                     />
                                 </div>
 
-                                {mustVerifyEmail &&
+                                {props.mustVerifyEmail &&
                                     auth.user.email_verified_at === null && (
                                         <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-amber-600 dark:text-amber-400">
                                             <p className="flex items-center gap-1.5 font-semibold">
@@ -129,7 +140,7 @@ export default function Profile({
                                                 </Link>
                                             </p>
 
-                                            {status ===
+                                            {props.status ===
                                                 'verification-link-sent' && (
                                                 <div className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                                                     <CheckCircle2 className="size-4" />
@@ -175,8 +186,8 @@ export default function Profile({
                 </CardContent>
             </Card>
 
-            {/* Danger Zone: Delete Account */}
-            <DeleteUser />
+            {/* Danger Zone: Delete Account (only shown if allowed by Security Policy) */}
+            {canDeleteAccount && <DeleteUser />}
         </div>
     );
 }

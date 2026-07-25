@@ -3,6 +3,7 @@
 namespace App\Modules\Console\UserManagement\DTO;
 
 use App\Models\User;
+use App\Modules\Console\SystemSetting\Services\SettingService;
 use App\Shared\DTO\BaseDTO;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -51,7 +52,7 @@ class UserDTO extends BaseDTO
             permissions: $user->getDirectPermissions()->pluck('name')->values()->toArray(),
             effectivePermissions: $user->getAllPermissions()->pluck('name')->sort()->values()->toArray(),
             primaryRole: $roles[0] ?? 'User',
-            created_at: $user->created_at?->format('d M Y') ?? $user->created_at?->toIso8601String(),
+            created_at: app(SettingService::class)->formatDateTime($user->created_at, 'date') ?? $user->created_at?->toIso8601String(),
             can: [
                 'update' => true,
                 'delete' => $currentUser ? $user->id !== $currentUser->id : true,

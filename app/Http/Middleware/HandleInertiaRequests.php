@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use App\Modules\Console\SystemSetting\Services\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -36,32 +37,49 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        /** @var User|null $user */
         $user = $request->user();
         $settingService = app(SettingService::class);
         $branding = $settingService->getBrandingSettings();
 
-        return [
-            ...parent::share($request),
+        return array_merge(parent::share($request), [
             'name' => $branding['app_name'] ?? config('app.name'),
             'branding' => $branding,
-            'auth' => [
-                'user' => $user ? [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'roles' => $user->getRoleNames(),
-                    'permissions' => $user->getAllPermissions()->pluck('name'),
-                ] : null,
-                'impersonator' => session('impersonator_id') ? [
-                    'id' => session('impersonator_id'),
-                    'name' => session('impersonator_name'),
-                ] : null,
-            ],
+            'localization' => $settingService->getLocalizationSettings(),
+            'pagination' => $settingService->getPaginationSettings(),
+            'securityPolicy' => $settingService->getSecurityPolicy(),
             'flash' => [
-                'success' => session('success'),
-                'error' => session('error'),
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+            ],
+            'auth' => [
+                'user' => $user ? $this->sharedUser($user) : null,
+                'roles' => $user ? $user->getRoleNames()->toArray() : [],
+                'permissions' => $user ? $user->getAllPermissions()->pluck('name')->toArray() : [],
+                'impersonator' => $request->session()->get('impersonator_id') ? [
+                    'id' => $request->session()->get('impersonator_id'),
+                    'name' => $request->session()->get('impersonator_name'),
+                ] : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+        ]);
+    }
+
+    /**
+     * Get array representation of shared user attributes.
+     *
+     * @return array<string, mixed>
+     */
+    private function sharedUser(User $user): array
+    {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'email_verified_at' => $user->email_verified_at,
+            'two_factor_enabled' => ! is_null($user->two_factor_secret),
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
         ];
     }
 }

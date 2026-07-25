@@ -9,6 +9,7 @@ use App\Modules\Console\UserManagement\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -72,7 +73,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => ['required', 'string', Password::default()],
             'roles' => 'nullable|array',
             'permissions' => 'nullable|array',
         ]);
@@ -87,7 +88,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'password' => 'nullable|string|min:8',
+            'password' => ['nullable', 'string', Password::default()],
             'roles' => 'nullable|array',
             'permissions' => 'nullable|array',
         ]);

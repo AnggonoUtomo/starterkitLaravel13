@@ -4,7 +4,9 @@ namespace App\Modules\Console\AuditLog\Services;
 
 use App\Models\User;
 use App\Modules\Console\AuditLog\DTO\AuditLogDTO;
+use App\Modules\Console\SystemSetting\Services\SettingService;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 
 class AuditLogQueryService
@@ -19,36 +21,60 @@ class AuditLogQueryService
         $logFiles = File::glob(storage_path('logs/*.log'));
         $entries = collect();
 
+        $rawItems = [];
+        $userIds = [];
+
         foreach ($logFiles as $file) {
             $content = File::get($file);
             preg_match_all('/\[(.*?)\] local\.INFO: \[AUDIT_TRAIL\] (.*?) (\{.*?\})/', $content, $matches, PREG_SET_ORDER);
 
             foreach ($matches as $index => $match) {
-                $timestamp = $match[1];
-                $eventName = $match[2];
                 $rawPayload = json_decode($match[3], true) ?: [];
-
                 $causedUserId = $rawPayload['caused_by_user_id'] ?? null;
-                $payloadData = $rawPayload['payload'] ?? [];
-                $causedUserName = null;
 
                 if ($causedUserId) {
-                    /** @var User|null $user */
-                    $user = User::find($causedUserId);
-                    $causedUserName = $user ? $user->name : "User #{$causedUserId}";
+                    $userIds[] = (int) $causedUserId;
                 }
 
-                $dto = new AuditLogDTO(
-                    id: md5($file.$index.$timestamp),
-                    event_name: $eventName,
-                    caused_by_user_id: $causedUserId,
-                    caused_by_user_name: $causedUserName ?? 'System',
-                    payload: $payloadData,
-                    timestamp: $timestamp
-                );
-
-                $entries->push($dto->toArray());
+                $rawItems[] = [
+                    'file' => $file,
+                    'index' => $index,
+                    'timestamp' => $match[1],
+                    'event_name' => $match[2],
+                    'caused_by_user_id' => $causedUserId ? (int) $causedUserId : null,
+                    'payload' => $rawPayload['payload'] ?? [],
+                ];
             }
+        }
+
+        // Batch fetch all user names in 1 single query (Eliminating N+1)
+        $userNamesMap = ! empty($userIds)
+            ? User::whereIn('id', array_unique($userIds))->pluck('name', 'id')->toArray()
+            : [];
+
+        $settingService = app(SettingService::class);
+
+        foreach ($rawItems as $item) {
+            $causedUserId = $item['caused_by_user_id'];
+            $causedUserName = null;
+
+            if ($causedUserId) {
+                $causedUserName = $userNamesMap[$causedUserId] ?? "User #{$causedUserId}";
+            }
+
+            $parsedDate = Carbon::parse($item['timestamp']);
+            $formattedTimestamp = $settingService->formatDateTime($parsedDate, 'datetime') ?? $item['timestamp'];
+
+            $dto = new AuditLogDTO(
+                id: md5($item['file'].$item['index'].$item['timestamp']),
+                event_name: $item['event_name'],
+                caused_by_user_id: $causedUserId,
+                caused_by_user_name: $causedUserName ?? 'System',
+                payload: $item['payload'],
+                timestamp: $formattedTimestamp
+            );
+
+            $entries->push($dto->toArray());
         }
 
         // Reverse to show latest logs first
