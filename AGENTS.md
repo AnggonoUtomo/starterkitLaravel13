@@ -301,3 +301,8 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 13. **Mandatory Pagination & Live Search Filter pada Datatable Submodul:**
    - Setiap submodul atau halaman yang menampilkan tabel data (Datatable) WAJIB mengimplementasikan fitur Pencarian Live (*Live Search Filter*) dan Navigasi Halaman (*Pagination UI & Control*) baik secara server-side via Inertia request maupun client-side filtering.
 
+14. **Mandatory Quality Gate & Multi-Axis Code Review (`code-review-and-quality`):**
+    - Sebelum menyelesaikan pengerjaan submodul, WAJIB mengaktifkan skill `code-review-and-quality`.
+    - WAJIB memeriksa kesesuaian 10 layer arsitektur submodul: **DTO**, **Form Request (`Http/Requests/`)**, **Eloquent Resource (`Http/Resources/`)**, **Integration Layer (`Integration/`)**, **Policies (`Policies/`)**, **Support (`Support/`)**, **Transactions (`Transactions/`)**, **Shared Kernel (`App\Shared\`)**, **Module Contract (`Contracts/`)**, dan **Domain Events (`Events/`)**.
+    - Review WAJIB dievaluasi dari 5 dimensi kualitas utama: *Correctness*, *Maintainability*, *Security*, *Test Coverage*, dan *Consistency* dengan arsitektur proyek.
+
