@@ -3,9 +3,18 @@
 namespace App\Providers;
 
 use App\Modules\Console\SystemSetting\Services\SettingService;
+use App\Shared\Contracts\DomainEventContract;
+use App\Shared\Events\UserLoggedIn;
+use App\Shared\Events\UserLoggedOut;
+use App\Shared\Events\UserLoginFailed;
+use App\Shared\Listeners\AuditTrailListener;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,6 +34,45 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->registerDomainEventAuditListeners();
+    }
+
+    protected function registerDomainEventAuditListeners(): void
+    {
+        // 1. Listen to all Domain Events implementing DomainEventContract
+        Event::listen(
+            DomainEventContract::class,
+            AuditTrailListener::class
+        );
+
+        // 2. Map standard Laravel Auth events to Domain Events
+        Event::listen(Login::class, function (Login $event) {
+            event(new UserLoggedIn([
+                'user_id' => $event->user->id,
+                'email' => $event->user->email,
+                'guard' => $event->guard,
+                'ip' => request()->ip(),
+            ], $event->user->id));
+        });
+
+        Event::listen(Logout::class, function (Logout $event) {
+            if ($event->user) {
+                event(new UserLoggedOut([
+                    'user_id' => $event->user->id,
+                    'email' => $event->user->email,
+                    'guard' => $event->guard,
+                    'ip' => request()->ip(),
+                ], $event->user->id));
+            }
+        });
+
+        Event::listen(Failed::class, function (Failed $event) {
+            event(new UserLoginFailed([
+                'email' => $event->credentials['email'] ?? null,
+                'guard' => $event->guard,
+                'ip' => request()->ip(),
+            ], null));
+        });
     }
 
     /**

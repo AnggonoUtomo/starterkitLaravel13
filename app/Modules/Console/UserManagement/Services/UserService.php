@@ -4,6 +4,11 @@ namespace App\Modules\Console\UserManagement\Services;
 
 use App\Models\User;
 use App\Modules\Console\UserManagement\DTO\UserDTO;
+use App\Modules\Console\UserManagement\Events\UserCreated;
+use App\Modules\Console\UserManagement\Events\UserDeleted;
+use App\Modules\Console\UserManagement\Events\UserImpersonated;
+use App\Modules\Console\UserManagement\Events\UserImpersonationStopped;
+use App\Modules\Console\UserManagement\Events\UserUpdated;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 
@@ -60,6 +65,13 @@ class UserService
             $user->syncPermissions($data['permissions']);
         }
 
+        event(new UserCreated([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'roles' => $data['roles'] ?? [],
+        ]));
+
         return $user;
     }
 
@@ -89,6 +101,12 @@ class UserService
             $user->syncPermissions($data['permissions']);
         }
 
+        event(new UserUpdated([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]));
+
         return $user;
     }
 
@@ -97,7 +115,21 @@ class UserService
      */
     public function deleteUser(User $user): bool
     {
-        return $user->delete();
+        $userId = $user->id;
+        $userName = $user->name;
+        $userEmail = $user->email;
+
+        $deleted = $user->delete();
+
+        if ($deleted) {
+            event(new UserDeleted([
+                'user_id' => $userId,
+                'name' => $userName,
+                'email' => $userEmail,
+            ]));
+        }
+
+        return $deleted;
     }
 
     /**
@@ -110,6 +142,13 @@ class UserService
 
         session()->put('impersonator_id', $adminUser->id);
         session()->put('impersonator_name', $adminUser->name);
+
+        event(new UserImpersonated([
+            'admin_id' => $adminUser->id,
+            'admin_name' => $adminUser->name,
+            'target_user_id' => $targetUser->id,
+            'target_user_name' => $targetUser->name,
+        ], $adminUser->id));
 
         auth()->login($targetUser);
     }
@@ -125,6 +164,12 @@ class UserService
             /** @var User $adminUser */
             $adminUser = User::findOrFail($impersonatorId);
             session()->forget(['impersonator_id', 'impersonator_name']);
+
+            event(new UserImpersonationStopped([
+                'admin_id' => $adminUser->id,
+                'admin_name' => $adminUser->name,
+            ], $adminUser->id));
+
             auth()->login($adminUser);
         }
     }

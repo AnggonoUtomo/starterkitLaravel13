@@ -26,7 +26,7 @@ class AuditLogQueryService
 
         foreach ($logFiles as $file) {
             $content = File::get($file);
-            preg_match_all('/\[(.*?)\] local\.INFO: \[AUDIT_TRAIL\] (.*?) (\{.*?\})/', $content, $matches, PREG_SET_ORDER);
+            preg_match_all('/\[(.*?)\] \w+\.INFO: \[AUDIT_TRAIL\] (.*?) (\{.*?\})/', $content, $matches, PREG_SET_ORDER);
 
             foreach ($matches as $index => $match) {
                 $rawPayload = json_decode($match[3], true) ?: [];

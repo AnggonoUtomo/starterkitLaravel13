@@ -2,6 +2,7 @@
 
 namespace App\Modules\Console\SystemSetting\Models;
 
+use App\Modules\Console\SystemSetting\Events\SystemSettingUpdated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Spatie\MediaLibrary\HasMedia;
@@ -70,6 +71,10 @@ class SystemSetting extends Model implements HasMedia
         );
 
         Cache::forget(self::CACHE_PREFIX.$group);
+
+        event(new SystemSettingUpdated([
+            'group' => $group,
+        ]));
 
         return array_merge($payload, $setting->payload ?? []);
     }

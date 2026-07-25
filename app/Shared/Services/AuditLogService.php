@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Log;
 class AuditLogService
 {
     /**
-     * Record a domain event into audit logs.
+     * Record a custom audit trail action into daily log.
+     *
+     * @param  array<string, mixed>  $payload
      */
-    public function recordEvent(DomainEventContract $event): void
+    public function log(string $eventName, array $payload = [], ?int $causedByUserId = null): void
     {
         $security = app(SettingService::class)->getSecurityPolicy();
 
@@ -19,10 +21,18 @@ class AuditLogService
             return;
         }
 
-        Log::channel('daily')->info('[AUDIT_TRAIL] '.$event->getEventName(), [
-            'caused_by_user_id' => $event->getCausedByUserId() ?? auth()->id(),
-            'payload' => $event->getPayload(),
+        Log::channel('daily')->info('[AUDIT_TRAIL] '.$eventName, [
+            'caused_by_user_id' => $causedByUserId ?? auth()->id(),
+            'payload' => $payload,
             'timestamp' => now()->toIso8601String(),
         ]);
+    }
+
+    /**
+     * Record a domain event into audit logs.
+     */
+    public function recordEvent(DomainEventContract $event): void
+    {
+        $this->log($event->getEventName(), $event->getPayload(), $event->getCausedByUserId());
     }
 }

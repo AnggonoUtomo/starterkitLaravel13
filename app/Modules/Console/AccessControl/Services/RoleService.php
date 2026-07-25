@@ -2,6 +2,9 @@
 
 namespace App\Modules\Console\AccessControl\Services;
 
+use App\Modules\Console\AccessControl\Events\RoleCreated;
+use App\Modules\Console\AccessControl\Events\RoleDeleted;
+use App\Modules\Console\AccessControl\Events\RolePermissionsUpdated;
 use App\Shared\Providers\ModuleServiceProvider;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
@@ -54,6 +57,12 @@ class RoleService
             $role->syncPermissions($permissions);
         }
 
+        event(new RoleCreated([
+            'role_id' => $role->id,
+            'role_name' => $role->name,
+            'permissions_count' => count($permissions),
+        ]));
+
         return $role;
     }
 
@@ -66,6 +75,12 @@ class RoleService
     {
         $role->syncPermissions($permissions);
 
+        event(new RolePermissionsUpdated([
+            'role_id' => $role->id,
+            'role_name' => $role->name,
+            'permissions_count' => count($permissions),
+        ]));
+
         return $role;
     }
 
@@ -74,6 +89,18 @@ class RoleService
      */
     public function deleteRole(Role $role): bool
     {
-        return $role->delete();
+        $roleId = $role->id;
+        $roleName = $role->name;
+
+        $deleted = $role->delete();
+
+        if ($deleted) {
+            event(new RoleDeleted([
+                'role_id' => $roleId,
+                'role_name' => $roleName,
+            ]));
+        }
+
+        return $deleted;
     }
 }
