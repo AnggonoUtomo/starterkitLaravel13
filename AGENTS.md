@@ -268,11 +268,16 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
       - **Asterisk Input Wajib (`*`)**: Setiap label input yang wajib diisi WAJIB menyertakan tanda asterik merah (`<span className="text-rose-500 font-bold ml-0.5">*</span>`).
       - **Ikon Informasi & Tooltip Input**: Setiap label input WAJIB menyertakan ikon bantuan `HelpCircle` (size-3.5) yang menampilkan tooltip informasi penggunaan saat di-hover/focus.
       - **Tooltip Tombol Aksi**: Setiap tombol aksi interaktif (Create, Edit, Delete, Impersonate, Filter, Reset, Collapse, Select All) WAJIB dibungkus atau dilengkapi dengan Tooltip petunjuk penggunaan.
-   - **Backend Layered Architecture & Payload Standard:**
-     - **Form Request & DTO Layer:** Validasi HTTP disentralkan di `Http/Requests/`. Form Request menyediakan method `toDto()` yang memetakan data tervalidasi ke DTO imutabel (`DTO/`).
-     - **Transaction & Service Layer:** Operasi mutasi data (Create, Update, Sync, Delete, Impersonate) wajib dibungkus dalam kelas `Transactions/` atau `DB::transaction()` untuk eksekusi atomik. Logika bisnis disentralkan di `Services/` yang menangani aturan domain, pembersihan cache RBAC (`PermissionRegistrar::forgetCachedPermissions()`), dan pencatatan jejak audit via `AuditLogService`.
-     - **Policy & Otorisasi Layer:** Seluruh endpoint controller dilindungi oleh Policy Otorisasi (`Policies/`) via `HasMiddleware` atau `$this->authorize()`. Proteksi peran khusus (`User::SUPER_SYSTEM_ROLE`) ditegakkan secara ketat pada Policy, Controller, dan Service.
-     - **Payload & DTO Pattern:** DTO menyediakan atribut terstruktur yang kaya untuk UI: `initials`, `primaryRole`, `roles`, `permissions`, `effectivePermissions`, `rolePermissions`, `created_at` (format tanggal terbaca `d M Y`), dan flag otorisasi `can` (`update`, `delete`, `impersonate`, `restore`, `forceDelete`).
+   - **Backend Layered Architecture & Submodule Standard (MANDATORY):**
+     - **DTO (Data Transfer Object):** Menggunakan DTO imutabel di `DTO/` untuk membawa data terstruktur antar-layer aplikasi.
+     - **Form Request Layer (`Http/Requests/`):** Validasi HTTP disentralkan di `Http/Requests/`. Dilarang menuliskan `$request->validate([...])` secara inline di Controller.
+     - **Eloquent API Resource Layer (`Http/Resources/`):** Menggunakan Eloquent API Resource untuk pemetaan format data API/Inertia yang konsisten.
+     - **Integration Layer (`Integration/`):** Menyediakan kelas integrasi submodul di `Integration/` untuk komunikasi antar-modul tanpa kopel database langsung.
+     - **Module Contract (`Contracts/`):** Menyediakan Interface/Contract submodul di `Contracts/` yang di-bind via ServiceProvider per-submodul (`Providers/`).
+     - **Domain Events (`Events/`):** Seluruh event bisnis wajib didefinisikan di `Events/` yang mengimplementasikan `DomainEventContract` dari Shared Kernel. Service hanya bertugas mendispatch Domain Event tanpa tahu infrastruktur log.
+     - **Transaction & Service Layer (`Transactions/` & `Services/`):** Operasi mutasi data wajib dibungkus dalam `Transactions/` atau `DB::transaction()` untuk eksekusi atomik. Logika bisnis disentralkan di `Services/`.
+     - **Policy & Otorisasi Layer (`Policies/`):** Seluruh endpoint controller dilindungi oleh Policy Otorisasi di `Policies/`. Proteksi peran khusus (`User::SUPER_SYSTEM_ROLE`) ditegakkan secara ketat.
+     - **Support & Shared Kernel (`Support/` & `App\Shared\`):** Kelas penunjang khusus submodul diletakkan di `Support/`, sedangkan kontrak/utilitas global berada di Shared Kernel (`App\Shared\`).
      - **Manifest Submodul:** Setiap submodul memiliki `module.php` (manifest), `navigation.php` (menu sidebar), `permissions.php` (daftar izin RBAC), dan `routes.php` (rute ternama).
 
 9. **Pelarangan Total Wayfinder & Penegakan Ziggy / Standard Routing:**
