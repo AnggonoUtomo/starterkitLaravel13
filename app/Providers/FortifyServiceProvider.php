@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Modules\Console\SystemSetting\Services\SettingService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -87,8 +88,11 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $security = app(SettingService::class)->getSecurityPolicy();
+            $maxAttempts = (int) ($security['login_max_attempts'] ?? 5);
+            $decayMinutes = (int) ($security['login_decay_minutes'] ?? 1);
 
-            return Limit::perMinute(5)->by($throttleKey);
+            return Limit::perMinutes($decayMinutes, $maxAttempts)->by($throttleKey);
         });
 
         RateLimiter::for('passkeys', function (Request $request) {
