@@ -3,9 +3,10 @@
 namespace App\Modules\Console\AccessControl\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Console\AccessControl\Http\Requests\CreateRoleRequest;
+use App\Modules\Console\AccessControl\Http\Requests\UpdateRolePermissionsRequest;
 use App\Modules\Console\AccessControl\Services\RoleService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -28,25 +29,20 @@ class RoleController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(CreateRoleRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name',
-            'permissions' => 'nullable|array',
-        ]);
+        $validated = $request->validated();
 
         $this->roleService->createRole($validated['name'], $validated['permissions'] ?? []);
 
         return back()->with('success', 'Role created successfully.');
     }
 
-    public function updatePermissions(Request $request, Role $role): RedirectResponse
+    public function updatePermissions(UpdateRolePermissionsRequest $request, Role $role): RedirectResponse
     {
-        $validated = $request->validate([
-            'permissions' => 'present|array',
-        ]);
+        $validated = $request->validated();
 
-        $this->roleService->updateRolePermissions($role, $validated['permissions']);
+        $this->roleService->updateRolePermissions($role, $validated['permissions'] ?? []);
 
         return back()->with('success', "Permissions updated for role {$role->name}.");
     }

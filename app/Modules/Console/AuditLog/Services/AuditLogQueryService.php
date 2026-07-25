@@ -5,12 +5,17 @@ namespace App\Modules\Console\AuditLog\Services;
 use App\Models\User;
 use App\Modules\Console\AuditLog\DTO\AuditLogDTO;
 use App\Modules\Console\SystemSetting\Services\SettingService;
+use App\Modules\Console\UserManagement\Contracts\UserModuleContract;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 
 class AuditLogQueryService
 {
+    public function __construct(
+        protected UserModuleContract $userModuleContract
+    ) {}
+
     /**
      * Get paginated audit logs from daily log files.
      *
@@ -47,9 +52,9 @@ class AuditLogQueryService
             }
         }
 
-        // Batch fetch all user names in 1 single query (Eliminating N+1)
+        // Batch fetch user names via UserModuleContract (Module Integration Layer)
         $userNamesMap = ! empty($userIds)
-            ? User::whereIn('id', array_unique($userIds))->pluck('name', 'id')->toArray()
+            ? $this->userModuleContract->getUserNamesByIds($userIds)
             : [];
 
         $settingService = app(SettingService::class);

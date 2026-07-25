@@ -3,6 +3,7 @@
 namespace App\Modules\Console\AuditLog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Console\AuditLog\Events\AuditLogViewed;
 use App\Modules\Console\AuditLog\Services\AuditLogQueryService;
 use App\Modules\Console\SystemSetting\Services\SettingService;
 use Illuminate\Http\Request;
@@ -25,6 +26,11 @@ class AuditLogController extends Controller
             perPage: $perPage,
             search: $request->query('search')
         );
+
+        event(new AuditLogViewed([
+            'search' => $request->query('search'),
+            'per_page' => $perPage,
+        ]));
 
         return Inertia::render('Console/AuditLog/Index', [
             'title' => 'System Audit Logs',

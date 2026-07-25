@@ -17,7 +17,30 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        // Register any shared kernel bindings if needed
+        $this->registerModuleProviders();
+    }
+
+    /**
+     * Auto-discover and register Service Providers from submodules.
+     */
+    protected function registerModuleProviders(): void
+    {
+        $modulesPath = app_path('Modules');
+
+        if (! File::isDirectory($modulesPath)) {
+            return;
+        }
+
+        $providerFiles = File::glob($modulesPath.'/*/*/Providers/*ServiceProvider.php');
+
+        foreach ($providerFiles as $providerFile) {
+            $relative = str_replace([app_path(), '/', '.php'], ['', '\\', ''], $providerFile);
+            $class = 'App'.$relative;
+
+            if (class_exists($class)) {
+                $this->app->register($class);
+            }
+        }
     }
 
     public function boot(): void

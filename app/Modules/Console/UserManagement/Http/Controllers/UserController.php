@@ -5,11 +5,12 @@ namespace App\Modules\Console\UserManagement\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Console\SystemSetting\Services\SettingService;
+use App\Modules\Console\UserManagement\Http\Requests\CreateUserRequest;
+use App\Modules\Console\UserManagement\Http\Requests\UpdateUserRequest;
 use App\Modules\Console\UserManagement\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -68,32 +69,16 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(CreateUserRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'string', Password::default()],
-            'roles' => 'nullable|array',
-            'permissions' => 'nullable|array',
-        ]);
-
-        $this->userService->createUser($validated);
+        $this->userService->createUser($request->validated());
 
         return back()->with('success', 'User created successfully.');
     }
 
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'password' => ['nullable', 'string', Password::default()],
-            'roles' => 'nullable|array',
-            'permissions' => 'nullable|array',
-        ]);
-
-        $this->userService->updateUser($user, $validated);
+        $this->userService->updateUser($user, $request->validated());
 
         return back()->with('success', 'User updated successfully.');
     }
