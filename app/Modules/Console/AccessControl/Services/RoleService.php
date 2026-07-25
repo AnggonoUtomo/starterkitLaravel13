@@ -2,9 +2,9 @@
 
 namespace App\Modules\Console\AccessControl\Services;
 
-use App\Modules\Console\AccessControl\Events\RoleCreated;
 use App\Modules\Console\AccessControl\Events\RoleDeleted;
-use App\Modules\Console\AccessControl\Events\RolePermissionsUpdated;
+use App\Modules\Console\AccessControl\Transactions\CreateRoleTransaction;
+use App\Modules\Console\AccessControl\Transactions\UpdateRolePermissionsTransaction;
 use App\Shared\Providers\ModuleServiceProvider;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
@@ -44,6 +44,11 @@ class RoleService
         return $discovered;
     }
 
+    public function __construct(
+        protected CreateRoleTransaction $createRoleTransaction,
+        protected UpdateRolePermissionsTransaction $updateRolePermissionsTransaction
+    ) {}
+
     /**
      * Create a new Role.
      *
@@ -51,19 +56,7 @@ class RoleService
      */
     public function createRole(string $name, array $permissions = []): Role
     {
-        /** @var Role $role */
-        $role = Role::create(['name' => $name, 'guard_name' => 'web']);
-        if (! empty($permissions)) {
-            $role->syncPermissions($permissions);
-        }
-
-        event(new RoleCreated([
-            'role_id' => $role->id,
-            'role_name' => $role->name,
-            'permissions_count' => count($permissions),
-        ]));
-
-        return $role;
+        return $this->createRoleTransaction->execute($name, $permissions);
     }
 
     /**
@@ -73,15 +66,7 @@ class RoleService
      */
     public function updateRolePermissions(Role $role, array $permissions): Role
     {
-        $role->syncPermissions($permissions);
-
-        event(new RolePermissionsUpdated([
-            'role_id' => $role->id,
-            'role_name' => $role->name,
-            'permissions_count' => count($permissions),
-        ]));
-
-        return $role;
+        return $this->updateRolePermissionsTransaction->execute($role, $permissions);
     }
 
     /**

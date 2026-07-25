@@ -4,13 +4,12 @@ namespace App\Modules\Console\UserManagement\Services;
 
 use App\Models\User;
 use App\Modules\Console\UserManagement\DTO\UserDTO;
-use App\Modules\Console\UserManagement\Events\UserCreated;
 use App\Modules\Console\UserManagement\Events\UserDeleted;
 use App\Modules\Console\UserManagement\Events\UserImpersonated;
 use App\Modules\Console\UserManagement\Events\UserImpersonationStopped;
-use App\Modules\Console\UserManagement\Events\UserUpdated;
+use App\Modules\Console\UserManagement\Transactions\CreateUserTransaction;
+use App\Modules\Console\UserManagement\Transactions\UpdateUserTransaction;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -44,6 +43,11 @@ class UserService
         return $paginator;
     }
 
+    public function __construct(
+        protected CreateUserTransaction $createUserTransaction,
+        protected UpdateUserTransaction $updateUserTransaction
+    ) {}
+
     /**
      * Create a new user with assigned roles and direct permissions.
      *
@@ -51,28 +55,7 @@ class UserService
      */
     public function createUser(array $data): User
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-
-        if (! empty($data['roles'])) {
-            $user->syncRoles($data['roles']);
-        }
-
-        if (! empty($data['permissions'])) {
-            $user->syncPermissions($data['permissions']);
-        }
-
-        event(new UserCreated([
-            'user_id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'roles' => $data['roles'] ?? [],
-        ]));
-
-        return $user;
+        return $this->createUserTransaction->execute($data);
     }
 
     /**
@@ -82,32 +65,7 @@ class UserService
      */
     public function updateUser(User $user, array $data): User
     {
-        $payload = [
-            'name' => $data['name'],
-            'email' => $data['email'],
-        ];
-
-        if (! empty($data['password'])) {
-            $payload['password'] = Hash::make($data['password']);
-        }
-
-        $user->update($payload);
-
-        if (isset($data['roles'])) {
-            $user->syncRoles($data['roles']);
-        }
-
-        if (isset($data['permissions'])) {
-            $user->syncPermissions($data['permissions']);
-        }
-
-        event(new UserUpdated([
-            'user_id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-        ]));
-
-        return $user;
+        return $this->updateUserTransaction->execute($user, $data);
     }
 
     /**
