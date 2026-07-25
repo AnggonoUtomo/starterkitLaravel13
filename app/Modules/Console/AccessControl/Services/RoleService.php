@@ -12,6 +12,11 @@ use Spatie\Permission\Models\Role;
 
 class RoleService
 {
+    public function __construct(
+        protected CreateRoleTransaction $createRoleTransaction,
+        protected UpdateRolePermissionsTransaction $updateRolePermissionsTransaction
+    ) {}
+
     /**
      * Get all roles with their assigned permissions.
      *
@@ -43,11 +48,6 @@ class RoleService
 
         return $discovered;
     }
-
-    public function __construct(
-        protected CreateRoleTransaction $createRoleTransaction,
-        protected UpdateRolePermissionsTransaction $updateRolePermissionsTransaction
-    ) {}
 
     /**
      * Create a new Role.

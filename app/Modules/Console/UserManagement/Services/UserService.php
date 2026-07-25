@@ -13,6 +13,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService
 {
+    public function __construct(
+        protected CreateUserTransaction $createUserTransaction,
+        protected UpdateUserTransaction $updateUserTransaction
+    ) {}
+
     /**
      * Get paginated users with search and role filter.
      *
@@ -42,11 +47,6 @@ class UserService
         /** @var LengthAwarePaginator<int, array<string, mixed>> $paginator */
         return $paginator;
     }
-
-    public function __construct(
-        protected CreateUserTransaction $createUserTransaction,
-        protected UpdateUserTransaction $updateUserTransaction
-    ) {}
 
     /**
      * Create a new user with assigned roles and direct permissions.
