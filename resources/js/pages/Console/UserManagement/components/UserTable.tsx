@@ -18,7 +18,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { UserData, PaginationLink, UserTableProps } from '../types';
+import type { UserTableProps } from '../types';
 
 export default function UserTable({
     users,

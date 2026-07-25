@@ -28,7 +28,26 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { EditUserModalProps } from '../types';
+import type { PermissionGroupItem, RoleOptionItem, UserData } from '../types';
+
+interface EditUserModalProps {
+    editingUser: UserData | null;
+    onClose: () => void;
+    formData: {
+        name: string;
+        email: string;
+        password?: string;
+        roles: string[];
+        permissions: string[];
+    };
+    errors?: Record<string, string>;
+    onFieldChange: (field: string, value: any) => void;
+    availableRoles: string[];
+    rolesWithPermissions?: RoleOptionItem[];
+    permissionGroups?: PermissionGroupItem[];
+    onSubmit: (e: React.FormEvent) => void;
+    isProcessing: boolean;
+}
 
 export default function EditUserModal({
     editingUser,

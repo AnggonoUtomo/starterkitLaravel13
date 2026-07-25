@@ -2,9 +2,7 @@ import { FileText } from 'lucide-react';
 import React from 'react';
 import ConsolePageHeader from '@/components/console/ConsolePageHeader';
 
-interface AuditLogHeaderProps {
-    title: string;
-}
+import type { AuditLogHeaderProps } from '../types';
 
 export default function AuditLogHeader({ title }: AuditLogHeaderProps) {
     return (

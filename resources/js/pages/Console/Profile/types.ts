@@ -1,21 +1,24 @@
-export interface SharedAuth {
-    user?: {
-        name: string;
-        email: string;
-    } | null;
-}
-
-export interface ProfileIndexProps {
-    title: string;
-}
-
-export interface ProfileFormFields {
+export interface SharedAuthUser {
+    id?: number;
     name: string;
     email: string;
 }
 
-export interface PasswordFormFields {
-    current_password: '';
-    password: '';
-    password_confirmation: '';
+export interface SharedAuth {
+    user?: SharedAuthUser | null;
+}
+
+export interface ProfileProps {
+    title: string;
+}
+
+export interface ProfileForm {
+    name: string;
+    email: string;
+}
+
+export interface PasswordForm {
+    current_password: string;
+    password: string;
+    password_confirmation: string;
 }

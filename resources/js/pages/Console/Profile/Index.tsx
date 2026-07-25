@@ -2,9 +2,10 @@ import { Head, useForm, usePage } from '@inertiajs/react';
 import { KeyRound, Save, User } from 'lucide-react';
 import React from 'react';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
-import type { SharedAuth, ProfileIndexProps } from './types';
 
-export default function Index({ title }: ProfileIndexProps) {
+import type { ProfileProps, SharedAuth } from './types';
+
+export default function Index({ title }: ProfileProps) {
     const { auth } = usePage<{ auth: SharedAuth }>().props;
 
     const profileForm = useForm({

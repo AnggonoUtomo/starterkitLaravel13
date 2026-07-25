@@ -28,7 +28,26 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { CreateUserModalProps } from '../types';
+import type { PermissionGroupItem, RoleOptionItem } from '../types';
+
+interface CreateUserModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    formData: {
+        name: string;
+        email: string;
+        password: string;
+        roles: string[];
+        permissions: string[];
+    };
+    errors?: Record<string, string>;
+    onFieldChange: (field: string, value: any) => void;
+    availableRoles: string[];
+    rolesWithPermissions?: RoleOptionItem[];
+    permissionGroups?: PermissionGroupItem[];
+    onSubmit: (e: React.FormEvent) => void;
+    isProcessing: boolean;
+}
 
 export default function CreateUserModal({
     isOpen,

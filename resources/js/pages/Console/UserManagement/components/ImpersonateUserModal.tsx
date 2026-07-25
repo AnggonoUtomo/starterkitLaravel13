@@ -8,7 +8,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import type { ImpersonateUserModalProps } from '../types';
+import type { UserData } from '../types';
+
+interface ImpersonateUserModalProps {
+    impersonatingUser: UserData | null;
+    onClose: () => void;
+    onConfirmImpersonate: (user: UserData) => void;
+}
 
 export default function ImpersonateUserModal({
     impersonatingUser,

@@ -16,13 +16,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type {
-    UserData,
-    UserWorkspaceMode,
-    UserWorkspaceCardProps,
-    RoleOptionItem,
-    PermissionGroupItem,
-} from '../types';
+import type { PermissionGroupItem, UserWorkspaceCardProps } from '../types';
 
 /**
  * Helper component to render permissions grouped by module category in a clean vertical stack with clear font sizes.

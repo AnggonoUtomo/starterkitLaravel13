@@ -270,8 +270,10 @@ export default function Index({
                             onSelectUser={handleSelectUser}
                             onOpenCreate={handleStartCreate}
                             onOpenEdit={handleStartEdit}
-                            onOpenDelete={(user) => setDeletingUser(user)}
-                            onOpenImpersonate={(user) =>
+                            onOpenDelete={(user: UserData) =>
+                                setDeletingUser(user)
+                            }
+                            onOpenImpersonate={(user: UserData) =>
                                 setImpersonatingUser(user)
                             }
                         />

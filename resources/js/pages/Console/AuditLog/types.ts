@@ -1,4 +1,8 @@
-import type { PaginationLink } from '../UserManagement/types';
+export interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
 
 export interface AuditLog {
     id: string;
@@ -42,4 +46,8 @@ export interface AuditLogTableProps {
 export interface AuditPayloadDrawerProps {
     selectedLog: AuditLog | null;
     onClose: () => void;
+}
+
+export interface AuditLogHeaderProps {
+    title: string;
 }

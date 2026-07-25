@@ -46,6 +46,14 @@ export interface PaginatedUsers {
     to: number;
 }
 
+export interface UserFormPayload {
+    name: string;
+    email: string;
+    password?: string;
+    roles: string[];
+    permissions: string[];
+}
+
 export interface UserManagementIndexProps {
     title: string;
     users: PaginatedUsers;
@@ -54,8 +62,25 @@ export interface UserManagementIndexProps {
     permissionGroups?: PermissionGroupItem[];
     filters: {
         search: string;
-        role?: string;
+        role: string;
     };
+}
+
+export interface UserWorkspaceCardProps {
+    mode: UserWorkspaceMode;
+    selectedUser: UserData | null;
+    formData: UserFormPayload;
+    availableRoles: string[];
+    rolesWithPermissions: RoleOptionItem[];
+    permissionGroups: PermissionGroupItem[];
+    isProcessing: boolean;
+    onFieldChange: (field: string, value: any) => void;
+    onSubmitCreate: (e: React.FormEvent) => void;
+    onSubmitEdit: (e: React.FormEvent) => void;
+    onCancel: () => void;
+    onStartEdit: (user: UserData) => void;
+    onStartDelete: (user: UserData) => void;
+    onStartImpersonate: (user: UserData) => void;
 }
 
 export interface UserTableProps {
@@ -70,8 +95,8 @@ export interface UserTableProps {
     from?: number;
     to?: number;
     paginationLinks?: PaginationLink[];
-    onSearchChange: (val: string) => void;
-    onRoleFilterChange: (role: string) => void;
+    onSearchChange: (value: string) => void;
+    onRoleFilterChange: (value: string) => void;
     onSearchSubmit: (e: React.FormEvent) => void;
     onSelectUser: (user: UserData) => void;
     onOpenCreate: () => void;
@@ -80,71 +105,62 @@ export interface UserTableProps {
     onOpenImpersonate: (user: UserData) => void;
 }
 
-export interface UserWorkspaceCardProps {
-    mode: UserWorkspaceMode;
-    selectedUser: UserData | null;
-    formData: {
+export interface CreateUserModalProps {
+    isOpen: boolean;
+    availableRoles: string[];
+    isProcessing: boolean;
+    onClose: () => void;
+    onSubmit: (data: {
         name: string;
         email: string;
         password?: string;
         roles: string[];
-        permissions: string[];
-    };
-    availableRoles: string[];
-    rolesWithPermissions?: RoleOptionItem[];
-    permissionGroups?: PermissionGroupItem[];
-    isProcessing?: boolean;
-    onFieldChange: (field: string, value: any) => void;
-    onSubmitCreate: (e: React.FormEvent) => void;
-    onSubmitEdit: (e: React.FormEvent) => void;
-    onCancel: () => void;
-    onStartEdit?: (user: UserData) => void;
-    onStartDelete?: (user: UserData) => void;
-    onStartImpersonate?: (user: UserData) => void;
-}
-
-export interface UserFormFields {
-    name: string;
-    email: string;
-    password?: string;
-    roles: string[];
-    permissions: string[];
-}
-
-export interface CreateUserModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    formData: UserFormFields;
-    errors: Record<string, string>;
-    onFieldChange: (field: string, value: any) => void;
-    availableRoles: string[];
-    rolesWithPermissions?: RoleOptionItem[];
-    permissionGroups?: PermissionGroupItem[];
-    onSubmit: (e: React.FormEvent) => void;
-    isProcessing: boolean;
+    }) => void;
 }
 
 export interface EditUserModalProps {
-    editingUser: UserData | null;
-    onClose: () => void;
-    formData: UserFormFields;
-    errors: Record<string, string>;
-    onFieldChange: (field: string, value: any) => void;
+    isOpen: boolean;
+    user: UserData | null;
     availableRoles: string[];
-    rolesWithPermissions?: RoleOptionItem[];
-    permissionGroups?: PermissionGroupItem[];
-    onSubmit: (e: React.FormEvent) => void;
     isProcessing: boolean;
+    onClose: () => void;
+    onSubmit: (data: {
+        name: string;
+        email: string;
+        password?: string;
+        roles: string[];
+    }) => void;
 }
 
 export interface DeleteUserModalProps {
-    deletingUser: UserData | null;
+    isOpen: boolean;
+    user: UserData | null;
+    isProcessing: boolean;
     onClose: () => void;
-    onConfirmDelete: (user: UserData) => void;
+    onConfirm: () => void;
 }
 
 export interface ImpersonateUserModalProps {
-    impersonatingUser: UserData | null;
+    isOpen: boolean;
+    user: UserData | null;
+    isProcessing: boolean;
     onClose: () => void;
-    onConfirmImpersonate: (user: UserData) => void;
+    onConfirm: () => void;
+}
+
+export interface UserManagementHeaderProps {
+    title: string;
+    totalUsers: number;
+    onStartCreate: () => void;
+}
+
+export interface UserShortcutPanelProps {
+    isOpen: boolean;
+    onToggle: () => void;
+}
+
+export interface UserSummaryCardsProps {
+    totalUsers: number;
+    activeUsers?: number;
+    adminCount?: number;
 }
