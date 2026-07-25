@@ -191,7 +191,6 @@ export default function Index(props: Partial<SystemSettingsProps>) {
         favicon: null,
         remove_logo: false,
         remove_favicon: false,
-        _method: 'put',
     });
 
     const localizationForm = useForm<LocalizationForm>({

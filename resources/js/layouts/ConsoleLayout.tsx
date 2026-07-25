@@ -51,8 +51,17 @@ interface SharedPageProps {
 }
 
 export default function ConsoleLayout({ children }: Props) {
-    const pageProps = usePage<SharedPageProps>();
-    const { auth, flash } = pageProps.props;
+    const pageProps = usePage<
+        SharedPageProps & {
+            name?: string;
+            branding?: {
+                app_name?: string;
+                logo_url?: string;
+                favicon_url?: string;
+            };
+        }
+    >();
+    const { auth, flash, name, branding } = pageProps.props;
     const url = pageProps.url;
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { appearance, updateAppearance } = useAppearance();
@@ -203,12 +212,24 @@ export default function ConsoleLayout({ children }: Props) {
 
                         <Link
                             href="/console/users"
-                            className="flex items-center gap-2 text-lg font-bold tracking-tight text-emerald-500"
+                            className="flex items-center gap-2.5 text-base font-bold tracking-tight text-foreground transition hover:opacity-90"
                         >
-                            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-1.5">
-                                <LayoutDashboard className="h-5 w-5 text-emerald-500" />
+                            <div className="flex size-9 items-center justify-center overflow-hidden rounded-lg border border-sidebar-border bg-sidebar-accent/50 text-foreground shadow-xs">
+                                {branding?.logo_url ? (
+                                    <img
+                                        src={branding.logo_url}
+                                        alt={name ?? 'Logo Aplikasi'}
+                                        className="size-full object-contain p-1"
+                                    />
+                                ) : (
+                                    <LayoutDashboard className="size-5 text-emerald-500" />
+                                )}
                             </div>
-                            {sidebarOpen && <span>Console Admin</span>}
+                            {sidebarOpen && (
+                                <span className="max-w-[200px] truncate font-bold text-foreground">
+                                    {name ?? 'Laravel Starter Kit'}
+                                </span>
+                            )}
                         </Link>
                     </div>
 

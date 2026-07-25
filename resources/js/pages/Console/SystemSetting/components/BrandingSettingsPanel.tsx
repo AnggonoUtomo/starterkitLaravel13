@@ -1,7 +1,9 @@
-import type { InertiaFormProps } from '@inertiajs/react';
 import { ImageIcon, Palette, Save, Send, Upload, X } from 'lucide-react';
+import React, { useState } from 'react';
 import type { FormEvent } from 'react';
 import { FieldInfoLabel } from '@/components/field-info-label';
+
+import { ImageCropDialog } from '@/components/image-crop-dialog';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,6 +37,40 @@ export function BrandingSettingsPanel({
     faviconPreview,
     submit,
 }: Props) {
+    const [cropSource, setCropSource] = useState<{
+        file: File;
+        target: 'logo' | 'favicon';
+    } | null>(null);
+
+    const handleSelectFile = (
+        file: File | null,
+        target: 'logo' | 'favicon',
+    ) => {
+        if (!file) {
+            return;
+        }
+
+        setCropSource({ file, target });
+    };
+
+    const handleApplyCrop = (croppedFile: File) => {
+        if (!cropSource) {
+            return;
+        }
+
+        if (cropSource.target === 'logo') {
+            form.setData('logo', croppedFile);
+            form.setData('remove_logo', false);
+            form.clearErrors('logo');
+        } else if (cropSource.target === 'favicon') {
+            form.setData('favicon', croppedFile);
+            form.setData('remove_favicon', false);
+            form.clearErrors('favicon');
+        }
+
+        setCropSource(null);
+    };
+
     return (
         <TooltipProvider>
             <Card data-dashboard-card className="min-w-0 overflow-hidden">
@@ -46,7 +82,8 @@ export function BrandingSettingsPanel({
                         Branding & Identitas Aplikasi
                     </CardTitle>
                     <CardDescription className="text-xs">
-                        Atur nama aplikasi, logo sidebar, dan favicon browser.
+                        Atur nama aplikasi, logo sidebar, dan favicon browser
+                        dengan fitur crop gambar.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="p-5 sm:p-6">
@@ -74,7 +111,7 @@ export function BrandingSettingsPanel({
                             <ImageUploadCard
                                 title="Logo Aplikasi"
                                 description="Logo utama untuk area sidebar/header. Format PNG, JPG, WEBP, atau SVG."
-                                hint="Rekomendasi rasio kotak atau horizontal ringkas."
+                                hint="Rekomendasi rasio 1:1 atau horizontal ringkas. Dilengkapi fitur crop."
                                 preview={logoPreview}
                                 accept=".png,.jpg,.jpeg,.webp,.svg"
                                 disabled={!can.update || form.processing}
@@ -86,16 +123,15 @@ export function BrandingSettingsPanel({
                                     form.setData('logo', null);
                                     form.setData('remove_logo', true);
                                 }}
-                                onChange={(file) => {
-                                    form.setData('logo', file);
-                                    form.setData('remove_logo', false);
-                                }}
+                                onChange={(file) =>
+                                    handleSelectFile(file, 'logo')
+                                }
                                 error={form.errors.logo}
                             />
                             <ImageUploadCard
                                 title="Favicon"
                                 description="Ikon kecil yang muncul di tab browser. Format ICO, PNG, JPG, WEBP, atau SVG."
-                                hint="Rekomendasi 32x32 atau 64x64 pixel."
+                                hint="Rekomendasi 32x32 atau 64x64 pixel. Dilengkapi fitur crop."
                                 preview={faviconPreview}
                                 accept=".ico,.png,.jpg,.jpeg,.webp,.svg"
                                 disabled={!can.update || form.processing}
@@ -107,10 +143,9 @@ export function BrandingSettingsPanel({
                                     form.setData('favicon', null);
                                     form.setData('remove_favicon', true);
                                 }}
-                                onChange={(file) => {
-                                    form.setData('favicon', file);
-                                    form.setData('remove_favicon', false);
-                                }}
+                                onChange={(file) =>
+                                    handleSelectFile(file, 'favicon')
+                                }
                                 error={form.errors.favicon}
                             />
                         </div>
@@ -122,12 +157,14 @@ export function BrandingSettingsPanel({
                                 </span>
                                 <div>
                                     <p className="text-xs font-bold">
-                                        Preview Runtime
+                                        Preview Runtime & Fitur Crop
                                     </p>
                                     <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                                        Setelah disimpan, nama aplikasi langsung
-                                        dipakai sebagai title halaman dan logo
-                                        akan muncul pada identitas layout.
+                                        Setiap gambar yang dipilih dapat
+                                        di-crop, diputar, dan diatur
+                                        perbesarannya sebelum disimpan. Nama
+                                        aplikasi dan logo baru langsung aktif
+                                        secara instan.
                                     </p>
                                 </div>
                             </div>
@@ -164,6 +201,23 @@ export function BrandingSettingsPanel({
                     </form>
                 </CardContent>
             </Card>
+
+            {/* Image Crop Dialog Modal */}
+            <ImageCropDialog
+                file={cropSource?.file ?? null}
+                open={Boolean(cropSource)}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setCropSource(null);
+                    }
+                }}
+                onApply={handleApplyCrop}
+                title={
+                    cropSource?.target === 'logo'
+                        ? 'Crop Logo Aplikasi'
+                        : 'Crop Favicon'
+                }
+            />
         </TooltipProvider>
     );
 }
@@ -239,9 +293,12 @@ function ImageUploadCard({
                         type="file"
                         accept={accept}
                         disabled={disabled}
-                        onChange={(event) =>
-                            onChange(event.target.files?.[0] ?? null)
-                        }
+                        onChange={(event) => {
+                            const file = event.target.files?.[0] ?? null;
+                            onChange(file);
+                            // Reset file input value to allow selecting same file again
+                            event.target.value = '';
+                        }}
                         className="text-xs file:text-xs"
                     />
                     <InputError message={error} />

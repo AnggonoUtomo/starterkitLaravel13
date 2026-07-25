@@ -4,9 +4,13 @@ namespace App\Modules\Console\SystemSetting\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class SystemSetting extends Model
+class SystemSetting extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $table = 'system_settings';
 
     protected $fillable = [
@@ -20,6 +24,15 @@ class SystemSetting extends Model
         return [
             'payload' => 'array',
         ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('logo')
+            ->singleFile();
+
+        $this->addMediaCollection('favicon')
+            ->singleFile();
     }
 
     /**

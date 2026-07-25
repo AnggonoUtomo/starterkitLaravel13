@@ -4,7 +4,6 @@ namespace App\Modules\Console\SystemSetting\Services;
 
 use App\Modules\Console\SystemSetting\Models\SystemSetting;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
 class SettingService
@@ -120,9 +119,41 @@ class SettingService
         return SystemSetting::getGroup('email', $this->defaultEmailSettings());
     }
 
+    private function formatRelativeMediaUrl(?string $url): ?string
+    {
+        if (! $url) {
+            return null;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+
+        return $path ?: $url;
+    }
+
     public function getBrandingSettings(): array
     {
-        return SystemSetting::getGroup('branding', $this->defaultBrandingSettings());
+        $settings = SystemSetting::getGroup('branding', $this->defaultBrandingSettings());
+
+        $settingModel = SystemSetting::query()->where('key', 'branding')->first();
+        if ($settingModel) {
+            $logoMedia = $settingModel->getFirstMediaUrl('logo');
+            if (! empty($logoMedia)) {
+                $settings['logo_url'] = $this->formatRelativeMediaUrl($logoMedia);
+            }
+            $faviconMedia = $settingModel->getFirstMediaUrl('favicon');
+            if (! empty($faviconMedia)) {
+                $settings['favicon_url'] = $this->formatRelativeMediaUrl($faviconMedia);
+            }
+        }
+
+        if (! empty($settings['logo_url'])) {
+            $settings['logo_url'] = $this->formatRelativeMediaUrl($settings['logo_url']);
+        }
+        if (! empty($settings['favicon_url'])) {
+            $settings['favicon_url'] = $this->formatRelativeMediaUrl($settings['favicon_url']);
+        }
+
+        return $settings;
     }
 
     public function getLocalizationSettings(): array
@@ -186,26 +217,29 @@ class SettingService
         $logoUrl = $current['logo_url'];
         $faviconUrl = $current['favicon_url'];
 
-        if (! empty($data['remove_logo']) && $logoUrl) {
-            $path = str_replace('/storage/', '', $logoUrl);
-            Storage::disk('public')->delete($path);
+        $settingModel = SystemSetting::query()->firstOrCreate(
+            ['key' => 'branding'],
+            ['group' => 'branding']
+        );
+
+        if (! empty($data['remove_logo'])) {
+            $settingModel->clearMediaCollection('logo');
             $logoUrl = null;
         }
 
-        if (! empty($data['remove_favicon']) && $faviconUrl) {
-            $path = str_replace('/storage/', '', $faviconUrl);
-            Storage::disk('public')->delete($path);
+        if (! empty($data['remove_favicon'])) {
+            $settingModel->clearMediaCollection('favicon');
             $faviconUrl = null;
         }
 
         if ($logoFile) {
-            $storedPath = $logoFile->store('branding', 'public');
-            $logoUrl = '/storage/'.$storedPath;
+            $media = $settingModel->addMedia($logoFile)->toMediaCollection('logo');
+            $logoUrl = $this->formatRelativeMediaUrl($media->getUrl());
         }
 
         if ($faviconFile) {
-            $storedPath = $faviconFile->store('branding', 'public');
-            $faviconUrl = '/storage/'.$storedPath;
+            $media = $settingModel->addMedia($faviconFile)->toMediaCollection('favicon');
+            $faviconUrl = $this->formatRelativeMediaUrl($media->getUrl());
         }
 
         $payload = [
@@ -214,7 +248,10 @@ class SettingService
             'favicon_url' => $faviconUrl,
         ];
 
-        return SystemSetting::setGroup('branding', $payload);
+        $updated = SystemSetting::setGroup('branding', $payload);
+        Config::set('app.name', $appName);
+
+        return $updated;
     }
 
     public function updateLocalizationSettings(array $data): array

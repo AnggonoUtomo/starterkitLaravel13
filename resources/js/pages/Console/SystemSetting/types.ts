@@ -176,7 +176,6 @@ export type BrandingForm = {
     favicon: File | null;
     remove_logo: boolean;
     remove_favicon: boolean;
-    _method: 'put';
 };
 
 export type LocalizationForm = {
