@@ -164,6 +164,23 @@ export default function Index({
         );
     };
 
+    // Live Search Automatic Debounce (300ms) Effect
+    useEffect(() => {
+        if (search === (filters.search || '')) {
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            router.get(
+                '/console/users',
+                { search, role: roleFilter },
+                { preserveState: true, preserveScroll: true, replace: true },
+            );
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [search, roleFilter, filters.search]);
+
     const handleRoleFilterChange = (newRole: string) => {
         setRoleFilter(newRole);
         router.get(

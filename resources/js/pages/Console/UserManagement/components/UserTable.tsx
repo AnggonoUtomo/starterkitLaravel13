@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import {
     ChevronLeft,
     ChevronRight,
@@ -83,6 +83,11 @@ export default function UserTable({
 
     const handleClearSearch = () => {
         onSearchChange('');
+        router.get(
+            '/console/users',
+            { search: '', role: roleFilter },
+            { preserveState: true, preserveScroll: true, replace: true },
+        );
     };
 
     return (

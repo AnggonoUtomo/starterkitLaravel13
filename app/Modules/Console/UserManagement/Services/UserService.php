@@ -38,7 +38,7 @@ class UserService
             $query->role($role);
         }
 
-        $paginator = $query->paginate($perPage);
+        $paginator = $query->paginate($perPage)->withQueryString();
         /** @var User|null $currentUser */
         $currentUser = auth()->user();
 
