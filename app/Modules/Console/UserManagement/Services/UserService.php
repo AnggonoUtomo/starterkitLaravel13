@@ -12,6 +12,7 @@ use App\Modules\Console\UserManagement\DTO\UserDTO;
 use App\Modules\Console\UserManagement\Transactions\CreateUserTransaction;
 use App\Modules\Console\UserManagement\Transactions\UpdateUserTransaction;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -30,31 +31,38 @@ class UserService
      */
     public function getRoleAndPermissionMetaData(): array
     {
-        $availableRoles = Role::pluck('name')->toArray();
+        return Cache::remember('user_roles_permissions_metadata', 3600, function () {
+            $availableRoles = Role::pluck('name')->toArray();
 
-        $rolesWithPermissions = Role::with('permissions:id,name')->get()->map(fn (Role $role) => [
-            'id' => $role->id,
-            'name' => $role->name,
-            'permissions' => $role->permissions->pluck('name')->sort()->values()->toArray(),
-        ])->toArray();
+            $rolesWithPermissions = Role::with('permissions:id,name')->get()->map(fn (Role $role) => [
+                'id' => $role->id,
+                'name' => $role->name,
+                'permissions' => $role->permissions->pluck('name')->sort()->values()->toArray(),
+            ])->toArray();
 
-        $permissionGroups = Permission::query()
-            ->select('id', 'name', 'guard_name')
-            ->orderBy('name')
-            ->get()
-            ->groupBy(fn (Permission $permission) => Str::before($permission->name, '.'))
-            ->map(fn ($permissions, string $module) => [
-                'module' => $module ?: 'general',
-                'permissions' => $permissions->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])->values()->toArray(),
-            ])
-            ->values()
-            ->toArray();
+            $permissionGroups = Permission::query()
+                ->select('id', 'name', 'guard_name')
+                ->orderBy('name')
+                ->get()
+                ->groupBy(fn (Permission $permission) => Str::before($permission->name, '.'))
+                ->map(fn ($permissions, string $module) => [
+                    'module' => $module ?: 'general',
+                    'permissions' => $permissions->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])->values()->toArray(),
+                ])
+                ->values()
+                ->toArray();
 
-        return [
-            'availableRoles' => $availableRoles,
-            'rolesWithPermissions' => $rolesWithPermissions,
-            'permissionGroups' => $permissionGroups,
-        ];
+            return [
+                'availableRoles' => $availableRoles,
+                'rolesWithPermissions' => $rolesWithPermissions,
+                'permissionGroups' => $permissionGroups,
+            ];
+        });
+    }
+
+    public function clearRoleAndPermissionCache(): void
+    {
+        Cache::forget('user_roles_permissions_metadata');
     }
 
     /**

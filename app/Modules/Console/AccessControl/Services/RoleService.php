@@ -9,6 +9,7 @@ use App\Modules\Console\AccessControl\Transactions\CreateRoleTransaction;
 use App\Modules\Console\AccessControl\Transactions\UpdateRolePermissionsTransaction;
 use App\Shared\Providers\ModuleServiceProvider;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -58,6 +59,8 @@ class RoleService
      */
     public function createRole(string $name, array $permissions = []): Role
     {
+        Cache::forget('user_roles_permissions_metadata');
+
         return $this->createRoleTransaction->execute($name, $permissions);
     }
 
@@ -68,6 +71,8 @@ class RoleService
      */
     public function updateRolePermissions(Role $role, array $permissions): Role
     {
+        Cache::forget('user_roles_permissions_metadata');
+
         return $this->updateRolePermissionsTransaction->execute($role, $permissions);
     }
 
@@ -79,6 +84,8 @@ class RoleService
         if ($role->name === 'Super System') {
             return false;
         }
+
+        Cache::forget('user_roles_permissions_metadata');
 
         $roleId = $role->id;
         $roleName = $role->name;
