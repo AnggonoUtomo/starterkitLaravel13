@@ -1,3 +1,4 @@
+import type { InertiaFormProps } from '@inertiajs/react';
 import { ImageIcon, Palette, Save, Send, Upload, X } from 'lucide-react';
 import React, { useState } from 'react';
 import type { FormEvent } from 'react';

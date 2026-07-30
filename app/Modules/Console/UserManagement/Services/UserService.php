@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\Services;
 
-use App\Models\User;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
+use App\Modules\Console\UserManagement\Domain\Events\UserDeleted;
+use App\Modules\Console\UserManagement\Domain\Events\UserImpersonated;
+use App\Modules\Console\UserManagement\Domain\Events\UserImpersonationStopped;
 use App\Modules\Console\UserManagement\DTO\UserDTO;
-use App\Modules\Console\UserManagement\Events\UserDeleted;
-use App\Modules\Console\UserManagement\Events\UserImpersonated;
-use App\Modules\Console\UserManagement\Events\UserImpersonationStopped;
 use App\Modules\Console\UserManagement\Transactions\CreateUserTransaction;
 use App\Modules\Console\UserManagement\Transactions\UpdateUserTransaction;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserService
 {
@@ -17,6 +22,40 @@ class UserService
         protected CreateUserTransaction $createUserTransaction,
         protected UpdateUserTransaction $updateUserTransaction
     ) {}
+
+    /**
+     * Get role and permission metadata for forms.
+     *
+     * @return array{availableRoles: array<int, string>, rolesWithPermissions: array<int, array<string, mixed>>, permissionGroups: array<int, array<string, mixed>>}
+     */
+    public function getRoleAndPermissionMetaData(): array
+    {
+        $availableRoles = Role::pluck('name')->toArray();
+
+        $rolesWithPermissions = Role::with('permissions:id,name')->get()->map(fn (Role $role) => [
+            'id' => $role->id,
+            'name' => $role->name,
+            'permissions' => $role->permissions->pluck('name')->sort()->values()->toArray(),
+        ])->toArray();
+
+        $permissionGroups = Permission::query()
+            ->select('id', 'name', 'guard_name')
+            ->orderBy('name')
+            ->get()
+            ->groupBy(fn (Permission $permission) => Str::before($permission->name, '.'))
+            ->map(fn ($permissions, string $module) => [
+                'module' => $module ?: 'general',
+                'permissions' => $permissions->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])->values()->toArray(),
+            ])
+            ->values()
+            ->toArray();
+
+        return [
+            'availableRoles' => $availableRoles,
+            'rolesWithPermissions' => $rolesWithPermissions,
+            'permissionGroups' => $permissionGroups,
+        ];
+    }
 
     /**
      * Get paginated users with search and role filter.

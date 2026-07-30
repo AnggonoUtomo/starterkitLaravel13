@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\Transactions;
 
-use App\Models\User;
-use App\Modules\Console\UserManagement\Events\UserUpdated;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
+use App\Modules\Console\UserManagement\Domain\Events\UserUpdated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UpdateUserTransaction
+final class UpdateUserTransaction
 {
     /**
      * Execute atomic user update transaction.

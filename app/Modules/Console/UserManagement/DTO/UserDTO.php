@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\DTO;
 
-use App\Models\User;
 use App\Modules\Console\SystemSetting\Services\SettingService;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
 use App\Shared\DTO\BaseDTO;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
-class UserDTO extends BaseDTO
+final class UserDTO extends BaseDTO
 {
     /**
      * @param  array<int, string>  $roles
@@ -18,7 +20,7 @@ class UserDTO extends BaseDTO
      * @param  array<string, bool>  $can
      */
     public function __construct(
-        public int $id,
+        public int|string $id,
         public string $name,
         public string $email,
         public string $initials,

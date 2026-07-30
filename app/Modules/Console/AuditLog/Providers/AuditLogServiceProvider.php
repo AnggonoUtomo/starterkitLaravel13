@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AuditLog\Providers;
 
 use App\Modules\Console\AuditLog\Contracts\AuditLogModuleContract;

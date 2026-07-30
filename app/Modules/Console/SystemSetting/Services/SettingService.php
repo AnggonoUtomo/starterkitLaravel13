@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\SystemSetting\Services;
 
-use App\Modules\Console\SystemSetting\Models\SystemSetting;
+use App\Modules\Console\SystemSetting\Domain\Entities\SystemSetting;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rules\Password;
@@ -11,6 +13,8 @@ class SettingService
 {
     /**
      * Default settings for all 10 domain panels.
+     *
+     * @return array<string, mixed>
      */
     public function defaultEmailSettings(): array
     {
@@ -32,6 +36,9 @@ class SettingService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBrandingSettings(): array
     {
         return [
@@ -41,6 +48,9 @@ class SettingService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultLocalizationSettings(): array
     {
         return [
@@ -51,6 +61,9 @@ class SettingService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultPaginationSettings(): array
     {
         return [
@@ -59,6 +72,9 @@ class SettingService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultSecurityPolicy(): array
     {
         return [
@@ -73,6 +89,9 @@ class SettingService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultPasswordPolicy(): array
     {
         return [
@@ -87,6 +106,9 @@ class SettingService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultMaintenanceMode(): array
     {
         return [
@@ -102,6 +124,9 @@ class SettingService
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultMapSettings(): array
     {
         return [
@@ -119,6 +144,10 @@ class SettingService
      */
     protected array $runtimeCache = [];
 
+    /**
+     * @param  array<string, mixed>  $default
+     * @return array<string, mixed>
+     */
     protected function getGroupCached(string $group, array $default): array
     {
         if (isset($this->runtimeCache[$group])) {
@@ -141,7 +170,29 @@ class SettingService
     }
 
     /**
+     * Get settings for a specific group.
+     *
+     * @return array<string, mixed>
+     */
+    public function getGroupSettings(string $group): array
+    {
+        return match ($group) {
+            'email' => $this->getEmailSettings(),
+            'branding' => $this->getBrandingSettings(),
+            'localization' => $this->getLocalizationSettings(),
+            'pagination' => $this->getPaginationSettings(),
+            'security' => $this->getSecurityPolicy(),
+            'password' => $this->getPasswordPolicy(),
+            'maintenance' => $this->getMaintenanceMode(),
+            'map' => $this->getMapSettings(),
+            default => [],
+        };
+    }
+
+    /**
      * Getters for each domain setting group.
+     *
+     * @return array<string, mixed>
      */
     public function getEmailSettings(): array
     {
@@ -159,6 +210,9 @@ class SettingService
         return $path ?: $url;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getBrandingSettings(): array
     {
         $settings = $this->getGroupCached('branding', $this->defaultBrandingSettings());
@@ -185,6 +239,9 @@ class SettingService
         return $settings;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getLocalizationSettings(): array
     {
         $settings = $this->getGroupCached('localization', $this->defaultLocalizationSettings());
@@ -197,26 +254,41 @@ class SettingService
         return $settings;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPaginationSettings(): array
     {
         return $this->getGroupCached('pagination', $this->defaultPaginationSettings());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getSecurityPolicy(): array
     {
         return $this->getGroupCached('security', $this->defaultSecurityPolicy());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPasswordPolicy(): array
     {
         return $this->getGroupCached('password', $this->defaultPasswordPolicy());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getMaintenanceMode(): array
     {
         return $this->getGroupCached('maintenance', $this->defaultMaintenanceMode());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getMapSettings(): array
     {
         return $this->getGroupCached('map', $this->defaultMapSettings());
@@ -224,6 +296,9 @@ class SettingService
 
     /**
      * Updaters for each domain setting group.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public function updateEmailSettings(array $data): array
     {
@@ -241,6 +316,10 @@ class SettingService
         return SystemSetting::setGroup('email', array_merge($current, $data));
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function updateBrandingSettings(array $data, mixed $logoFile = null, mixed $faviconFile = null): array
     {
         $current = $this->getBrandingSettings();
@@ -286,6 +365,10 @@ class SettingService
         return $updated;
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function updateLocalizationSettings(array $data): array
     {
         $current = $this->getLocalizationSettings();
@@ -306,6 +389,10 @@ class SettingService
         return SystemSetting::setGroup('localization', array_merge($current, $payload));
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function updatePaginationSettings(array $data): array
     {
         $current = $this->getPaginationSettings();
@@ -328,6 +415,10 @@ class SettingService
         return SystemSetting::setGroup('pagination', $payload);
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function updateSecurityPolicy(array $data): array
     {
         $current = $this->getSecurityPolicy();
@@ -348,6 +439,10 @@ class SettingService
         return SystemSetting::setGroup('security', array_merge($current, $payload));
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function updatePasswordPolicy(array $data): array
     {
         $current = $this->getPasswordPolicy();
@@ -368,6 +463,10 @@ class SettingService
         return SystemSetting::setGroup('password', array_merge($current, $payload));
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function updateMaintenanceMode(array $data): array
     {
         $current = $this->getMaintenanceMode();
@@ -391,6 +490,10 @@ class SettingService
         return SystemSetting::setGroup('maintenance', array_merge($current, $payload));
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     public function updateMapSettings(array $data): array
     {
         $current = $this->getMapSettings();
@@ -515,6 +618,29 @@ class SettingService
         };
 
         return $carbon->format($format);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSystemSettingsViewProps(SystemHealthService $healthService): array
+    {
+        return [
+            'title' => 'System Settings & Health Status',
+            'emailSettings' => $this->getEmailSettings(),
+            'brandingSettings' => $this->getBrandingSettings(),
+            'localizationSettings' => $this->getLocalizationSettings(),
+            'paginationSettings' => $this->getPaginationSettings(),
+            'securityPolicy' => $this->getSecurityPolicy(),
+            'passwordPolicy' => $this->getPasswordPolicy(),
+            'maintenanceMode' => $this->getMaintenanceMode(),
+            'mapSettings' => $this->getMapSettings(),
+            'systemHealth' => $healthService->getHealthStatus(),
+            'environmentInfo' => $healthService->getEnvironmentInfo(),
+            'can' => [
+                'update' => true,
+            ],
+        ];
     }
 
     private function convertPhpDateFormat(string $format): string

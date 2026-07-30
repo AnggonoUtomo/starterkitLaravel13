@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\Profile\Events;
 
-use App\Shared\Events\AbstractDomainEvent;
+use App\Modules\Console\Profile\Domain\Events\ProfileUpdated as DomainProfileUpdated;
 
-class ProfileUpdated extends AbstractDomainEvent {}
+class ProfileUpdated extends DomainProfileUpdated {}

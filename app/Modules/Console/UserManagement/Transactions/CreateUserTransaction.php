@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\Transactions;
 
-use App\Models\User;
-use App\Modules\Console\UserManagement\Events\UserCreated;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
+use App\Modules\Console\UserManagement\Domain\Events\UserCreated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class CreateUserTransaction
+final class CreateUserTransaction
 {
     /**
      * Execute atomic user creation transaction.

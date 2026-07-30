@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAKAAI — Structural Pillar OS for AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="installer-header">
+    <div class="header-brand">
+      <div class="logo-glow">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div>
+        <h1>SAKAAI Installer</h1>
+        <p>Structural Pillar OS for AI — Interactive Setup Wizard</p>
+      </div>
+    </div>
+    <div class="header-version">v3.0</div>
+  </header>
+
+  <!-- Step Indicator -->
+  <nav class="step-indicator">
+    <div class="step active" data-step="1"><span class="step-num">1</span><span class="step-label">Path</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="2"><span class="step-num">2</span><span class="step-label">Skills</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="3"><span class="step-num">3</span><span class="step-label">Architecture</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="4"><span class="step-num">4</span><span class="step-label">Install</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="5"><span class="step-num">5</span><span class="step-label">Done</span></div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="installer-main">
+
+    <!-- Step 1: Path Configuration -->
+    <section class="wizard-step" id="step-1">
+      <div class="step-card">
+        <h2>📁 Target Installation Path</h2>
+        <p class="step-desc">Masukkan path folder proyek tujuan tempat SAKAAI akan dipasang. Sub-folder <code>SAKAAI/</code> akan dibuat secara otomatis di dalamnya.</p>
+        <div class="input-group">
+          <input type="text" id="input-path" placeholder="C:\laragon\www\my-project" autocomplete="off" spellcheck="false">
+          <button class="btn btn-secondary" id="btn-validate-path">Validasi</button>
+        </div>
+        <div class="path-feedback" id="path-feedback"></div>
+      </div>
+      <div class="step-nav">
+        <div></div>
+        <button class="btn btn-primary" id="btn-next-1" disabled>Lanjut →</button>
+      </div>
+    </section>
+
+    <!-- Step 2: Skill Packs -->
+    <section class="wizard-step hidden" id="step-2">
+      <div class="step-card">
+        <h2>🧠 Agent Skill Packs</h2>
+        <p class="step-desc">Pilih skill packs yang ingin dipasang. Setiap pack berisi kumpulan instruksi khusus yang meningkatkan kemampuan AI Agent.</p>
+        <div class="skills-grid" id="skills-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-ghost" id="btn-prev-2">← Kembali</button>
+        <button class="btn btn-primary" id="btn-next-2">Lanjut →</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Architecture Template -->
+    <section class="wizard-step hidden" id="step-3">
+      <div class="step-card">
+        <h2>🏗️ Architecture Template</h2>
+        <p class="step-desc">Pilih template arsitektur proyek. SAKAAI akan mengkonfigurasi <code>AGENTS.md</code> dan spesifikasi arsitektur secara otomatis sesuai template yang dipilih.</p>
+        <div class="arch-grid" id="arch-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-ghost" id="btn-prev-3">← Kembali</button>
+        <button class="btn btn-primary" id="btn-next-3">Lanjut →</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Installation Progress -->
+    <section class="wizard-step hidden" id="step-4">
+      <div class="step-card">
+        <h2>⚡ Installing SAKAAI...</h2>
+        <div class="progress-container">
+          <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="install-progress"></div>
+          </div>
+          <span class="progress-text" id="progress-text">Initializing...</span>
+        </div>
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">Installation Log</span>
+          </div>
+          <div class="terminal-body" id="terminal-body">
+            <div class="terminal-line info">Waiting for installation to begin...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 5: Summary -->
+    <section class="wizard-step hidden" id="step-5">
+      <div class="step-card">
+        <h2>✅ Installation Complete</h2>
+        <div class="summary-grid" id="summary-grid">
+          <!-- Populated after installation -->
+        </div>
+        <div class="step-nav" style="margin-top: 2rem;">
+          <button class="btn btn-ghost" id="btn-new-install">New Installation</button>
+          <button class="btn btn-primary" id="btn-open-dashboard">🚀 Open SAKAAI Dashboard</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="installer-footer">
+    <span>SAKAAI — Structural Pillar Operating System for AI Agents</span>
+    <span>Zero Dependencies • Node.js Native • Enterprise Grade</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

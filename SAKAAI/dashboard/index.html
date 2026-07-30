@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAKAAI - Human-in-the-Loop (HITL) Web Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-icon">
+        <span class="logo-pulse"></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="logo-title">SAKAAI Enterprise Dashboard</h1>
+        <p class="logo-subtitle">Human-in-the-Loop Operational Portal v1.0</p>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <div class="status-badge active" id="system-status">
+        <span class="status-dot"></span>
+        <span id="status-text">KERNEL ACTIVE</span>
+      </div>
+      <button class="btn btn-secondary" id="btn-trigger-approval">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        Simulate Approval Gate
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Grid Container -->
+  <main class="dashboard-grid">
+
+    <!-- Section 1: Metrics Overview Cards -->
+    <section class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Active Specification Docs</span>
+          <span class="metric-icon blue">📄</span>
+        </div>
+        <div class="metric-value" id="val-total-docs">102</div>
+        <div class="metric-footer text-success">100% Validated (0 Warnings)</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Token Budget Usage</span>
+          <span class="metric-icon purple">⚡</span>
+        </div>
+        <div class="metric-value" id="val-tokens">45,200 <span class="metric-unit">/ 128k</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill purple" style="width: 35.3%;"></div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">TTFT Latency (Reasoning)</span>
+          <span class="metric-icon green">⏱️</span>
+        </div>
+        <div class="metric-value" id="val-latency">452 <span class="metric-unit">ms</span></div>
+        <div class="metric-footer text-success">Optimal Latency (SLA &lt; 1000ms)</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Audit Hash Chain</span>
+          <span class="metric-icon orange">🔒</span>
+        </div>
+        <div class="metric-value text-gold" style="font-size: 1.2rem; font-family: var(--font-code);">#c710e21a8b...</div>
+        <div class="metric-footer text-success">Tamper-Proof Verified</div>
+      </div>
+    </section>
+
+    <!-- Section 2: DAG Task Execution Visualizer -->
+    <section class="card dag-section">
+      <div class="card-header">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Orchestrator DAG Task Graph Visualizer
+        </h2>
+        <span class="badge">Live Execution Flow</span>
+      </div>
+      
+      <div class="dag-container" id="dag-graph">
+        <!-- DAG Nodes will be dynamically populated via app.js -->
+      </div>
+    </section>
+
+    <!-- Section 3: Dual Column Layout (Active Context & Memory Simulator) -->
+    <div class="dual-column">
+      
+      <!-- Active Context Inspector -->
+      <section class="card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            Active Context Inspector (STATE001)
+          </h2>
+        </div>
+        <div class="context-body">
+          <div class="context-item">
+            <span class="label">Current Objective:</span>
+            <p class="value" id="ctx-objective">Implement complete production-ready SAKAAI CLI and HITL Web Dashboard with student guide.</p>
+          </div>
+          <div class="context-item">
+            <span class="label">Active Subsystem:</span>
+            <span class="badge green">15-HUMAN-INTERACTIVE-PORTAL</span>
+          </div>
+          <div class="context-item">
+            <span class="label">Recent System Event:</span>
+            <pre class="code-block" id="ctx-event">{
+  "event": "APPROVAL_GATE_REQUESTED",
+  "tool": "run_command",
+  "privilege": "ELEVATED_SHELL",
+  "timestamp": "2026-07-26T00:10:00Z"
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- RAG Memory Retrieval Simulator -->
+      <section class="card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Memory Retrieval & RAG Query Simulator
+          </h2>
+        </div>
+        <div class="memory-body">
+          <div class="search-box">
+            <input type="text" id="memory-search-input" placeholder="Query RAG Memory (e.g., 'Event Bus Architecture')...">
+            <button class="btn btn-primary" id="btn-search-memory">Search</button>
+          </div>
+
+          <div class="memory-results" id="memory-results-container">
+            <div class="memory-card-result">
+              <div class="res-header">
+                <span class="res-title">001-SAKAAI-CORE-SPECIFICATION.md (ENG001)</span>
+                <span class="res-score">Similarity: 0.94</span>
+              </div>
+              <p class="res-snippet">SAKAAI Core berfungsi sebagai Kernel utama sistem SAKAAI. Core mengelola siklus hidup eksekusi, subsistem bus internal, dan state machine.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Interactive Manual Approval Gate Modal -->
+  <div class="modal-overlay" id="approval-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="modal-icon warning">⚠️</span>
+          <div>
+            <h3>Manual Approval Gate Required</h3>
+            <p class="modal-sub">Elevated Command Privilege Request (GOV003)</p>
+          </div>
+        </div>
+        <button class="btn-close" id="btn-close-modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="alert-box warning">
+          <strong>Warning:</strong> Primary Agent memicu eksekusi perintah terminal berisiko tinggi (Level: ELEVATED_SHELL). Membutuhkan ratifikasi manusia.
+        </p>
+
+        <div class="request-details">
+          <div class="detail-row">
+            <span class="detail-label">Requested Tool:</span>
+            <span class="detail-val code">run_command</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">CommandLine:</span>
+            <span class="detail-val code red">git commit -m "Deploy SAKAAI v3.0 Enterprise"</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Actor Role:</span>
+            <span class="detail-val">Primary Execution Agent (Level 3)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="btn-reject-cmd">Reject Task</button>
+        <button class="btn btn-success" id="btn-approve-cmd">Approve & Execute</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

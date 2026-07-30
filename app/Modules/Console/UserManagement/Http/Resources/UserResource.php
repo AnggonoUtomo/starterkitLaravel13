@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\Http\Resources;
 
-use App\Models\User;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

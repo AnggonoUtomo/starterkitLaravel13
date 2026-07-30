@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\Contracts;
 
 interface DomainEventContract
@@ -19,5 +21,5 @@ interface DomainEventContract
     /**
      * Get the ID of the user who triggered the event, if applicable.
      */
-    public function getCausedByUserId(): ?int;
+    public function getCausedByUserId(): int|string|null;
 }

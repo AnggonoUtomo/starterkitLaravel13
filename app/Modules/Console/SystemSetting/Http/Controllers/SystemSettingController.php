@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\SystemSetting\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -19,7 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SystemSettingController extends Controller
+final class SystemSettingController extends Controller
 {
     public function __construct(
         protected SettingService $settingService,
@@ -28,22 +30,7 @@ class SystemSettingController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('Console/SystemSetting/Index', [
-            'title' => 'System Settings & Health Status',
-            'emailSettings' => $this->settingService->getEmailSettings(),
-            'brandingSettings' => $this->settingService->getBrandingSettings(),
-            'localizationSettings' => $this->settingService->getLocalizationSettings(),
-            'paginationSettings' => $this->settingService->getPaginationSettings(),
-            'securityPolicy' => $this->settingService->getSecurityPolicy(),
-            'passwordPolicy' => $this->settingService->getPasswordPolicy(),
-            'maintenanceMode' => $this->settingService->getMaintenanceMode(),
-            'mapSettings' => $this->settingService->getMapSettings(),
-            'systemHealth' => $this->healthService->getHealthStatus(),
-            'environmentInfo' => $this->healthService->getEnvironmentInfo(),
-            'can' => [
-                'update' => true,
-            ],
-        ]);
+        return Inertia::render('Console/SystemSetting/Index', $this->settingService->getSystemSettingsViewProps($this->healthService));
     }
 
     public function updateEmail(UpdateEmailSettingsRequest $request): RedirectResponse

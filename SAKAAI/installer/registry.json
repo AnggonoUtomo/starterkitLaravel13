@@ -1,0 +1,96 @@
+{
+  "skillPacks": [
+    {
+      "id": "addyosmani",
+      "author": "Addy Osmani",
+      "description": "Engineering leadership, web performance, code quality, and frontend best practices from Google Chrome team lead.",
+      "skillCount": 25,
+      "folder": ".agents/skills",
+      "preinstalled": true,
+      "skills": [
+        "api-and-interface-design", "browser-testing-with-devtools", "ci-cd-and-automation",
+        "code-review-and-quality", "code-simplification", "context-engineering",
+        "debugging-and-error-recovery", "deprecation-and-migration", "documentation-and-adrs",
+        "doubt-driven-development", "frontend-ui-engineering", "git-workflow-and-versioning",
+        "idea-refine", "incremental-implementation", "interview-me",
+        "observability-and-instrumentation", "performance-optimization", "planning-and-task-breakdown",
+        "security-and-hardening", "shipping-and-launch", "source-driven-development",
+        "spec-driven-development", "test-driven-development", "using-agent-skills",
+        "web-performance-addyosmani"
+      ]
+    },
+    {
+      "id": "danabramov",
+      "author": "Dan Abramov",
+      "description": "React core team patterns: component architecture, hooks, server components, state management, and concurrent rendering.",
+      "skillCount": 8,
+      "folder": ".agents/skills-danabramov",
+      "preinstalled": false,
+      "skills": [
+        "react-component-patterns", "state-management-patterns", "hooks-best-practices",
+        "server-components", "error-boundaries", "suspense-patterns",
+        "concurrent-rendering", "react-performance"
+      ]
+    },
+    {
+      "id": "martinfowler",
+      "author": "Martin Fowler",
+      "description": "Software architecture mastery: refactoring, DDD, event sourcing, CQRS, microservices, and evolutionary design.",
+      "skillCount": 8,
+      "folder": ".agents/skills-martinfowler",
+      "preinstalled": false,
+      "skills": [
+        "refactoring-patterns", "domain-driven-design", "event-sourcing",
+        "cqrs-pattern", "microservices-patterns", "continuous-integration",
+        "feature-toggles", "strangler-fig-migration"
+      ]
+    }
+  ],
+  "architectureTemplates": [
+    {
+      "id": "laravel-ddd-lite",
+      "name": "Laravel 13 DDD-Lite",
+      "description": "Bounded Context Modular Architecture dengan Shared Kernel, Module Contracts, DTOs, Transactions, Slim Controllers, dan Domain Events.",
+      "icon": "libre",
+      "specFolder": "19-LARAVEL-DDD-LITE",
+      "templateFolder": "templates/laravel-ddd-lite",
+      "tags": ["PHP", "Laravel 13", "DDD", "Modular"]
+    },
+    {
+      "id": "go-clean-architecture",
+      "name": "Go Clean Architecture",
+      "description": "Hexagonal / Clean Architecture untuk Go dengan domain entities, use cases, repository interfaces, dan HTTP/gRPC handlers.",
+      "icon": "🟦",
+      "specFolder": "20-GO-CLEAN-ARCHITECTURE",
+      "templateFolder": "templates/go-clean-architecture",
+      "tags": ["Go", "Golang", "Hexagonal", "Clean Architecture"]
+    },
+    {
+      "id": "docker-devops",
+      "name": "Docker & DevOps",
+      "description": "Multi-stage Docker builds, docker-compose orchestration, CI/CD pipelines (GitHub Actions), dan infrastructure-as-code patterns.",
+      "icon": "🐳",
+      "specFolder": "21-DOCKER-DEVOPS",
+      "templateFolder": "templates/docker-devops",
+      "tags": ["Docker", "DevOps", "CI/CD", "IaC"]
+    },
+    {
+      "id": "nextjs-modular",
+      "name": "Next.js Modular",
+      "description": "Next.js 15 App Router dengan Server Components, Feature-Sliced Design, parallel routes, dan optimized data fetching.",
+      "icon": "⬛",
+      "specFolder": "22-NEXTJS-MODULAR",
+      "templateFolder": "templates/nextjs-modular",
+      "tags": ["TypeScript", "Next.js", "React", "Feature-Sliced"]
+    },
+    {
+      "id": "python-fastapi",
+      "name": "Python FastAPI",
+      "description": "FastAPI dengan Clean Architecture: domain models, Pydantic schemas, dependency injection, SQLAlchemy repositories, dan async handlers.",
+      "icon": "🐍",
+      "specFolder": "23-PYTHON-FASTAPI",
+      "templateFolder": "templates/python-fastapi",
+      "tags": ["Python", "FastAPI", "Pydantic", "SQLAlchemy"]
+    }
+  ]
+}

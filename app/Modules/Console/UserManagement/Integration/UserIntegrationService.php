@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\Integration;
 
-use App\Models\User;
 use App\Modules\Console\UserManagement\Contracts\UserModuleContract;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
 
-class UserIntegrationService implements UserModuleContract
+final class UserIntegrationService implements UserModuleContract
 {
-    public function findUserById(int $id): ?User
+    public function findUserById(int|string $id): ?User
     {
         return User::find($id);
     }
 
     /**
-     * @param  array<int, int>  $ids
-     * @return array<int, string>
+     * @param  array<int, int|string>  $ids
+     * @return array<int|string, string>
      */
     public function getUserNamesByIds(array $ids): array
     {

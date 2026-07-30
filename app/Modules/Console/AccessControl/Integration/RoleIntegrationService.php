@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AccessControl\Integration;
 
 use App\Modules\Console\AccessControl\Contracts\RoleModuleContract;
 use Spatie\Permission\Models\Role;
 
-class RoleIntegrationService implements RoleModuleContract
+final class RoleIntegrationService implements RoleModuleContract
 {
     public function findRoleByName(string $name): ?Role
     {

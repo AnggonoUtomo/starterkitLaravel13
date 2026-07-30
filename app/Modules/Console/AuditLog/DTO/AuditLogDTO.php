@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AuditLog\DTO;
 
 use App\Shared\DTO\BaseDTO;
 
-class AuditLogDTO extends BaseDTO
+final class AuditLogDTO extends BaseDTO
 {
     /**
      * @param  array<string, mixed>  $payload

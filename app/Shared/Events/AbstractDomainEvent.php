@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\Events;
 
 use App\Shared\Contracts\DomainEventContract;
@@ -14,7 +16,7 @@ abstract class AbstractDomainEvent implements DomainEventContract
      */
     public function __construct(
         public array $payload = [],
-        public ?int $causedByUserId = null
+        public int|string|null $causedByUserId = null
     ) {
         $this->causedByUserId = $this->causedByUserId ?? auth()->id();
     }
@@ -29,7 +31,7 @@ abstract class AbstractDomainEvent implements DomainEventContract
         return $this->payload;
     }
 
-    public function getCausedByUserId(): ?int
+    public function getCausedByUserId(): int|string|null
     {
         return $this->causedByUserId;
     }

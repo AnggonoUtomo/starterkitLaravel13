@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\SystemSetting\Providers;
 
 use App\Modules\Console\SystemSetting\Contracts\SettingModuleContract;

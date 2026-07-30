@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AuditLog\Services;
 
-use App\Models\User;
 use App\Modules\Console\AuditLog\DTO\AuditLogDTO;
 use App\Modules\Console\SystemSetting\Services\SettingService;
 use App\Modules\Console\UserManagement\Contracts\UserModuleContract;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;

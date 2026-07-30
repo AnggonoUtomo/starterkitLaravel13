@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Modules\Console\SystemSetting\Http\Controllers\SystemSettingController;
 use Illuminate\Support\Facades\Route;
 

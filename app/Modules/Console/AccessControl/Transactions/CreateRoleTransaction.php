@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AccessControl\Transactions;
 
-use App\Modules\Console\AccessControl\Events\RoleCreated;
+use App\Modules\Console\AccessControl\Domain\Events\RoleCreated;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
-class CreateRoleTransaction
+final class CreateRoleTransaction
 {
     /**
      * Execute atomic role creation transaction.

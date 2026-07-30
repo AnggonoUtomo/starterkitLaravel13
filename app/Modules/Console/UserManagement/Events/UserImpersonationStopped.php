@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\Events;
 
-use App\Shared\Events\AbstractDomainEvent;
+use App\Modules\Console\UserManagement\Domain\Events\UserImpersonationStopped as DomainUserImpersonationStopped;
 
-class UserImpersonationStopped extends AbstractDomainEvent {}
+class UserImpersonationStopped extends DomainUserImpersonationStopped {}

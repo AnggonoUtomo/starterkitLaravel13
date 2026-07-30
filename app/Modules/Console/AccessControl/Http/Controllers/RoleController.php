@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AccessControl\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +13,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
 
-class RoleController extends Controller
+final class RoleController extends Controller
 {
     public function __construct(
         protected RoleService $roleService

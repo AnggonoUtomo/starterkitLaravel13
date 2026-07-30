@@ -113,6 +113,7 @@ export default [
             'resources/js/components/ui/*',
             'ContohFrontEnd/**',
             'ContohBackEnd/**',
+            'SAKAAI/**',
         ],
     },
     prettier,

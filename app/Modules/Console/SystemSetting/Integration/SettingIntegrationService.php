@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\SystemSetting\Integration;
 
 use App\Modules\Console\SystemSetting\Contracts\SettingModuleContract;
 use App\Modules\Console\SystemSetting\Services\SettingService;
 
-class SettingIntegrationService implements SettingModuleContract
+final class SettingIntegrationService implements SettingModuleContract
 {
     public function __construct(
         protected SettingService $settingService

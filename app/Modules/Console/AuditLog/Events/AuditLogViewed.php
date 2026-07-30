@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AuditLog\Events;
 
-use App\Shared\Events\AbstractDomainEvent;
+use App\Modules\Console\AuditLog\Domain\Events\AuditLogViewed as DomainAuditLogViewed;
 
-class AuditLogViewed extends AbstractDomainEvent {}
+class AuditLogViewed extends DomainAuditLogViewed {}

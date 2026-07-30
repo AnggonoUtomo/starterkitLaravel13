@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\SystemSetting\Transactions;
 
 use App\Modules\Console\SystemSetting\Models\SystemSetting;
 
-class UpdateSettingGroupTransaction
+final class UpdateSettingGroupTransaction
 {
     /**
      * Execute atomic setting group update transaction.

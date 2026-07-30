@@ -1,0 +1,10 @@
+{
+  "name": "Workspace SAKAAI Integrated Skills Registry",
+  "version": "1.0.0",
+  "inherits": [
+    { "path": "../SAKAAI/.agents/skills.json" }
+  ],
+  "entries": [
+    { "path": "../SAKAAI/.agents/skills" }
+  ]
+}

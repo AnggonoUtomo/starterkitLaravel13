@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Modules\Console\SystemSetting\Services\SettingService;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
 use App\Shared\Contracts\DomainEventContract;
 use App\Shared\Events\UserLoggedIn;
 use App\Shared\Events\UserLoggedOut;
@@ -47,22 +50,26 @@ class AppServiceProvider extends ServiceProvider
 
         // 2. Map standard Laravel Auth events to Domain Events
         Event::listen(Login::class, function (Login $event) {
+            /** @var User $user */
+            $user = $event->user;
             event(new UserLoggedIn([
-                'user_id' => $event->user->id,
-                'email' => $event->user->email,
+                'user_id' => $user->id,
+                'email' => $user->email,
                 'guard' => $event->guard,
                 'ip' => request()->ip(),
-            ], $event->user->id));
+            ], $user->id));
         });
 
         Event::listen(Logout::class, function (Logout $event) {
-            if ($event->user) {
+            /** @var User|null $user */
+            $user = $event->user;
+            if ($user) {
                 event(new UserLoggedOut([
-                    'user_id' => $event->user->id,
-                    'email' => $event->user->email,
+                    'user_id' => $user->id,
+                    'email' => $user->email,
                     'guard' => $event->guard,
                     'ip' => request()->ip(),
-                ], $event->user->id));
+                ], $user->id));
             }
         });
 

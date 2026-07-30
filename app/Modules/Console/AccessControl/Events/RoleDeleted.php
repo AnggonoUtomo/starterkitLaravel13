@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AccessControl\Events;
 
-use App\Shared\Events\AbstractDomainEvent;
+use App\Modules\Console\AccessControl\Domain\Events\RoleDeleted as DomainRoleDeleted;
 
-class RoleDeleted extends AbstractDomainEvent {}
+class RoleDeleted extends DomainRoleDeleted {}

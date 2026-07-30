@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\Listeners;
 
 use App\Shared\Contracts\DomainEventContract;

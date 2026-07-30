@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Modules\Console\AuditLog\Http\Controllers\AuditLogController;
 use Illuminate\Support\Facades\Route;
 

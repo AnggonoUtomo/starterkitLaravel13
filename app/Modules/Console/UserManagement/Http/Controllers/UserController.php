@@ -1,22 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\UserManagement\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Modules\Console\SystemSetting\Services\SettingService;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
 use App\Modules\Console\UserManagement\Http\Requests\CreateUserRequest;
 use App\Modules\Console\UserManagement\Http\Requests\UpdateUserRequest;
 use App\Modules\Console\UserManagement\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     public function __construct(
         protected UserService $userService
@@ -26,46 +25,17 @@ class UserController extends Controller
     {
         $search = $request->query('search');
         $role = $request->query('role');
-        $paginationSettings = app(SettingService::class)->getPaginationSettings();
-        $defaultPerPage = (int) ($paginationSettings['default_per_page'] ?? 10);
+        $defaultPerPage = (int) (app(SettingService::class)->getPaginationSettings()['default_per_page'] ?? 10);
         $perPage = (int) $request->query('per_page', $defaultPerPage);
 
-        $users = $this->userService->getPaginatedUsers(
-            perPage: $perPage,
-            search: $search,
-            role: $role
-        );
-
-        $availableRoles = Role::pluck('name')->toArray();
-
-        $rolesWithPermissions = Role::with('permissions:id,name')->get()->map(fn (Role $role) => [
-            'id' => $role->id,
-            'name' => $role->name,
-            'permissions' => $role->permissions->pluck('name')->sort()->values()->toArray(),
-        ])->toArray();
-
-        $permissionGroups = Permission::query()
-            ->select('id', 'name', 'guard_name')
-            ->orderBy('name')
-            ->get()
-            ->groupBy(fn (Permission $permission) => Str::before($permission->name, '.'))
-            ->map(fn ($permissions, string $module) => [
-                'module' => $module ?: 'general',
-                'permissions' => $permissions->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])->values()->toArray(),
-            ])
-            ->values()
-            ->toArray();
+        $users = $this->userService->getPaginatedUsers($perPage, $search, $role);
+        $meta = $this->userService->getRoleAndPermissionMetaData();
 
         return Inertia::render('Console/UserManagement/Index', [
             'title' => 'User Management',
             'users' => $users,
-            'availableRoles' => $availableRoles,
-            'rolesWithPermissions' => $rolesWithPermissions,
-            'permissionGroups' => $permissionGroups,
-            'filters' => [
-                'search' => $search ?? '',
-                'role' => $role ?? '',
-            ],
+            ...$meta,
+            'filters' => ['search' => $search ?? '', 'role' => $role ?? ''],
         ]);
     }
 

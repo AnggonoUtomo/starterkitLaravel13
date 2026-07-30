@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Modules\Console\Profile\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 

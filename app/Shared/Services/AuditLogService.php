@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Shared\Services;
 
 use App\Modules\Console\SystemSetting\Services\SettingService;
@@ -13,7 +15,7 @@ class AuditLogService
      *
      * @param  array<string, mixed>  $payload
      */
-    public function log(string $eventName, array $payload = [], ?int $causedByUserId = null): void
+    public function log(string $eventName, array $payload = [], int|string|null $causedByUserId = null): void
     {
         $security = app(SettingService::class)->getSecurityPolicy();
 

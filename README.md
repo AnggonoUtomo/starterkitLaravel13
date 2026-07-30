@@ -25,7 +25,7 @@ Aplikasi starter kit modern, enterprise-ready, dan modular yang dibangun menggun
 - **Role-Based Access Control (RBAC)**: `spatie/laravel-permission` (^8.3)
 - **Routing Integration**: `tightenco/ziggy` (^2.6)
 - **Caching & Session**: `predis/predis` (^3.5)
-- **Development Tools**: `laravel/boost` (^2.2), `laravel/tinker` (^3.0), `laravel/pail` (^1.2)
+- **Development Tools**: `laravel/tinker` (^3.0), `laravel/pail` (^1.2)
 
 ### Frontend (React 19 / TypeScript 5)
 

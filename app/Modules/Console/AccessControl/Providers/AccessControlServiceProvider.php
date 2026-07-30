@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AccessControl\Providers;
 
 use App\Modules\Console\AccessControl\Contracts\RoleModuleContract;

@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AccessControl\Events;
 
-use App\Shared\Events\AbstractDomainEvent;
+use App\Modules\Console\AccessControl\Domain\Events\RolePermissionsUpdated as DomainRolePermissionsUpdated;
 
-class RolePermissionsUpdated extends AbstractDomainEvent {}
+class RolePermissionsUpdated extends DomainRolePermissionsUpdated {}

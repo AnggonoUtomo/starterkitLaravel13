@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AuditLog\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Console\AuditLog\Events\AuditLogViewed;
+use App\Modules\Console\AuditLog\Domain\Events\AuditLogViewed;
 use App\Modules\Console\AuditLog\Services\AuditLogQueryService;
 use App\Modules\Console\SystemSetting\Services\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AuditLogController extends Controller
+final class AuditLogController extends Controller
 {
     public function __construct(
         protected AuditLogQueryService $queryService

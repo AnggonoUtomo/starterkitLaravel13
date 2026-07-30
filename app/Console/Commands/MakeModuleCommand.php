@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -99,6 +101,8 @@ class MakeModuleCommand extends Command
         $dtoContent = <<<PHP
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\\{$module}\\{$submodule}\\DTO;
 
 final readonly class {$dtoName}
@@ -125,6 +129,8 @@ PHP;
         // 6. Generate Service
         $serviceContent = <<<PHP
 <?php
+
+declare(strict_types=1);
 
 namespace App\Modules\\{$module}\\{$submodule}\\Services;
 
@@ -154,6 +160,8 @@ PHP;
         // 7. Generate Controller
         $controllerContent = <<<PHP
 <?php
+
+declare(strict_types=1);
 
 namespace App\Modules\\{$module}\\{$submodule}\\Http\\Controllers;
 

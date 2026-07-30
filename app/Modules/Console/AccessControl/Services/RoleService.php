@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\AccessControl\Services;
 
-use App\Modules\Console\AccessControl\Events\RoleDeleted;
+use App\Modules\Console\AccessControl\Domain\Events\RoleDeleted;
 use App\Modules\Console\AccessControl\Transactions\CreateRoleTransaction;
 use App\Modules\Console\AccessControl\Transactions\UpdateRolePermissionsTransaction;
 use App\Shared\Providers\ModuleServiceProvider;
@@ -74,6 +76,10 @@ class RoleService
      */
     public function deleteRole(Role $role): bool
     {
+        if ($role->name === 'Super System') {
+            return false;
+        }
+
         $roleId = $role->id;
         $roleName = $role->name;
 

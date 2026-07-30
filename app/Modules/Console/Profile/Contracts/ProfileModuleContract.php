@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\Profile\Contracts;
 
-use App\Models\User;
+use App\Modules\Console\UserManagement\Domain\Entities\User;
 
 interface ProfileModuleContract
 {

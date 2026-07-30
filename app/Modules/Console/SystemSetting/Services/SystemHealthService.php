@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Console\SystemSetting\Services;
 
 use App\Shared\Providers\ModuleServiceProvider;
@@ -11,6 +13,8 @@ class SystemHealthService
 {
     /**
      * Get system health metrics and diagnostic checks.
+     *
+     * @return array<string, mixed>
      */
     public function getHealthStatus(): array
     {
@@ -148,6 +152,8 @@ class SystemHealthService
 
     /**
      * Get read-only environment diagnostics group.
+     *
+     * @return array<string, mixed>
      */
     public function getEnvironmentInfo(): array
     {
@@ -197,6 +203,8 @@ class SystemHealthService
 
     /**
      * Get auto-discovered modules and submodules list.
+     *
+     * @return array<string, mixed>
      */
     public function getDiscoveredModules(): array
     {
