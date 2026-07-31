@@ -50,7 +50,7 @@ export default function ImpersonateUserModal({
                             <DialogTitle className="text-base font-bold">
                                 Konfirmasi Impersonation
                             </DialogTitle>
-                            <DialogDescription>
+                            <DialogDescription className="text-[13px] text-muted-foreground">
                                 Masuk sebagai akun pengguna target untuk
                                 sementara waktu.
                             </DialogDescription>

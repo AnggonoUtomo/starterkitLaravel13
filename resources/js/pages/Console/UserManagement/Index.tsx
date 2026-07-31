@@ -1,4 +1,4 @@
-import { Head, useForm, router } from '@inertiajs/react';
+import { Head, useForm, router, usePage } from '@inertiajs/react';
 import React, { useState, useEffect, useCallback } from 'react';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
 import CreateUserModal from './components/CreateUserModal';
@@ -154,9 +154,17 @@ export default function Index({
         return () => window.removeEventListener('keydown', handleShortcut);
     }, [selectedUser, handleStartCreate]);
 
+    const { props: pageProps } = usePage<{ pagination?: { min_search_chars?: number } }>();
+    const minSearchChars = pageProps.pagination?.min_search_chars ?? 3;
+
     // SPA Search & Filter Handlers
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (search.length > 0 && search.length < minSearchChars) {
+            return;
+        }
+
         router.get(
             '/console/users',
             { search, role: roleFilter },
@@ -170,6 +178,10 @@ export default function Index({
             return;
         }
 
+        if (search.length > 0 && search.length < minSearchChars) {
+            return;
+        }
+
         const timer = setTimeout(() => {
             router.get(
                 '/console/users',
@@ -179,7 +191,7 @@ export default function Index({
         }, 300);
 
         return () => clearTimeout(timer);
-    }, [search, roleFilter, filters.search]);
+    }, [search, roleFilter, filters.search, minSearchChars]);
 
     const handleRoleFilterChange = (newRole: string) => {
         setRoleFilter(newRole);

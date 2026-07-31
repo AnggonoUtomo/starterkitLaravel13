@@ -51,9 +51,10 @@ export default function DeleteRoleModal({
                             <DialogTitle className="text-base font-bold">
                                 Konfirmasi Hapus Role
                             </DialogTitle>
-                            <DialogDescription>
+                            <DialogDescription className="text-[13px] text-muted-foreground">
                                 Tindakan ini akan menghapus role secara permanen
-                                beserta seluruh izin yang terkait.
+                                dan mencabut akses dari seluruh pengguna yang
+                                memilikinya.
                             </DialogDescription>
                         </div>
                     </div>

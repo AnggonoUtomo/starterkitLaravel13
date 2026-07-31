@@ -124,17 +124,13 @@ export function PaginationSettingsPanel({
                                 />
                                 <Select
                                     value={form.data.default_per_page}
-                                    onValueChange={(value) =>
-                                        form.setData('default_per_page', value)
+                                    onValueChange={(val) =>
+                                        form.setData('default_per_page', val)
                                     }
-                                    disabled={
-                                        !can.update ||
-                                        form.processing ||
-                                        form.data.per_page_options.length === 0
-                                    }
+                                    disabled={!can.update || form.processing}
                                 >
-                                    <SelectTrigger className="enabled:cursor-pointer">
-                                        <SelectValue placeholder="Pilih default" />
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Pilih default per page" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {form.data.per_page_options.map(
@@ -151,6 +147,31 @@ export function PaginationSettingsPanel({
                                 </Select>
                                 <InputError
                                     message={form.errors.default_per_page}
+                                />
+                            </div>
+
+                            <div className="space-y-3">
+                                <FieldInfoLabel
+                                    label="Minimal Karakter Pencarian"
+                                    required
+                                    tooltip="Sistem baru akan meload pencarian jika kata kunci telah mencapai jumlah karakter ini (misal 3 huruf) atau saat input dibersihkan."
+                                />
+                                <input
+                                    type="number"
+                                    min={1}
+                                    max={10}
+                                    value={form.data.min_search_chars}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'min_search_chars',
+                                            e.target.value,
+                                        )
+                                    }
+                                    disabled={!can.update || form.processing}
+                                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-foreground outline-none focus:ring-1 focus:ring-emerald-500"
+                                />
+                                <InputError
+                                    message={form.errors.min_search_chars}
                                 />
                             </div>
                         </div>

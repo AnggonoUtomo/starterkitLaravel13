@@ -68,6 +68,15 @@ export default function ConsoleLayout({ children }: Props) {
 
     const navItems = [
         {
+            name: 'Dashboard',
+            href: '/console/dashboard',
+            icon: LayoutDashboard,
+            iconColor: 'text-violet-500',
+            activeClass:
+                'border border-violet-500/30 bg-violet-500/10 text-violet-500 font-semibold shadow-xs',
+            active: url === '/console' || url.startsWith('/console/dashboard'),
+        },
+        {
             name: 'User Management',
             href: '/console/users',
             icon: Users,

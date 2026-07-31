@@ -1,5 +1,5 @@
-import { Head, router } from '@inertiajs/react';
-import React, { useState } from 'react';
+import { Head, router, usePage } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
 import ConsoleFilterBar from '@/components/console/ConsoleFilterBar';
 import ConsoleLayout from '@/layouts/ConsoleLayout';
 import AuditLogHeader from './components/AuditLogHeader';
@@ -11,10 +11,34 @@ export default function Index({ title, logs, filters }: AuditLogIndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
 
+    const { props: pageProps } = usePage<{ pagination?: { min_search_chars?: number } }>();
+    const minSearchChars = pageProps.pagination?.min_search_chars ?? 3;
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (search.length > 0 && search.length < minSearchChars) {
+            return;
+        }
+
         router.get('/console/audit-logs', { search }, { preserveState: true });
     };
+
+    useEffect(() => {
+        if (search === (filters.search || '')) {
+            return;
+        }
+
+        if (search.length > 0 && search.length < minSearchChars) {
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            router.get('/console/audit-logs', { search }, { preserveState: true });
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [search, filters.search, minSearchChars]);
 
     return (
         <ConsoleLayout>

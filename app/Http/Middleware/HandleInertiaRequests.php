@@ -56,8 +56,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'auth' => [
                 'user' => $user ? $this->sharedUser($user) : null,
-                'roles' => $user ? $user->getRoleNames()->toArray() : [],
-                'permissions' => $user ? $user->getAllPermissions()->pluck('name')->toArray() : [],
+                'super' => $user ? $user->isSuperSystem() : false,
+                'roles' => $user ? $user->getRoleNames()->mapWithKeys(fn ($r) => [$r => true])->toArray() : [],
+                'permissions' => $user ? $user->getAllPermissions()->pluck('name')->mapWithKeys(fn ($p) => [$p => true])->toArray() : [],
                 'impersonator' => $request->session()->get('impersonator_id') ? [
                     'id' => $request->session()->get('impersonator_id'),
                     'name' => $request->session()->get('impersonator_name'),

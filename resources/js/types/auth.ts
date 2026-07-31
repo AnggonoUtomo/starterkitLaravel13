@@ -1,5 +1,5 @@
 export type User = {
-    id: number;
+    id: number | string;
     name: string;
     email: string;
     avatar?: string;
@@ -11,7 +11,29 @@ export type User = {
 };
 
 export type Auth = {
-    user: User;
+    user: User | null;
+    super?: boolean;
+    roles?: Record<string, boolean>;
+    permissions?: Record<string, boolean>;
+    impersonator?: {
+        id: string;
+        name: string;
+    } | null;
+};
+
+export type SharedData = {
+    name?: string;
+    branding?: {
+        app_name?: string;
+        logo_url?: string;
+        favicon_url?: string;
+    };
+    auth: Auth;
+    flash?: {
+        success?: string | null;
+        error?: string | null;
+    };
+    [key: string]: unknown;
 };
 
 /* @chisel-passkeys */

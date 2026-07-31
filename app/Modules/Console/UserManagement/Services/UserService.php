@@ -74,10 +74,12 @@ class UserService
     {
         $query = User::with(['roles.permissions', 'permissions'])->latest();
 
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+        if (! empty(trim($search ?? ''))) {
+            $term = mb_strtolower(trim((string) $search));
+
+            $query->where(function ($q) use ($term) {
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$term}%"])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ["%{$term}%"]);
             });
         }
 

@@ -87,10 +87,19 @@ class AuditLogQueryService
         // Reverse to show latest logs first
         $sorted = $entries->reverse()->values();
 
-        if ($search) {
-            $sorted = $sorted->filter(function ($item) use ($search) {
-                return str_contains(strtolower($item['event_name']), strtolower($search))
-                    || str_contains(strtolower($item['caused_by_user_name'] ?? ''), strtolower($search));
+        if (! empty(trim($search ?? ''))) {
+            $term = mb_strtolower(trim((string) $search));
+
+            $sorted = $sorted->filter(function ($item) use ($term) {
+                $eventName = mb_strtolower($item['event_name'] ?? '');
+                $userName = mb_strtolower($item['caused_by_user_name'] ?? '');
+                $userEmail = mb_strtolower($item['caused_by_user_email'] ?? '');
+                $subject = mb_strtolower($item['subject_type'] ?? '');
+
+                return str_contains($eventName, $term)
+                    || str_contains($userName, $term)
+                    || str_contains($userEmail, $term)
+                    || str_contains($subject, $term);
             })->values();
         }
 

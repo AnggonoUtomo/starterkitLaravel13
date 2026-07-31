@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import {
     KeyRound,
     Plus,
@@ -6,7 +7,8 @@ import {
     Trash2,
     ShieldCheck,
 } from 'lucide-react';
-import React from 'react';
+import { useState, useMemo } from 'react';
+import { usePermission } from '@/hooks/use-permission';
 import type { Role } from '../types';
 
 interface RoleControlCardProps {
@@ -36,6 +38,21 @@ export default function RoleControlCard({
     onSubmit,
     onDeleteRole,
 }: RoleControlCardProps) {
+    const { can } = usePermission();
+    const [roleSearch, setRoleSearch] = useState('');
+    const { props: pageProps } = usePage<{ pagination?: { min_search_chars?: number } }>();
+    const minSearchChars = pageProps.pagination?.min_search_chars ?? 3;
+
+    const filteredRoles = useMemo(() => {
+        const term = roleSearch.trim().toLowerCase();
+
+        if (!term || (term.length > 0 && term.length < minSearchChars)) {
+            return roles;
+        }
+
+        return roles.filter((role) => role.name.toLowerCase().includes(term));
+    }, [roles, roleSearch, minSearchChars]);
+
     const progressPercentage =
         totalPermissionCount > 0
             ? Math.round((selectedPermissionCount / totalPermissionCount) * 100)
@@ -56,34 +73,47 @@ export default function RoleControlCard({
                         <h3 className="text-sm font-bold text-foreground">
                             Pilih Role
                         </h3>
-                        <p className="text-[11px] text-muted-foreground">
+                        <p className="text-[13px] text-muted-foreground">
                             Role aktif menjadi target konfigurasi matriks.
                         </p>
                     </div>
                 </div>
 
-                <button
-                    type="button"
-                    onClick={onAddRole}
-                    className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 transition hover:bg-emerald-500/20"
-                    title="Tambah Role Baru"
-                >
-                    <Plus className="h-4 w-4" />
-                </button>
+                {can('access_control.role.create') && (
+                    <button
+                        type="button"
+                        onClick={onAddRole}
+                        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 transition hover:bg-emerald-500/20"
+                        title="Tambah Role Baru"
+                    >
+                        <Plus className="h-4 w-4" />
+                    </button>
+                )}
             </div>
 
-            {/* Dropdown Role Selector */}
-            <div>
-                <label className="mb-1 block text-[11px] font-semibold text-muted-foreground">
-                    Role Terpilih
-                </label>
+            {/* Dropdown Role Selector & Search */}
+            <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                    <label className="block text-[11px] font-semibold text-muted-foreground">
+                        Role Terpilih ({filteredRoles.length})
+                    </label>
+                    {roles.length > 4 && (
+                        <input
+                            type="text"
+                            value={roleSearch}
+                            onChange={(e) => setRoleSearch(e.target.value)}
+                            placeholder="Cari role..."
+                            className="w-32 rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-foreground outline-none focus:ring-1 focus:ring-indigo-500"
+                        />
+                    )}
+                </div>
                 <select
                     id="access-role-select"
                     value={activeRoleId ?? ''}
                     onChange={(e) => onRoleChange(Number(e.target.value))}
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-foreground outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                    {roles.map((role) => (
+                    {filteredRoles.map((role) => (
                         <option key={role.id} value={role.id}>
                             {role.name}{' '}
                             {role.name === 'Super System' ? '(Protected)' : ''}
@@ -169,30 +199,32 @@ export default function RoleControlCard({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-2 pt-1">
-                <button
-                    type="button"
-                    onClick={onReset}
-                    disabled={isProcessing || isProtected}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    <RefreshCcw className="h-3.5 w-3.5" />
-                    Reset
-                </button>
-                <button
-                    id="access-save-permissions"
-                    type="button"
-                    onClick={onSubmit}
-                    disabled={isProcessing || isProtected}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    <Save className="h-3.5 w-3.5" />
-                    {isProcessing ? 'Memproses...' : 'Simpan'}
-                </button>
-            </div>
+            {can('access_control.role.edit') && (
+                <div className="flex gap-2 pt-1">
+                    <button
+                        type="button"
+                        onClick={onReset}
+                        disabled={isProcessing || isProtected}
+                        className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <RefreshCcw className="h-3.5 w-3.5" />
+                        Reset
+                    </button>
+                    <button
+                        id="access-save-permissions"
+                        type="button"
+                        onClick={onSubmit}
+                        disabled={isProcessing || isProtected}
+                        className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700 enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <Save className="h-3.5 w-3.5" />
+                        {isProcessing ? 'Memproses...' : 'Simpan'}
+                    </button>
+                </div>
+            )}
 
             {/* Delete Role Option */}
-            {!isProtected && onDeleteRole && activeRole && (
+            {!isProtected && onDeleteRole && activeRole && can('access_control.role.delete') && (
                 <button
                     id="access-delete-role"
                     type="button"

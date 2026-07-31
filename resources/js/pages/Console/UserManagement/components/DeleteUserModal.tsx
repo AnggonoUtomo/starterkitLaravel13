@@ -50,7 +50,7 @@ export default function DeleteUserModal({
                             <DialogTitle className="text-base font-bold">
                                 Konfirmasi Hapus Akun
                             </DialogTitle>
-                            <DialogDescription>
+                            <DialogDescription className="text-[13px] text-muted-foreground">
                                 Tindakan ini akan menghapus akun pengguna secara
                                 permanen.
                             </DialogDescription>

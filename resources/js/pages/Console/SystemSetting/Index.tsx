@@ -86,6 +86,7 @@ const defaultLocalizationSettings = {
 const defaultPaginationSettings = {
     default_per_page: 10,
     per_page_options: [5, 10, 15, 25, 50, 100],
+    min_search_chars: 3,
 };
 
 const defaultSecurityPolicy = {
@@ -135,7 +136,7 @@ const defaultSystemHealth = {
         ok: 6,
         warning: 0,
         error: 0,
-        checked_at: new Date().toLocaleString(),
+        checked_at: new Date().toLocaleString('id-ID'),
     },
     runtime: { environment: 'local', debug: true },
     checks: [],
@@ -144,7 +145,7 @@ const defaultSystemHealth = {
 const defaultEnvironmentInfo = {
     summary: {
         mode: 'local',
-        generated_at: new Date().toLocaleString(),
+        generated_at: new Date().toLocaleString('id-ID'),
         notice: 'Read-only environment diagnostics',
     },
     groups: [],
@@ -202,6 +203,7 @@ export default function Index(props: Partial<SystemSettingsProps>) {
     const paginationForm = useForm<PaginationForm>({
         default_per_page: String(paginationSettings.default_per_page),
         per_page_options: paginationSettings.per_page_options,
+        min_search_chars: String(paginationSettings.min_search_chars ?? 3),
     });
 
     const securityForm = useForm<SecurityPolicyForm>({

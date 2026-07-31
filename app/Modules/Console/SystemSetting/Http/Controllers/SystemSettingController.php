@@ -21,8 +21,18 @@ use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class SystemSettingController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+final class SystemSettingController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:system_setting.manage'),
+        ];
+    }
+
     public function __construct(
         protected SettingService $settingService,
         protected SystemHealthService $healthService

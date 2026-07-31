@@ -38,7 +38,7 @@ export default function CreateRoleModal({
                     <DialogTitle className="text-base font-bold">
                         Buat Role Baru
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="text-[13px] text-muted-foreground">
                         Masukkan nama role baru yang ingin dibuat. Role ini
                         dapat dikonfigurasi dengan permission di matriks izin.
                     </DialogDescription>

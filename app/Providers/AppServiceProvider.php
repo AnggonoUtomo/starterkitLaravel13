@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
+use Illuminate\Support\Facades\Gate;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -36,6 +38,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::before(function (User $user, string $ability) {
+            if ($ability === 'impersonate') {
+                return null;
+            }
+
+            return $user->isSuperSystem() ? true : null;
+        });
+
         $this->configureDefaults();
         $this->registerDomainEventAuditListeners();
     }

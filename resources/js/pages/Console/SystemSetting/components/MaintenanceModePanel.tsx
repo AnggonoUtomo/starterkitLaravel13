@@ -195,7 +195,7 @@ export function MaintenanceModePanel({
                                         <span className="block text-xs font-bold">
                                             {option.label}
                                         </span>
-                                        <span className="mt-1 block text-[11px] leading-relaxed text-muted-foreground">
+                                        <span className="mt-1 block text-[13px] leading-relaxed text-muted-foreground">
                                             {option.description}
                                         </span>
                                     </button>
@@ -234,7 +234,7 @@ export function MaintenanceModePanel({
                                         )
                                     }
                                 />
-                                <p className="text-[11px] leading-relaxed text-muted-foreground">
+                                <p className="text-[13px] leading-relaxed text-muted-foreground">
                                     Membuat halaman maintenance auto reload
                                     berkala.
                                 </p>
@@ -263,7 +263,7 @@ export function MaintenanceModePanel({
                                         )
                                     }
                                 />
-                                <p className="text-[11px] leading-relaxed text-muted-foreground">
+                                <p className="text-[13px] leading-relaxed text-muted-foreground">
                                     Secret tidak ditampilkan ulang untuk
                                     keamanan.
                                 </p>

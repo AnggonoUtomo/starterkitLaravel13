@@ -22,6 +22,7 @@ class UpdatePaginationSettingsRequest extends FormRequest
             'default_per_page' => ['required', 'integer', 'min:1', 'max:500'],
             'per_page_options' => ['required', 'array', 'min:1'],
             'per_page_options.*' => ['integer', 'min:1', 'max:500'],
+            'min_search_chars' => ['required', 'integer', 'min:1', 'max:10'],
         ];
     }
 }

@@ -88,10 +88,13 @@ export default function AuditLogTable({
                                             </span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 font-mono text-xs text-muted-foreground">
+                                    <td
+                                        className="px-6 py-4 font-mono text-xs text-muted-foreground"
+                                        suppressHydrationWarning
+                                    >
                                         {new Date(
                                             log.timestamp,
-                                        ).toLocaleString()}
+                                        ).toLocaleString('id-ID')}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <button

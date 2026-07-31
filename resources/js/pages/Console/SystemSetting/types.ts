@@ -48,6 +48,7 @@ export type LocalizationSettings = {
 export type PaginationSettings = {
     default_per_page: number;
     per_page_options: number[];
+    min_search_chars: number;
 };
 
 export type SecurityPolicy = {
@@ -187,6 +188,7 @@ export type LocalizationForm = {
 export type PaginationForm = {
     default_per_page: string;
     per_page_options: number[];
+    min_search_chars: string;
 };
 
 export type SecurityPolicyForm = {

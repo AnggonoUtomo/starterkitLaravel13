@@ -12,8 +12,18 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-final class AuditLogController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+final class AuditLogController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:audit_log.view', only: ['index']),
+        ];
+    }
+
     public function __construct(
         protected AuditLogQueryService $queryService
     ) {}

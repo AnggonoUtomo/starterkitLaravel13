@@ -16,6 +16,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { usePermission } from '@/hooks/use-permission';
 import type { PermissionGroupItem, UserWorkspaceCardProps } from '../types';
 
 /**
@@ -112,6 +113,7 @@ export default function UserWorkspaceCard({
     onStartDelete,
     onStartImpersonate,
 }: UserWorkspaceCardProps) {
+    const { can } = usePermission();
     // Calculate inherited permissions from selected roles in form
     const inheritedPermissions = new Set(
         rolesWithPermissions
@@ -538,61 +540,67 @@ export default function UserWorkspaceCard({
 
                         {/* Action Panel Buttons */}
                         <div className="flex flex-col gap-2 border-t border-border pt-2">
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            onStartImpersonate(selectedUser)
-                                        }
-                                        className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-500 transition hover:bg-emerald-500/20 enabled:cursor-pointer"
-                                    >
-                                        <UserCheck className="h-4 w-4" />
-                                        Impersonate User Sesi Ini
-                                    </button>
-                                </TooltipTrigger>
-                                <TooltipContent side="top">
-                                    Masuk dan bertindak sebagai pengguna ini (
-                                    {selectedUser.name})
-                                </TooltipContent>
-                            </Tooltip>
+                            {can('users.impersonate') && (
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                onStartImpersonate(selectedUser)
+                                            }
+                                            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-500 transition hover:bg-emerald-500/20 enabled:cursor-pointer"
+                                        >
+                                            <UserCheck className="h-4 w-4" />
+                                            Impersonate User Sesi Ini
+                                        </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top">
+                                        Masuk dan bertindak sebagai pengguna ini (
+                                        {selectedUser.name})
+                                    </TooltipContent>
+                                </Tooltip>
+                            )}
 
                             <div className="flex gap-2">
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                onStartEdit(selectedUser)
-                                            }
-                                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-2 text-xs font-semibold text-indigo-500 transition hover:bg-indigo-500/20 enabled:cursor-pointer"
-                                        >
-                                            <Edit2 className="h-3.5 w-3.5" />
-                                            Ubah Data
-                                        </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="top">
-                                        Buka modal edit data pengguna
-                                    </TooltipContent>
-                                </Tooltip>
+                                {can('users.edit') && (
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    onStartEdit(selectedUser)
+                                                }
+                                                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-2 text-xs font-semibold text-indigo-500 transition hover:bg-indigo-500/20 enabled:cursor-pointer"
+                                            >
+                                                <Edit2 className="h-3.5 w-3.5" />
+                                                Ubah Data
+                                            </button>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top">
+                                            Buka modal edit data pengguna
+                                        </TooltipContent>
+                                    </Tooltip>
+                                )}
 
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                onStartDelete(selectedUser)
-                                            }
-                                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-500 transition hover:bg-rose-500/20 enabled:cursor-pointer"
-                                        >
-                                            <Trash2 className="h-3.5 w-3.5" />
-                                            Hapus
-                                        </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="top">
-                                        Buka konfirmasi hapus pengguna
-                                    </TooltipContent>
-                                </Tooltip>
+                                {can('users.delete') && (
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    onStartDelete(selectedUser)
+                                                }
+                                                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-500 transition hover:bg-rose-500/20 enabled:cursor-pointer"
+                                            >
+                                                <Trash2 className="h-3.5 w-3.5" />
+                                                Hapus
+                                            </button>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top">
+                                            Buka konfirmasi hapus pengguna
+                                        </TooltipContent>
+                                    </Tooltip>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -602,7 +610,7 @@ export default function UserWorkspaceCard({
                         <p className="mt-2 font-medium">
                             Pilih pengguna dari tabel
                         </p>
-                        <p className="text-[11px] text-muted-foreground/70">
+                        <p className="text-[13px] text-muted-foreground/70">
                             Klik salah satu baris tabel di sebelah kiri untuk
                             melihat detail akun.
                         </p>

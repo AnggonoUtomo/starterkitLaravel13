@@ -52,6 +52,13 @@ class User extends Authenticatable implements PasskeyUser
         ];
     }
 
+    public const SUPER_SYSTEM_ROLE = 'Super System';
+
+    public function isSuperSystem(): bool
+    {
+        return $this->hasRole(self::SUPER_SYSTEM_ROLE);
+    }
+
     protected static function newFactory(): UserFactory
     {
         return UserFactory::new();

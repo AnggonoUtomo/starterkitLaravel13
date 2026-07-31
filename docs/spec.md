@@ -31,11 +31,12 @@ app/
 │   └── Services/
 └── Modules/
     └── Console/                 <-- Namespace Modul Utama
-        ├── UserManagement/      <-- Submodul (Database, DTO, Http, Integration, Models, Policies, Providers, Services, Support, Transactions, routes.php, permissions.php)
         ├── AccessControl/       <-- Submodul RBAC
-        ├── SystemSetting/       <-- Submodul Health & Setting
         ├── AuditLog/            <-- Submodul Activity Log
-        └── Profile/             <-- Submodul Profil Akun
+        ├── Dashboard/           <-- Submodul Dashboard Utama
+        ├── Profile/             <-- Submodul Profil Akun
+        ├── SystemSetting/       <-- Submodul Health & Setting
+        └── UserManagement/      <-- Submodul (Database, DTO, Http, Integration, Models, Policies, Providers, Services, Support, Transactions, routes.php, permissions.php)
 
 resources/js/
 ├── layouts/                     <-- Layout Utama (ConsoleLayout.tsx)
@@ -43,11 +44,12 @@ resources/js/
 ├── types/                       <-- Tipe TypeScript & Kontrak Global
 └── pages/
     └── Console/                 <-- Halaman Frontend (Mirroring Backend)
-        ├── UserManagement/
         ├── AccessControl/
-        ├── SystemSetting/
         ├── AuditLog/
-        └── Profile/
+        ├── Dashboard/
+        ├── Profile/
+        ├── SystemSetting/
+        └── UserManagement/
 
 docs/
 ├── decisions/                   <-- Catatan Keputusan Arsitektur (ADR)

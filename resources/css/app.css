@@ -430,37 +430,37 @@
 }
 
 .dark {
-    --background: oklch(0.17 0.012 258);
+    --background: oklch(0.21 0.01 250);
     --foreground: oklch(0.94 0.006 250);
-    --card: oklch(0.225 0.014 258);
+    --card: oklch(0.26 0.01 250);
     --card-foreground: oklch(0.94 0.006 250);
-    --popover: oklch(0.225 0.014 258);
+    --popover: oklch(0.26 0.01 250);
     --popover-foreground: oklch(0.94 0.006 250);
     --primary: oklch(0.7 0.095 252);
     --primary-foreground: oklch(0.15 0.018 252);
-    --secondary: oklch(0.28 0.012 258);
+    --secondary: oklch(0.29 0.01 250);
     --secondary-foreground: oklch(0.9 0.006 250);
-    --muted: oklch(0.28 0.012 258);
+    --muted: oklch(0.29 0.01 250);
     --muted-foreground: oklch(0.68 0.012 250);
     --accent: oklch(0.31 0.04 230);
     --accent-foreground: oklch(0.92 0.02 230);
     --destructive: oklch(0.64 0.21 25.39);
     --destructive-foreground: oklch(0.98 0.006 25);
-    --border: oklch(0.35 0.012 258);
-    --input: oklch(0.35 0.012 258);
+    --border: oklch(0.30 0.01 250);
+    --input: oklch(0.30 0.01 250);
     --ring: oklch(0.7 0.095 252);
     --chart-1: oklch(0.7 0.095 252);
     --chart-2: oklch(0.68 0.085 195);
     --chart-3: oklch(0.74 0.1 82);
     --chart-4: oklch(0.65 0.09 155);
     --chart-5: oklch(0.66 0.08 275);
-    --sidebar: oklch(0.205 0.014 258);
+    --sidebar: oklch(0.235 0.01 250);
     --sidebar-foreground: oklch(0.92 0.006 250);
     --sidebar-primary: oklch(0.7 0.095 252);
     --sidebar-primary-foreground: oklch(0.15 0.018 252);
-    --sidebar-accent: oklch(0.28 0.014 258);
+    --sidebar-accent: oklch(0.29 0.01 250);
     --sidebar-accent-foreground: oklch(0.92 0.006 250);
-    --sidebar-border: oklch(0.34 0.012 258);
+    --sidebar-border: oklch(0.30 0.01 250);
     --sidebar-ring: oklch(0.7 0.095 252);
 }
 
@@ -664,6 +664,9 @@
 }
 
 @theme {
+    --text-xs: 0.8125rem;
+    --text-xs--line-height: 1.25rem;
+
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -710,6 +713,11 @@
 @layer base {
     * {
         @apply border-border;
+    }
+
+    .text-xs {
+        font-size: 0.8125rem; /* 13px */
+        line-height: 1.25rem;
     }
 
     body {

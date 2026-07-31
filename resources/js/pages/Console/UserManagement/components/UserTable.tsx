@@ -18,6 +18,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { usePermission } from '@/hooks/use-permission';
 import type { UserTableProps } from '../types';
 
 export default function UserTable({
@@ -41,6 +42,7 @@ export default function UserTable({
     onOpenDelete,
     onOpenImpersonate,
 }: UserTableProps) {
+    const { can } = usePermission();
     const prevLink = paginationLinks?.find(
         (l) => l.label.includes('Previous') || l.label.includes('&laquo;'),
     );
@@ -153,23 +155,25 @@ export default function UserTable({
                         </Tooltip>
 
                         {/* Add User Button */}
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <button
-                                    type="button"
-                                    onClick={onOpenCreate}
-                                    className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-700 active:scale-95 enabled:cursor-pointer"
-                                >
-                                    <Plus className="size-4" />
-                                    <span className="hidden sm:inline">
-                                        Tambah User
-                                    </span>
-                                </button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top">
-                                Tambah pengguna baru ke sistem (Ctrl+Shift+A)
-                            </TooltipContent>
-                        </Tooltip>
+                        {can('users.create') && (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        type="button"
+                                        onClick={onOpenCreate}
+                                        className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-2xs transition hover:bg-emerald-700 active:scale-95 enabled:cursor-pointer"
+                                    >
+                                        <Plus className="size-4" />
+                                        <span className="hidden sm:inline">
+                                            Tambah User
+                                        </span>
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top">
+                                    Tambah pengguna baru ke sistem (Ctrl+Shift+A)
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
                     </div>
                 </div>
 
@@ -222,7 +226,7 @@ export default function UserTable({
                                                         <div className="truncate font-semibold text-foreground">
                                                             {user.name}
                                                         </div>
-                                                        <div className="truncate font-mono text-[11px] text-muted-foreground">
+                                                        <div className="truncate font-mono text-[13px] text-muted-foreground">
                                                             {user.email}
                                                         </div>
                                                     </div>
@@ -237,14 +241,14 @@ export default function UserTable({
                                                         user.roles.map((r) => (
                                                             <span
                                                                 key={r}
-                                                                className="inline-flex items-center gap-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] font-medium text-emerald-500"
+                                                                className="inline-flex items-center gap-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[13px] font-medium text-emerald-500"
                                                             >
                                                                 <Shield className="size-3" />
                                                                 {r}
                                                             </span>
                                                         ))
                                                     ) : (
-                                                        <span className="text-[11px] text-muted-foreground italic">
+                                                        <span className="text-[13px] text-muted-foreground italic">
                                                             Tanpa Role
                                                         </span>
                                                     )}
@@ -253,7 +257,7 @@ export default function UserTable({
 
                                             {/* Effective Permissions Count */}
                                             <td className="px-4 py-3">
-                                                <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-mono text-[11px] font-medium text-muted-foreground">
+                                                <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-mono text-[13px] font-medium text-muted-foreground">
                                                     {user.effectivePermissions
                                                         ?.length || 0}{' '}
                                                     Izin
@@ -269,68 +273,74 @@ export default function UserTable({
                                                     }
                                                 >
                                                     {/* Impersonate Button */}
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() =>
-                                                                    onOpenImpersonate(
-                                                                        user,
-                                                                    )
-                                                                }
-                                                                className="rounded-md p-1.5 text-muted-foreground transition hover:bg-emerald-500/10 hover:text-emerald-500 enabled:cursor-pointer"
-                                                            >
-                                                                <UserCheck className="size-4" />
-                                                            </button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent side="top">
-                                                            Impersonasi pengguna
-                                                            ini ({user.name})
-                                                        </TooltipContent>
-                                                    </Tooltip>
+                                                    {can('users.impersonate') && (
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        onOpenImpersonate(
+                                                                            user,
+                                                                        )
+                                                                    }
+                                                                    className="rounded-md p-1.5 text-muted-foreground transition hover:bg-emerald-500/10 hover:text-emerald-500 enabled:cursor-pointer"
+                                                                >
+                                                                    <UserCheck className="size-4" />
+                                                                </button>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent side="top">
+                                                                Impersonasi pengguna
+                                                                ini ({user.name})
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    )}
 
                                                     {/* Edit Button */}
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() =>
-                                                                    onOpenEdit(
-                                                                        user,
-                                                                    )
-                                                                }
-                                                                className="rounded-md p-1.5 text-muted-foreground transition hover:bg-indigo-500/10 hover:text-indigo-500 enabled:cursor-pointer"
-                                                            >
-                                                                <Edit2 className="size-4" />
-                                                            </button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent side="top">
-                                                            Edit data dan peran
-                                                            pengguna (
-                                                            {user.name})
-                                                        </TooltipContent>
-                                                    </Tooltip>
+                                                    {can('users.edit') && (
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        onOpenEdit(
+                                                                            user,
+                                                                        )
+                                                                    }
+                                                                    className="rounded-md p-1.5 text-muted-foreground transition hover:bg-indigo-500/10 hover:text-indigo-500 enabled:cursor-pointer"
+                                                                >
+                                                                    <Edit2 className="size-4" />
+                                                                </button>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent side="top">
+                                                                Edit data dan peran
+                                                                pengguna (
+                                                                {user.name})
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    )}
 
                                                     {/* Delete Button */}
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() =>
-                                                                    onOpenDelete(
-                                                                        user,
-                                                                    )
-                                                                }
-                                                                className="rounded-md p-1.5 text-muted-foreground transition hover:bg-rose-500/10 hover:text-rose-500 enabled:cursor-pointer"
-                                                            >
-                                                                <Trash2 className="size-4" />
-                                                            </button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent side="top">
-                                                            Hapus pengguna (
-                                                            {user.name})
-                                                        </TooltipContent>
-                                                    </Tooltip>
+                                                    {can('users.delete') && (
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        onOpenDelete(
+                                                                            user,
+                                                                        )
+                                                                    }
+                                                                    className="rounded-md p-1.5 text-muted-foreground transition hover:bg-rose-500/10 hover:text-rose-500 enabled:cursor-pointer"
+                                                                >
+                                                                    <Trash2 className="size-4" />
+                                                                </button>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent side="top">
+                                                                Hapus pengguna (
+                                                                {user.name})
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>

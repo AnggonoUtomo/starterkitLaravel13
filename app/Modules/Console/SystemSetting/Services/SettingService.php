@@ -69,6 +69,7 @@ class SettingService
         return [
             'default_per_page' => 10,
             'per_page_options' => [5, 10, 15, 25, 50, 100],
+            'min_search_chars' => 3,
         ];
     }
 
@@ -405,9 +406,12 @@ class SettingService
             sort($options);
         }
 
+        $minSearchChars = (int) ($data['min_search_chars'] ?? 3);
+
         $payload = [
             'default_per_page' => $defaultPerPage,
             'per_page_options' => array_values(array_unique($options)),
+            'min_search_chars' => max(1, min(10, $minSearchChars)),
         ];
 
         $this->clearRuntimeCache('pagination');

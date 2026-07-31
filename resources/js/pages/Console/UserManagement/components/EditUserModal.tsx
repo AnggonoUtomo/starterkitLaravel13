@@ -153,7 +153,7 @@ export default function EditUserModal({
                                 <DialogTitle className="text-base font-bold text-foreground">
                                     Edit Pengguna: {editingUser?.name}
                                 </DialogTitle>
-                                <DialogDescription className="text-xs text-muted-foreground">
+                                <DialogDescription className="text-[13px] text-muted-foreground">
                                     Perbarui informasi nama, email, password,
                                     peran, dan matriks izin akses.
                                 </DialogDescription>

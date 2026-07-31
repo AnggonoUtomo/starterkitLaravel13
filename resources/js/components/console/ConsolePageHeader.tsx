@@ -25,7 +25,7 @@ export default function ConsolePageHeader({
                     <span>{title}</span>
                 </h1>
                 {description && (
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="mt-1 text-[12px] text-muted-foreground">
                         {description}
                     </p>
                 )}

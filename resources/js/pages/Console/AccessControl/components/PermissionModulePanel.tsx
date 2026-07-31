@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import { ShieldCheck, ChevronDown, ChevronRight, Search } from 'lucide-react';
 import React, { useState } from 'react';
 import type { Role, PermissionGroup } from '../types';
@@ -34,22 +35,25 @@ export default function PermissionModulePanel({
         );
     };
 
-    // Filter groups by search query
+    const { props: pageProps } = usePage<{ pagination?: { min_search_chars?: number } }>();
+    const minSearchChars = pageProps.pagination?.min_search_chars ?? 3;
+
+    // Filter groups by search query (case-insensitive across name, label, and module name)
     const filteredGroups = groups
         .map((group) => {
-            if (!searchQuery.trim()) {
+            const term = searchQuery.trim().toLowerCase();
+
+            if (!term || (term.length > 0 && term.length < minSearchChars)) {
                 return group;
             }
 
+            const isModuleMatch = group.module.toLowerCase().includes(term);
+
             const filtered = group.permissions.filter(
                 (perm) =>
-                    perm.name
-                        .toLowerCase()
-                        .includes(searchQuery.toLowerCase()) ||
-                    (perm.label &&
-                        perm.label
-                            .toLowerCase()
-                            .includes(searchQuery.toLowerCase())),
+                    isModuleMatch ||
+                    perm.name.toLowerCase().includes(term) ||
+                    (perm.label && perm.label.toLowerCase().includes(term)),
             );
 
             return {

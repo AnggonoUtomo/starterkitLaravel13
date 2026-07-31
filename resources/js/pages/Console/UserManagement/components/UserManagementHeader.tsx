@@ -8,6 +8,8 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+import { usePermission } from '@/hooks/use-permission';
+
 interface UserManagementHeaderProps {
     title: string;
     onOpenCreateModal: () => void;
@@ -17,6 +19,8 @@ export default function UserManagementHeader({
     title,
     onOpenCreateModal,
 }: UserManagementHeaderProps) {
+    const { can } = usePermission();
+
     return (
         <TooltipProvider>
             <ConsolePageHeader
@@ -25,21 +29,23 @@ export default function UserManagementHeader({
                 icon={Users}
                 iconColor="text-emerald-500"
                 action={
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <button
-                                onClick={onOpenCreateModal}
-                                className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-emerald-500/20 transition hover:bg-emerald-700 active:scale-95 enabled:cursor-pointer"
-                            >
-                                <UserPlus className="h-4 w-4" />
-                                <span>Tambah Pengguna Baru</span>
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                            Buka modal formulir untuk menambahkan pengguna baru
-                            (Ctrl+Shift+A)
-                        </TooltipContent>
-                    </Tooltip>
+                    can('users.create') ? (
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    onClick={onOpenCreateModal}
+                                    className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-emerald-500/20 transition hover:bg-emerald-700 active:scale-95 enabled:cursor-pointer"
+                                >
+                                    <UserPlus className="h-4 w-4" />
+                                    <span>Tambah Pengguna Baru</span>
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                                Buka modal formulir untuk menambahkan pengguna baru
+                                (Ctrl+Shift+A)
+                            </TooltipContent>
+                        </Tooltip>
+                    ) : null
                 }
             />
         </TooltipProvider>

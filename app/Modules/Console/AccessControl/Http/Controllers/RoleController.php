@@ -13,8 +13,21 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
 
-final class RoleController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+final class RoleController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:access_control.view', only: ['index']),
+            new Middleware('permission:access_control.role.create', only: ['store']),
+            new Middleware('permission:access_control.role.edit', only: ['updatePermissions']),
+            new Middleware('permission:access_control.role.delete', only: ['destroy']),
+        ];
+    }
+
     public function __construct(
         protected RoleService $roleService
     ) {}

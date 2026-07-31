@@ -153,7 +153,7 @@ export default function CreateUserModal({
                                 <DialogTitle className="text-base font-bold text-foreground">
                                     Tambah Pengguna Baru
                                 </DialogTitle>
-                                <DialogDescription className="text-xs text-muted-foreground">
+                                <DialogDescription className="text-[13px] text-muted-foreground">
                                     Kelola data identitas, alokasi peran, dan
                                     matriks izin akses pengguna.
                                 </DialogDescription>
